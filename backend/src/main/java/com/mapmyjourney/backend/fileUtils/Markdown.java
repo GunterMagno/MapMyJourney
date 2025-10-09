@@ -20,10 +20,10 @@ public class Markdown implements TestWatcher {
 
     private void logTestResult(ExtensionContext context) {
         String testName = context.getDisplayName();
-        String markdownContent = Como saco el mensaje que tengo puesto en el test
+        //String markdownContent = Como saco el mensaje que tengo puesto en el test
 
         try (FileWriter writer = new FileWriter(mdFilePath.toFile(), true)) {
-            writer.write(markdownContent);
+          //  writer.write(markdownContent);
         } catch (IOException e) {
             e.printStackTrace();
         }
