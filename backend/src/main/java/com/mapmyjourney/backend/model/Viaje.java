@@ -1,4 +1,4 @@
-package org.example.model;
+package com.mapmyjourney.backend.model;
 
 public class Viaje {
     public String titulo = "Viaje a Benidorm";

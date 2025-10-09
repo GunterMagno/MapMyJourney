@@ -1,4 +1,4 @@
-package org.example.model;
+package com.mapmyjourney.backend.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
