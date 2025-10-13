@@ -22,6 +22,14 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias
+        run: pip install pytest
+
       - name: Ejecutar tests
         run: mvn -f ./backend/pom.xml test
 
@@ -34,19 +42,3 @@ jobs:
         with:
           commit_message: "Update README.md y report.md con estado de tests"
           file_pattern: README.md report.md
-
-      - name: Notificar resultado en Discord
-        if: always()
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: |
-          STATUS_LINE=$(sed -n '/## Estado de los tests/{n;p;}' README.md)
-          if echo "$STATUS_LINE" | grep -q "✅"; then
-            curl -H "Content-Type: application/json" \
-                -d '{"content": "✅ Tests correctos en el último commit"}' \
-                $DISCORD_WEBHOOK
-          else
-            curl -H "Content-Type: application/json" \
-                -d '{"content": "❌ Tests fallidos en el último commit"}' \
-                $DISCORD_WEBHOOK
-          fi
