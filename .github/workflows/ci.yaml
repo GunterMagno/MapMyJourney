@@ -27,7 +27,7 @@ jobs:
 
 
       - name: Actualizar README.md
-        run: python actualizar_readme.py
+        run: python update_readme.py
 
       - name: Commit automático del README.md y del report.md
         uses: stefanzweifel/git-auto-commit-action@v5
