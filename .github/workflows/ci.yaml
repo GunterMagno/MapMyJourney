@@ -34,9 +34,6 @@ jobs:
           commit_message: "Update README.md y report.md con estado de tests"
           file_pattern: README.md report.md
 
-      - name: Copiar report.md a index.md
-        run: python generar_index.py
-
       - name: Notificar resultado en Discord
         if: always()
         env:
