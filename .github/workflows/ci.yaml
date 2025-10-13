@@ -1,0 +1,54 @@
+name: CI con AutoCommit
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+
+jobs:
+  test-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Ejecutar script de tests y actualizar ficheros
+        run: mvn test
+
+      - name: Actualizar README.md
+        run: python actualizar_readme.py
+
+      - name: Commit automático del README.md y del report.md
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update README.md y report.md con estado de tests"
+          file_pattern: README.md report.md
+
+      - name: Copiar report.md a index.md
+        run: python generar_index.py
+
+      - name: Notificar resultado en Discord
+        if: always()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          STATUS_LINE=$(sed -n '/## Estado de los tests/{n;p;}' README.md)
+          if echo "$STATUS_LINE" | grep -q "✅"; then
+            curl -H "Content-Type: application/json" \
+                -d '{"content": "✅ Tests correctos en el último commit"}' \
+                $DISCORD_WEBHOOK
+          else
+            curl -H "Content-Type: application/json" \
+                -d '{"content": "❌ Tests fallidos en el último commit"}' \
+                $DISCORD_WEBHOOK
+          fi

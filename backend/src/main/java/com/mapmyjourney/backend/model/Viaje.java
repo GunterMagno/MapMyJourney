@@ -8,8 +8,6 @@ public class Viaje {
     }
 
     public boolean comprobarNombre(String titulo) {
-        if (titulo.isEmpty() || titulo.length() < 30) {
-            return false;
-        } else return true;
+        return !titulo.isEmpty() && titulo.length() <= 30;
     }
 }

@@ -1,21 +1,21 @@
 package com.mapmyjourney.backend.model;
 
+import com.mapmyjourney.backend.fileUtils.Markdown;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(Markdown.class)
 public class ViajeTest {
 
     @Test
-    void validarTitulo(){
+    void validarTitulo() {
         String titulo = System.getenv("TITULO_VIAJE");
-
-        if (titulo == null){
-            titulo = "";
-        }
+        if (titulo == null) titulo = "Viaje a Benidorm";
 
         Viaje v = new Viaje(titulo);
         boolean resultado = v.comprobarNombre(titulo);
@@ -24,10 +24,15 @@ public class ViajeTest {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String fechaHora = ahora.format(formato);
 
+        String mensaje;
         if (titulo.isEmpty() || titulo.length() > 30) {
-            assertFalse(resultado,  "[" + fechaHora + "] " + "✅Test de Viaje correctos");
+            mensaje = "[" + fechaHora + "] ❌ El nombre no puede estar vacío o superar los 30 caracteres.";
+            assertFalse(resultado, mensaje);
         } else {
-            assertTrue(resultado, "[" + fechaHora + "] " + "❌Test de Viaje fallido -> El nombre no puede estar vacío o ser mayor a 30 caracteres.");
+            mensaje = "[" + fechaHora + "] ✅ Test de Viaje correctos";
+            assertTrue(resultado, mensaje);
         }
+
+        Markdown.saveMessage(mensaje);
     }
 }
