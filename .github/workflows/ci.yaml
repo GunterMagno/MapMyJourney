@@ -33,9 +33,8 @@ jobs:
       - name: Ejecutar tests
         run: mvn -f ./backend/pom.xml test
 
-
       - name: Actualizar README.md
-        run: python ./MapMyJourney/backend/update_readme.py
+        run: python backend/update_readme.py
 
       - name: Commit automático del README.md y del report.md
         uses: stefanzweifel/git-auto-commit-action@v5
