@@ -22,8 +22,9 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Ejecutar script de tests y actualizar ficheros
-        run: mvn -f ./backend\pom.xml test
+      - name: Ejecutar tests
+        run: mvn -f ./backend/pom.xml test
+
 
       - name: Actualizar README.md
         run: python actualizar_readme.py
