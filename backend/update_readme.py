@@ -1,3 +1,5 @@
+README_PATH = "../README.md"
+
 def read_report():
     with open("report.md", "r", encoding="utf-8") as f:
         lines = f.readlines()
@@ -8,7 +10,7 @@ def read_report():
                 return "### ❌ - Test Fallidos"
 
 def update_readme(status: str):
-    with open("README.md", "r", encoding="utf-8") as f:
+    with open(README_PATH, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
     for i, line in enumerate(lines):
@@ -19,7 +21,7 @@ def update_readme(status: str):
                 lines.append(status)
             break
 
-    with open("README.md", "w", encoding="utf-8") as f:
+    with open(README_PATH, "w", encoding="utf-8") as f:
         f.writelines(lines)
 
 
