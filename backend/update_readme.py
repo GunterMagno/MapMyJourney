@@ -1,31 +1,36 @@
-import subprocess
 
-def run_tests():
-    try:
-        subprocess.check_call(["mvn", "test"])
-        return "✅ Tests correctos"
-    except subprocess.CalledProcessError:
-        return "❌ Tests fallidos"
+def read_report():
+    with open("backend/report.md", "r", encoding="utf-8") as f:
+        lines = f.readlines()
+        for line in reversed(lines):
+            if "✅" in line:
+                return "\n### ✅ - Test Correctos"
+            elif "❌" in line:
+                return "\n### ❌ - Test Fallidos"
+        
 
 def update_readme(status: str):
     with open("README.md", "r", encoding="utf-8") as f:
         lines = f.readlines()
 
     new_lines = []
-    for line in lines:
-        new_lines.append(line)
-        if line.strip() == "## Estado de los tests":
-            # Si ya hay línea de estado, reemplazarla
-            next_index = lines.index(line) + 1
-            if next_index < len(lines):
-                lines[next_index] = status + "\n"
+    i = 0
+    while i < len(lines):
+        new_lines.append(lines[i])
+
+        if lines[i].strip() == "## Estado de los tests":
+
+            if "✅" in lines[i+2] or "❌" in lines[i+2]:
+                new_lines.append(status + "\n")
+                lines.remove(i)
             else:
                 new_lines.append(status + "\n")
-            break
+        i += 1
 
     with open("README.md", "w", encoding="utf-8") as f:
         f.writelines(new_lines)
 
+
 if __name__ == "__main__":
-    status = run_tests()
+    status = read_report()
     update_readme(status)
