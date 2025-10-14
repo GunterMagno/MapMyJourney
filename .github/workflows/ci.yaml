@@ -31,18 +31,19 @@ jobs:
           python-version: '3.10'
 
       - name: Ejecutar tests
-        run: mvn -f ./backend/pom.xml test
+        run: mvn -f backend/pom.xml test
 
       - name: Actualizar README.md
-        run: python backend/update_readme.py
+        working-directory: backend
+        run: python update_readme.py
 
       - name: Generar Javadoc
-        run: mvn javadoc:javadoc
+        run: mvn -f backend/pom.xml javadoc:javadoc
 
       - name: Copiar documentación a docs/html
         run: |
           mkdir -p docs/html
-          cp -r target/site/apidocs/* docs/html/
+          cp -r backend/target/site/apidocs/* docs/html/
 
       - name: Commit automático del README.md y del report.md
         uses: stefanzweifel/git-auto-commit-action@v5
