@@ -15,7 +15,7 @@ public class ViajeTest {
     @Test
     void validarTitulo() {
         String titulo = System.getenv("TITULO_VIAJE");
-        if (titulo == null) titulo = "Viaje a Benidorm";
+        if (titulo == null) titulo = "Viaje a Benidormooooooooooooooooooooo";
 
         Viaje v = new Viaje(titulo);
         boolean resultado = v.comprobarNombre(titulo);

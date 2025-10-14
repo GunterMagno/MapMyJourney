@@ -2,7 +2,4 @@ Konichiwa
 
 ## Estado de los tests
 
-### ✅ - Test Correctos
-
-
-
+### ❌ - Test Fallidos
