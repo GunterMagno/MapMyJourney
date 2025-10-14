@@ -1,5 +1,5 @@
 def read_report():
-    with open("backend/report.md", "r", encoding="utf-8") as f:
+    with open("report.md", "r", encoding="utf-8") as f:
         lines = f.readlines()
         for line in reversed(lines):
             if "✅" in line:
