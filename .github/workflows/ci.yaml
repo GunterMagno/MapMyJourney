@@ -22,10 +22,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Set up Maven
-        uses: hb0730/maven-action@v1.0.2
-        with:
-          maven-version: 3.9.11
+      - name: Instalar Maven
+        run: sudo apt-get update && sudo apt-get install -y maven
 
       - name: Configurar Python
         uses: actions/setup-python@v4
@@ -38,8 +36,17 @@ jobs:
       - name: Actualizar README.md
         run: python backend/update_readme.py
 
+      - name: Generar Javadoc
+        run: mvn javadoc:javadoc
+
+      - name: Copiar documentación a docs/html
+        run: |
+          mkdir -p docs/html
+          cp -r target/site/apidocs/* docs/html/
+
       - name: Commit automático del README.md y del report.md
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Update README.md y report.md con estado de tests"
-          file_pattern: README.md report.md
+          commit_message: "Update README.md y report.md con estado de tests y documentación en Javadoc"
+          file_pattern: README.md report.md "docs/html/**"
+          branch: main
