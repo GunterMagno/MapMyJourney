@@ -74,11 +74,13 @@ jobs:
       # 1️⃣1️⃣ Commit automático
       - name: Commit automático del README.md, report.md y documentación
         run: |
+          cd ..
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md backend/report.md docs
           git commit -m "Update README.md, report.md y documentación Javadoc" || echo "No hay cambios que commitear"
           git push origin HEAD:${GITHUB_REF#refs/heads/}
+
 
       # 1️⃣2️⃣ Publicar en GitHub Pages
       - name: Deploy a GitHub Pages
