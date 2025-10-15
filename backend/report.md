@@ -6,6 +6,8 @@ Test realizados hasta ahora: 0, 0 correctos, 0 fallidos
 
 
 
+
+
 validarTitulo() -> [2025-10-13 20:50:39] ❌ El nombre no puede estar vacío o superar los 30 caracteres.
 
 validarTitulo() -> [2025-10-13 20:51:09] ✅ Test de Viaje correctos
@@ -39,3 +41,5 @@ validarTitulo() -> [2025-10-15 10:53:46] ✅ Test de Viaje correctos
 validarTitulo() -> [2025-10-15 11:26:17] ✅ Test de Viaje correctos
 
 validarTitulo() -> [2025-10-15 11:42:46] ✅ Test de Viaje correctos
+
+validarTitulo() -> [2025-10-15 15:53:52] ✅ Test de Viaje correctos
