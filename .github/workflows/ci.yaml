@@ -49,5 +49,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update README.md y report.md con estado de tests y documentación en Javadoc"
-          file_pattern: README.md backend/report.md "docs/html/**"
+          file_pattern: README.md backend/report.md docs/html/**
           branch: main
