@@ -52,7 +52,7 @@ jobs:
           file_pattern: README.md backend/report.md docs/html/**
           branch: main
       
-      - name: Deploy to GitHub Pages
+      - name: Lanzar GitHub Pages
         uses: Cecilapp/GitHub-Pages-deploy@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,3 +61,14 @@ jobs:
           build_dir: docs
           branch: gh-pages
           commit_message: "Deploy Javadoc HTML"
+
+      - name: Instalar wkhtmltopdf
+        run: sudo apt-get install -y wkhtmltopdf
+
+      - name: Generar documentación en PDF
+        run: wkhtmltopdf backend/target/site/apidocs/index.html backend/target/site/javadoc.pdf
+
+      - name: Copiar PDF a docs/
+        run: |
+          mkdir -p docs
+          cp backend/target/site/javadoc.pdf docs/
