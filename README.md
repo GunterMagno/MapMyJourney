@@ -1,3 +1,3 @@
 ## Estado de los tests
 
-### ❌ - Test Fallidos
+### ✅ - Test Correctos
