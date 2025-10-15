@@ -43,7 +43,8 @@ jobs:
       - name: Copiar documentación HTML a /docs
         run: |
           mkdir -p docs
-          cp -r backend/target/site/apidocs/html/* docs/
+          cp -r backend/target/site/apidocs/* docs/
+
 
 
       - name: Generar documentación Javadoc en PDF
