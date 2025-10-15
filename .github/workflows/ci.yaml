@@ -1,4 +1,4 @@
-name: CI con AutoCommit
+name: CI con AutoCommit y Documentación
 
 on:
   push:
@@ -8,71 +8,85 @@ on:
 permissions:
   contents: write
 
-
 jobs:
   test-and-update:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
+      # 1️⃣ Clonar el repo
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # 2️⃣ Configurar Java 21
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
 
+      # 3️⃣ Instalar Maven
       - name: Instalar Maven
         run: sudo apt-get update && sudo apt-get install -y maven
 
+      # 4️⃣ Configurar Python
       - name: Configurar Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
+      # 5️⃣ Ejecutar tests
       - name: Ejecutar tests
-        run: mvn -f backend/pom.xml test
+        run: mvn test
 
+      # 6️⃣ Actualizar README.md y report.md
       - name: Actualizar README.md
-        working-directory: backend
         run: python update_readme.py
 
-      - name: Generar Javadoc
-        run: mvn -f backend/pom.xml javadoc:javadoc
+      # 7️⃣ Generar Javadoc HTML
+      - name: Generar Javadoc HTML
+        run: mvn clean javadoc:javadoc
 
-      - name: Copiar documentación HTML a /docs
+      # 8️⃣ Instalar wkhtmltopdf
+      - name: Instalar wkhtmltopdf
+        run: sudo apt-get install -y wkhtmltopdf
+
+      # 9️⃣ Convertir index.html a PDF
+      - name: Generar PDF de Javadoc
         run: |
-          mkdir -p docs
-          cp -r backend/target/site/apidocs/* docs/
-
-
-
-      - name: Generar documentación Javadoc en PDF
-        run: |
-          sudo apt-get install -y wkhtmltopdf
+          mkdir -p target/reports/pdf
           wkhtmltopdf --enable-local-file-access \
-            backend/target/site/apidocs/index.html \
-            backend/target/site/javadoc.pdf
+            "file://$(pwd)/target/site/apidocs/index.html" \
+            "target/reports/pdf/javadoc.pdf"
 
-      - name: Copiar PDF a docs/
+      # 🔟 Copiar documentación a /docs
+      - name: Copiar documentación HTML y PDF a /docs
         run: |
-          mkdir -p docs
-          cp backend/target/site/javadoc.pdf docs/
-      
+          cd ..
+          rm -rf docs/*
+          mkdir -p docs/pdf
+          cp -r backend/target/site/apidocs/* docs/
+          cp backend/target/reports/pdf/javadoc.pdf docs/pdf/
+          touch docs/.nojekyll
+
+      # 1️⃣1️⃣ Commit automático
       - name: Commit automático del README.md, report.md y documentación
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Update README.md, report.md y documentación Javadoc"
-          file_pattern: README.md backend/report.md docs/**
-          branch: main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md backend/report.md docs
+          git commit -m "Update README.md, report.md y documentación Javadoc" || echo "No hay cambios que commitear"
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
 
-
-      - name: Lanzar GitHub Pages
+      # 1️⃣2️⃣ Publicar en GitHub Pages
+      - name: Deploy a GitHub Pages
         uses: Cecilapp/GitHub-Pages-deploy@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          email: aborcru560@g.educaand.es 
+          email: aborcru560@g.educaand.es
           build_dir: docs
           branch: gh-pages
-          commit_message: "Deploy Javadoc HTML"
+          commit_message: "Deploy documentación Javadoc"
