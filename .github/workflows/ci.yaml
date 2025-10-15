@@ -43,7 +43,7 @@ jobs:
       - name: Copiar documentación HTML a /docs
         run: |
           mkdir -p docs
-          cp -r backend/target/site/apidocs/* docs/
+          cp -r backend/target/site/apidocs/html/* docs/
 
 
       - name: Generar documentación Javadoc en PDF
@@ -62,7 +62,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update README.md y report.md con estado de tests y documentación en Javadoc"
-          file_pattern: README.md backend/report.md docs/html/**
+          file_pattern: README.md backend/report.md docs/**
           branch: main
 
       - name: Lanzar GitHub Pages
