@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.mapmyjourney.backend","l":"BackendApplication"},{"p":"com.mapmyjourney.backend.fileUtils","l":"Markdown"},{"p":"com.mapmyjourney.backend.model","l":"Viaje"}];updateSearchResults();

@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.mapmyjourney.backend"},{"l":"com.mapmyjourney.backend.fileUtils"},{"l":"com.mapmyjourney.backend.model"}];updateSearchResults();
