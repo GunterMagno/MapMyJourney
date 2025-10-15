@@ -59,12 +59,13 @@ jobs:
           mkdir -p docs
           cp backend/target/site/javadoc.pdf docs/
       
-      - name: Commit automático del README.md y del report.md
+      - name: Commit automático del README.md, report.md y documentación
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Update README.md y report.md con estado de tests y documentación en Javadoc"
+          commit_message: "Update README.md, report.md y documentación Javadoc"
           file_pattern: README.md backend/report.md docs/**
           branch: main
+
 
       - name: Lanzar GitHub Pages
         uses: Cecilapp/GitHub-Pages-deploy@v3
