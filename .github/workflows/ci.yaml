@@ -54,12 +54,20 @@ jobs:
         run: sudo apt-get install -y wkhtmltopdf
 
       # 9️⃣ Convertir index.html a PDF
-      - name: Generar PDF de Javadoc
+      - name: Generar PDFs individuales del Javadoc
+        working-directory: backend
         run: |
+          sudo apt-get update && sudo apt-get install -y wkhtmltopdf
           mkdir -p target/reports/pdf
-          wkhtmltopdf --enable-local-file-access \
-            "file://$(pwd)/target/site/apidocs/index.html" \
-            "target/reports/pdf/javadoc.pdf"
+          for html in $(find target/site/apidocs -type f -name "*.html"); do
+            relative_path=$(realpath --relative-to=target/site/apidocs "$html")
+            pdf_path="target/reports/pdf/${relative_path%.html}.pdf"
+            mkdir -p "$(dirname "$pdf_path")"
+            echo "Generando $pdf_path..."
+            wkhtmltopdf --enable-local-file-access "file://$(pwd)/$html" "$pdf_path"
+          done
+          
+          echo "✅ PDFs generados en target/reports/pdf"
 
       # 🔟 Copiar documentación a /docs
       - name: Copiar documentación HTML y PDF a /docs
