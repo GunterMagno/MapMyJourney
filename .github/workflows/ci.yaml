@@ -51,3 +51,13 @@ jobs:
           commit_message: "Update README.md y report.md con estado de tests y documentación en Javadoc"
           file_pattern: README.md backend/report.md docs/html/**
           branch: main
+      
+      - name: Deploy to GitHub Pages
+        uses: Cecilapp/GitHub-Pages-deploy@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          email: aborcru560@g.educaand.es 
+          build_dir: docs
+          branch: gh-pages
+          commit_message: "Deploy Javadoc HTML"
