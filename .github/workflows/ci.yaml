@@ -76,7 +76,7 @@ jobs:
           rm -rf docs/*
           mkdir -p docs/pdf
           cp -r backend/target/site/apidocs/* docs/
-          cp backend/target/reports/pdf/javadoc.pdf docs/pdf/
+          cp -r backend/target/reports/pdf/* docs/pdf/
           touch docs/.nojekyll
 
       # 1️⃣1️⃣ Commit automático
