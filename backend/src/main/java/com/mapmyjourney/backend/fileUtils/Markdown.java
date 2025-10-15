@@ -78,8 +78,8 @@ public class Markdown implements TestWatcher {
 
             // Reescribir archivo con contador arriba y mensajes intactos
             try (FileWriter writer = new FileWriter(mdFilePath.toFile())) {
-                writer.write("# Resultados de las Pruebas\n\n");
-                writer.write(contador + "\n\n");
+                writer.write("# Resultados de las Pruebas\n");
+                writer.write(contador + "\n");
                 for (String l : lines) {
                     if (!l.startsWith("Test realizados hasta ahora") && !l.startsWith("#")) {
                         writer.write(l + "\n");
