@@ -1,7 +1,6 @@
 ## Estado de los tests
 
-### ✅ - Test CorrectosPrueba
-
+### ✅ - Test Correctos
 # Práctica 1.1: GH Action para Documentación — *MapMyJourney*
 
 - **Lenguaje utilizado:** `Java` (Spring Boot – Backend del proyecto `MapMyJourney`)  
