@@ -40,10 +40,11 @@ jobs:
       - name: Generar Javadoc
         run: mvn -f backend/pom.xml javadoc:javadoc
 
-      - name: Copiar documentación a docs/html
+      - name: Copiar documentación HTML a /docs
         run: |
-          mkdir -p docs/html
-          cp -r backend/target/site/apidocs/* docs/html/
+          mkdir -p docs
+          cp -r backend/target/site/apidocs/* docs/
+
 
       - name: Generar documentación Javadoc en PDF
         run: |
@@ -51,7 +52,7 @@ jobs:
           wkhtmltopdf --enable-local-file-access \
             backend/target/site/apidocs/index.html \
             backend/target/site/javadoc.pdf
-            
+
       - name: Copiar PDF a docs/
         run: |
           mkdir -p docs
