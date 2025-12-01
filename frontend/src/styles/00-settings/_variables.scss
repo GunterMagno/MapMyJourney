@@ -1,0 +1,21 @@
+:root {
+    /* Colors */
+
+    --principal-color: #2ecc71;
+    --secondary-color: #2ecc71;
+    --tertiary-color: #2ecc71;
+    --quaternary-color: #2ecc71;
+    --quinary-color: #2ecc71;
+
+    /* Hover Colors */
+    --principal-color-hover: #2ecc71;
+    --secondary-color-hover: #2ecc71;
+    --tertiary-color-hover: #2ecc71;
+    --quaternary-color-hover: #2ecc71;
+    --quinary-color-hover: #2ecc71;
+
+    /* Colors */
+    --text-color: var(--principal-color); // Esto esta bien? tiene sentido para poder cambiar el color del texto globalmente?
+    
+}
+
