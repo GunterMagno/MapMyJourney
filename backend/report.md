@@ -43,3 +43,5 @@ validarTitulo() -> [2025-10-15 16:07:19] ✅ Test de Viaje correctos
 validarTitulo() -> [2025-10-15 16:21:57] ✅ Test de Viaje correctos
 
 validarTitulo() -> [2025-10-15 21:34:12] ✅ Test de Viaje correctos
+
+validarTitulo() -> [2025-12-01 10:39:31] ✅ Test de Viaje correctos
