@@ -1,21 +1,63 @@
 :root {
     /* Colors */
 
-    --principal-color: #2ecc71;
-    --secondary-color: #2ecc71;
-    --tertiary-color: #2ecc71;
-    --quaternary-color: #2ecc71;
-    --quinary-color: #2ecc71;
+    --principal-color: #EF476F;
+    --secondary-color: #F37748;
+    --tertiary-color: #FFD166;
+    --quaternary-color: #3ECBA6;
+    --quinary-color: #118AB2;
 
     /* Hover Colors */
-    --principal-color-hover: #2ecc71;
-    --secondary-color-hover: #2ecc71;
-    --tertiary-color-hover: #2ecc71;
-    --quaternary-color-hover: #2ecc71;
-    --quinary-color-hover: #2ecc71;
+    --principal-color-hover: #C83356;
+    --secondary-color-hover: #DB6B41;
+    --tertiary-color-hover: #E6BC5C;
+    --quaternary-color-hover: #38B795;
+    --quinary-color-hover: #0F7CA0;
 
-    /* Colors */
-    --text-color: var(--principal-color); // Esto esta bien? tiene sentido para poder cambiar el color del texto globalmente?
+    /* Disabled Colors */
+    --principal-color-disabled: #FAC6D2;
+    --secondary-color-disabled: #F9BDA5;
+    --tertiary-color-disabled: #FFF1D0;
+    --quaternary-color-disabled: #C3EFE3;
+    --quinary-color-disabled: #B5DBE7;
     
+    /* Support Colors */
+    --text-color: var(--quinary-color); // Esto esta bien? tiene sentido para poder cambiar el color del texto globalmente?
+    --correct-color: #8DCC52;
+    --error-color: #EB351A;
+    --warning-color: var(--secondary-color);
+    --info-color: var(--quinary-color);
+    --dark-color: #141414;
 }
 
+.dark-mode {
+    /* Colors */
+
+    --principal-color: #B33553;
+    --secondary-color: #B65936;
+    --tertiary-color: #BF9D4D;
+    --quaternary-color: #2F987D;
+    --quinary-color: #0D6886;
+
+    /* Hover Colors */
+    --principal-color-hover: #8F2B43;
+    --secondary-color-hover: #92472B;
+    --tertiary-color-hover: #997D3D;
+    --quaternary-color-hover: #257A64;
+    --quinary-color-hover: #0A536B;
+
+    /* Disabled Colors */
+    --principal-color-disabled: #541927;
+    --secondary-color-disabled: #552A19;
+    --tertiary-color-disabled: #594924;
+    --quaternary-color-disabled: #16473A;
+    --quinary-color-disabled: #06303E;
+    
+    /* Support Colors */
+    --text-color: var(--quinary-color);
+    --correct-color: #8DCC52;
+    --error-color: #EB351A;
+    --warning-color: var(--secondary-color);
+    --info-color: var(--quinary-color);
+    --dark-color: #141414;
+}
