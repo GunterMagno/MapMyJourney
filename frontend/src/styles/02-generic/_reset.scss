@@ -1,0 +1,60 @@
+/* Minimal reset inspired by Normalize.css */
+* { 
+    box-sizing: border-box; 
+}
+
+html { 
+    line-height: var(--line-height-normal); 
+    -webkit-text-size-adjust: 100%; 
+}
+
+body { 
+    margin: 0; 
+    font-family: var(--font-primary); 
+    font-size: var(--font-size-base); 
+    color: var(--text-color); 
+    background: var(--font-primary-disabled); 
+}
+
+h1, h2, h3, h4, h5, h6 { 
+    margin: 0; 
+    font-weight: var(--font-weight-semibold); 
+    line-height: var(--line-height-tight); 
+}
+
+p { 
+    margin: 0; 
+}
+
+ul, li { 
+    margin: 0; 
+    padding: 0; 
+    list-style: none; 
+}
+
+a { 
+    color: inherit; 
+    text-decoration: none; 
+}
+
+img, svg, video, canvas { 
+    display: block; 
+    max-width: 100%; 
+    height: auto; 
+}
+
+button, input, textarea, select { 
+    font: inherit; 
+    color: inherit; 
+}
+
+button { 
+    border: none; 
+    background: none; 
+    cursor: pointer; 
+}
+
+table { 
+    border-collapse: collapse; 
+    border-spacing: 0; 
+}

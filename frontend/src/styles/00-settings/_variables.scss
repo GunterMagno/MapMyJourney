@@ -1,6 +1,7 @@
-:root {
-    /* Colors */
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=NTR&family=Mulish:wght@200;300;400;500;600;700;800;900&display=swap');
 
+:root {
+    /* Principal Colors */
     --principal-color: #EF476F;
     --secondary-color: #F37748;
     --tertiary-color: #FFD166;
@@ -22,17 +23,98 @@
     --quinary-color-disabled: #B5DBE7;
     
     /* Support Colors */
-    --text-color: var(--quinary-color); // Esto esta bien? tiene sentido para poder cambiar el color del texto globalmente?
+    --text-color: var(--quinary-color);
     --correct-color: #8DCC52;
     --error-color: #EB351A;
     --warning-color: var(--secondary-color);
     --info-color: var(--quinary-color);
     --dark-color: #141414;
+
+    /* Fonts */
+    --font-primary: 'Comfortaa', sans-serif;
+    --font-secondary: 'NTR', sans-serif;
+    --font-tertiary: 'Mulish', sans-serif;
+    
+    /* Font Sizes */
+    --font-size-tittle-h1: 68px;
+    --font-size-tittle-h2: 42px;
+    --font-size-tittle-h3: 26px;
+    --font-size-tittle-h4: 20px;
+    --font-size-medium: 16px;
+    --font-size-small: 14px;
+    --font-size-extra-small: 12px;
+
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    /* Line Heights */
+    --line-height-tight: 1.1;
+    --line-height-normal: 1.4;
+    --line-height-relaxed: 1.6;
+
+    /* Modular Scale Ratio */
+    --font-ratio: 1.25;
+
+    /* Borders */
+    --border-radius-small: 10px;
+    --border-radius-medium: 20px;
+    --border-radius-full: 9999px;
+    
+    --border-thin: 1px;
+    --border-medium: 2px;
+    --border-thick: 4px;
+
+    /* Elevations / Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.10);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+    /* Breakpoints */
+    --breakpoint-mobile: 640px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1024px;
+    --breakpoint-large-desktop: 1280px;
+
+    /* Transitions */
+    --transition-slow: 0.6s ease-in-out;
+    --transition-medium: 0.4s ease-in-out;
+    --transition-fast: 0.2s ease-in-out;
+
+    /* Spacing */
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-5: 1.25rem;
+    --spacing-6: 1.5rem;
+    --spacing-7: 1.75rem;
+    --spacing-8: 2rem;
+    --spacing-9: 2.25rem;
+    --spacing-10: 2.5rem;
+    --spacing-11: 2.75rem;
+    --spacing-12: 3rem;
+    --spacing-13: 3.25rem;
+    --spacing-14: 3.5rem;
+    --spacing-15: 3.75rem;
+    --spacing-16: 4rem;
+    --spacing-17: 4.25rem;
+    --spacing-18: 4.5rem;
+    --spacing-19: 4.75rem;
+    --spacing-20: 5rem;
+    --spacing-21: 5.25rem;
+    --spacing-22: 5.5rem;
+    --spacing-23: 5.75rem;
+    --spacing-24: 6rem;    
 }
 
 .dark-mode {
-    /* Colors */
-
+    /* Principal Colors */
     --principal-color: #B33553;
     --secondary-color: #B65936;
     --tertiary-color: #BF9D4D;

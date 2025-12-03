@@ -1,0 +1,28 @@
+// Media query mixin with breakpoint variables
+@mixin media_query($size) {
+  @if $size == sm {
+    @media (min-width: var(--breakpoint-mobile)) { @content; }
+  } @else if $size == md {
+    @media (min-width: var(--breakpoint-tablet)) { @content; }
+  } @else if $size == lg {
+    @media (min-width: var(--breakpoint-desktop)) { @content; }
+  } @else if $size == xl {
+    @media (min-width: var(--breakpoint-large-desktop)) { @content; }
+  }
+}
+
+// Transition helper (uses simple durations)
+@mixin transition($props: all, $speed: medium) {
+  $duration: var(--transition-medium);
+  @if $speed == fast { $duration: var(--transition-fast); }
+  @else if $speed == slow { $duration: var(--transition-slow); }
+  transition: #{$props} #{$duration};
+}
+
+// Center with flex
+@mixin flex-center($gap: var(--spacing-4)) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: #{$gap};
+}
