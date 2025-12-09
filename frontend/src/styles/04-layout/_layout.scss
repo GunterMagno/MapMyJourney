@@ -1,1 +1,50 @@
+// Basic grid
+.grid {
+  display: grid;
+  gap: var(--spacing-6);
+  grid-template-columns: repeat(6, 1fr);
+}
 
+// Responsive
+@media (max-width: var(--breakpoint-tablet)) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Grid items - Column span
+.grid-item--span-2 { grid-column: span 2; }
+.grid-item--span-3 { grid-column: span 3; }
+.grid-item--span-4 { grid-column: span 4; }
+.grid-item--span-6 { grid-column: span 6; }
+.grid-item--span-12 { grid-column: span 12; }
+
+
+// Flex
+.flex {
+  display: flex;
+  gap: var(--spacing-6);
+}
+
+.flex--center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex--col {
+  flex-direction: column;
+}
+
+// Container
+.container {
+  width: 100%;
+  max-width: var(--breakpoint-desktop);
+  margin: 0 auto;
+  padding: 0 var(--spacing-4);
+}
