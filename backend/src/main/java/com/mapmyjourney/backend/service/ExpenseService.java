@@ -3,7 +3,8 @@ package com.mapmyjourney.backend.service;
 import com.mapmyjourney.backend.dto.ExpenseCreateRequestDTO;
 import com.mapmyjourney.backend.dto.ExpenseDTO;
 import com.mapmyjourney.backend.dto.ExpenseSplitDTO;
-import com.mapmyjourney.backend.exception.BusinessException;
+import com.mapmyjourney.backend.dto.UserDTO;
+import com.mapmyjourney.backend.exception.ValidationException;
 import com.mapmyjourney.backend.exception.ResourceNotFoundException;
 import com.mapmyjourney.backend.model.Expense;
 import com.mapmyjourney.backend.model.ExpenseSplit;
@@ -53,18 +54,18 @@ public class ExpenseService {
 
         // Validar monto
         if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessException("El monto debe ser mayor a 0");
+            throw new ValidationException("El monto debe ser mayor a 0");
         }
 
         // Validar participantes
         if (request.getParticipantUserIds() == null || request.getParticipantUserIds().isEmpty()) {
-            throw new BusinessException("Debe haber al menos un participante");
+            throw new ValidationException("Debe haber al menos un participante");
         }
 
         // Crear gasto
         Expense expense = new Expense();
         expense.setTrip(trip);
-        expense.setCreatedByUser(creator);
+        expense.setPaidBy(creator);
         expense.setDescription(request.getDescription());
         expense.setAmount(request.getAmount());
         expense.setExpenseDate(request.getExpenseDate());
@@ -77,7 +78,7 @@ public class ExpenseService {
         if (request.getSplitType() == ExpenseSplitType.EQUAL) {
             createEqualSplit(savedExpense, request.getParticipantUserIds());
         } else {
-            throw new BusinessException("Solo se soporta división equitativa por ahora");
+            throw new ValidationException("Solo se soporta división equitativa por ahora");
         }
 
         return mapToDTO(savedExpense);
@@ -134,7 +135,7 @@ public class ExpenseService {
         // Calcular monto por persona
         int numParticipants = participantIds.size();
         BigDecimal splitAmount = expense.getAmount().divide(
-                BigDecimal.valueOf(numParticipants), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal.valueOf(numParticipants), 2, java.math.RoundingMode.HALF_UP);
 
         // Crear una división para cada participante
         for (Long userId : participantIds) {
@@ -146,7 +147,7 @@ public class ExpenseService {
 
             ExpenseSplit split = new ExpenseSplit();
             split.setExpense(expense);
-            split.setParticipantUser(user);
+            split.setParticipant(user);
             split.setAmount(splitAmount);
             split.setPaid(false);
 
@@ -164,9 +165,16 @@ public class ExpenseService {
         for (ExpenseSplit split : expense.getSplits()) {
             ExpenseSplitDTO splitDTO = new ExpenseSplitDTO();
             splitDTO.setId(split.getId());
+            splitDTO.setExpenseId(split.getExpense().getId());
             splitDTO.setAmount(split.getAmount());
             splitDTO.setPaid(split.isPaid());
-            splitDTO.setParticipantUserId(split.getParticipantUser().getId());
+            
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(split.getParticipant().getId());
+            userDTO.setName(split.getParticipant().getName());
+            userDTO.setEmail(split.getParticipant().getEmail());
+            splitDTO.setParticipant(userDTO);
+            
             splits.add(splitDTO);
         }
 
@@ -177,8 +185,13 @@ public class ExpenseService {
         dto.setAmount(expense.getAmount());
         dto.setExpenseDate(expense.getExpenseDate());
         dto.setSplitType(expense.getSplitType());
-        dto.setCreatedByUserId(expense.getCreatedByUser().getId());
-        dto.setSplits(splits);
+        
+        UserDTO paidByDTO = new UserDTO();
+        paidByDTO.setId(expense.getPaidBy().getId());
+        paidByDTO.setName(expense.getPaidBy().getName());
+        paidByDTO.setEmail(expense.getPaidBy().getEmail());
+        dto.setPaidBy(paidByDTO);
+        
         dto.setCreatedAt(expense.getCreatedAt());
 
         return dto;

@@ -47,9 +47,5 @@ public class TripDTO {
     private TripMemberRole currentUserRole;
 
     private Set<TripMemberDTO> members;
-
-    /**
-     * Información resumida: cantidad de miembros, gastos, etc.
-     */
-    private TripStatsDTO stats;
 }
+

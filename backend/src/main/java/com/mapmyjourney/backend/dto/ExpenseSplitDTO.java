@@ -20,6 +20,8 @@ public class ExpenseSplitDTO {
 
     private Long id;
 
+    private Long expenseId;
+
     private UserDTO participant;
 
     @NotNull(message = "El monto de la división es obligatorio")

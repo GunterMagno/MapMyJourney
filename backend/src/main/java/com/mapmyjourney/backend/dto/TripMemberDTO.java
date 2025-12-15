@@ -19,6 +19,8 @@ public class TripMemberDTO {
 
     private Long id;
 
+    private Long tripId;
+
     private UserDTO user;
 
     private TripMemberRole role;

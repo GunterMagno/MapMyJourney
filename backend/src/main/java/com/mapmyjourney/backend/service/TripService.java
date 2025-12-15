@@ -2,7 +2,7 @@ package com.mapmyjourney.backend.service;
 
 import com.mapmyjourney.backend.dto.TripCreateRequestDTO;
 import com.mapmyjourney.backend.dto.TripDTO;
-import com.mapmyjourney.backend.exception.BusinessException;
+import com.mapmyjourney.backend.exception.ValidationException;
 import com.mapmyjourney.backend.exception.ResourceNotFoundException;
 import com.mapmyjourney.backend.model.Trip;
 import com.mapmyjourney.backend.model.TripMember;
@@ -35,7 +35,7 @@ public class TripService {
     public TripDTO createTrip(TripCreateRequestDTO request, Long creatorUserId) {
         // Validar fechas
         if (request.getEndDate().isBefore(request.getStartDate())) {
-            throw new BusinessException("La fecha de fin no puede ser anterior a la de inicio");
+            throw new ValidationException("La fecha de fin no puede ser anterior a la de inicio");
         }
 
         // Obtener usuario creador
@@ -126,7 +126,7 @@ public class TripService {
         // Verificar que no sea miembro ya
         for (TripMember member : trip.getMembers()) {
             if (member.getUser().getId().equals(userId)) {
-                throw new BusinessException("El usuario ya es miembro del viaje");
+                throw new ValidationException("El usuario ya es miembro del viaje");
             }
         }
 
@@ -171,7 +171,7 @@ public class TripService {
         }
 
         if (!isMember) {
-            throw new BusinessException("No eres miembro de este viaje");
+            throw new ValidationException("No eres miembro de este viaje");
         }
     }
 
