@@ -46,7 +46,7 @@ else
     echo "OK: Todos los tests pasaron"
 fi
 echo ""
-
+0
 # Empaquetar
 echo "Empaquetando aplicacion..."
 mvn package -DskipTests
