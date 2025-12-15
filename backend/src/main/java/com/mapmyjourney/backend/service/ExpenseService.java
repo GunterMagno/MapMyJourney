@@ -34,7 +34,15 @@ public class ExpenseService {
     private final UserRepository userRepository;
 
     /**
-     * Crea un nuevo gasto y divide entre participantes.
+     * 1. Crea un nuevo gasto y divide entre participantes.
+     * Valida que el viaje y los usuarios existan.
+     * 
+     * @param tripId ID del viaje donde se registra el gasto
+     * @param request DTO con los datos del gasto
+     * @param creatorUserId ID del usuario que crea el gasto (quien paga)
+     * @return DTO del gasto creado
+     * @throws ResourceNotFoundException si el viaje o usuario no existe
+     * @throws ValidationException si el monto es inválido o no hay participantes
      */
     @Transactional
     public ExpenseDTO createExpense(Long tripId, ExpenseCreateRequestDTO request, Long creatorUserId) {
@@ -85,7 +93,10 @@ public class ExpenseService {
     }
 
     /**
-     * Obtiene todos los gastos de un viaje.
+     * 2. Obtiene todos los gastos de un viaje.
+     * 
+     * @param tripId ID del viaje
+     * @return Lista de DTOs de gastos del viaje
      */
     @Transactional(readOnly = true)
     public List<ExpenseDTO> getTripExpenses(Long tripId) {
@@ -100,7 +111,11 @@ public class ExpenseService {
     }
 
     /**
-     * Obtiene un gasto por ID.
+     * 3. Obtiene un gasto por ID.
+     * 
+     * @param expenseId ID del gasto
+     * @return DTO del gasto encontrado
+     * @throws ResourceNotFoundException si el gasto no existe
      */
     @Transactional(readOnly = true)
     public ExpenseDTO getExpenseById(Long expenseId) {
@@ -113,7 +128,9 @@ public class ExpenseService {
     }
 
     /**
-     * Marca una división como pagada.
+     * 4. Marca una división como pagada.
+     * 
+     * @param splitId ID de la división a marcar como pagada
      */
     @Transactional
     public void markSplitAsPaid(Long splitId) {
@@ -130,6 +147,9 @@ public class ExpenseService {
     /**
      * Divide un gasto equitativamente entre los participantes.
      * Ejemplo: 100€ entre 4 personas = 25€ cada una
+     * 
+     * @param expense Gasto a dividir
+     * @param participantIds IDs de los usuarios participantes
      */
     private void createEqualSplit(Expense expense, List<Long> participantIds) {
         // Calcular monto por persona
@@ -156,7 +176,10 @@ public class ExpenseService {
     }
 
     /**
-     * Convierte un Expense a ExpenseDTO.
+     * Mapea un Expense a ExpenseDTO incluyendo sus divisiones.
+     * 
+     * @param expense Entidad de gasto
+     * @return DTO del gasto con todas sus divisiones
      */
     private ExpenseDTO mapToDTO(Expense expense) {
         // Convertir splits
@@ -195,5 +218,76 @@ public class ExpenseService {
         dto.setCreatedAt(expense.getCreatedAt());
 
         return dto;
+    }
+
+    /**
+     * Actualiza un gasto existente.
+     * Solo quien pagó el gasto puede actualizarlo.
+     * 
+     * @param expenseId ID del gasto a actualizar
+     * @param request DTO con los nuevos datos
+     * @param userId ID del usuario que hace la actualización
+     * @return DTO del gasto actualizado
+     * @throws ResourceNotFoundException si el gasto no existe
+     * @throws ValidationException si el usuario no es quien pagó o los datos son inválidos
+     */
+    @Transactional
+    public ExpenseDTO updateExpense(Long expenseId, ExpenseCreateRequestDTO request, Long userId) {
+        // Obtener gasto
+        Optional<Expense> expenseOptional = expenseRepository.findById(expenseId);
+        if (!expenseOptional.isPresent()) {
+            throw new ResourceNotFoundException("Gasto no encontrado");
+        }
+        Expense expense = expenseOptional.get();
+
+        // Verificar que el usuario es quien pagó
+        if (!expense.getPaidBy().getId().equals(userId)) {
+            throw new ValidationException("No tienes permisos para actualizar este gasto");
+        }
+
+        // Validar monto
+        if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValidationException("El monto debe ser mayor a 0");
+        }
+
+        // Validar fechas
+        if (request.getExpenseDate() != null && request.getExpenseDate().isAfter(java.time.LocalDate.now())) {
+            throw new ValidationException("La fecha del gasto no puede ser en el futuro");
+        }
+
+        // Actualizar campos
+        expense.setDescription(request.getDescription());
+        expense.setAmount(request.getAmount());
+        expense.setExpenseDate(request.getExpenseDate());
+        expense.setReceiptUrl(request.getReceiptUrl());
+
+        Expense updatedExpense = expenseRepository.save(expense);
+        return mapToDTO(updatedExpense);
+    }
+
+    /**
+     * Elimina un gasto.
+     * Solo quien pagó el gasto puede eliminarlo.
+     * 
+     * @param expenseId ID del gasto a eliminar
+     * @param userId ID del usuario que hace la eliminación
+     * @throws ResourceNotFoundException si el gasto no existe
+     * @throws ValidationException si el usuario no es quien pagó
+     */
+    @Transactional
+    public void deleteExpense(Long expenseId, Long userId) {
+        // Obtener gasto
+        Optional<Expense> expenseOptional = expenseRepository.findById(expenseId);
+        if (!expenseOptional.isPresent()) {
+            throw new ResourceNotFoundException("Gasto no encontrado");
+        }
+        Expense expense = expenseOptional.get();
+
+        // Verificar que el usuario es quien pagó
+        if (!expense.getPaidBy().getId().equals(userId)) {
+            throw new ValidationException("No tienes permisos para eliminar este gasto");
+        }
+
+        expenseRepository.delete(expense);
     }
 }

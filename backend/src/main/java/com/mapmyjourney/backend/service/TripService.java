@@ -86,24 +86,10 @@ public class TripService {
      */
     @Transactional(readOnly = true)
     public List<TripDTO> getUserTrips(Long userId) {
-        List<Trip> allTrips = tripRepository.findAll();
-        List<TripDTO> userTrips = new ArrayList<>();
-
-        for (Trip trip : allTrips) {
-            boolean isMember = false;
-            for (TripMember member : trip.getMembers()) {
-                if (member.getUser().getId().equals(userId)) {
-                    isMember = true;
-                    break;
-                }
-            }
-            
-            if (isMember) {
-                userTrips.add(mapToDTO(trip));
-            }
-        }
-
-        return userTrips;
+        List<Trip> userTrips = tripRepository.findAllByUserId(userId);
+        return userTrips.stream()
+            .map(this::mapToDTO)
+            .toList();
     }
 
     /**
@@ -173,6 +159,64 @@ public class TripService {
         if (!isMember) {
             throw new ValidationException("No eres miembro de este viaje");
         }
+    }
+
+    /**
+     * Actualiza un viaje existente.
+     * Solo el OWNER puede actualizar.
+     */
+    @Transactional
+    public TripDTO updateTrip(Long tripId, TripCreateRequestDTO request, Long userId) {
+        // Obtener viaje
+        Optional<Trip> tripOptional = tripRepository.findById(tripId);
+        if (!tripOptional.isPresent()) {
+            throw new ResourceNotFoundException("Viaje no encontrado");
+        }
+        Trip trip = tripOptional.get();
+
+        // Verificar que el usuario es OWNER
+        Optional<TripMember> memberOptional = tripMemberRepository.findByTripIdAndUserId(tripId, userId);
+        if (!memberOptional.isPresent() || !memberOptional.get().isOwner()) {
+            throw new ValidationException("No tienes permisos para actualizar este viaje");
+        }
+
+        // Validar fechas
+        if (request.getEndDate().isBefore(request.getStartDate())) {
+            throw new ValidationException("La fecha de fin no puede ser anterior a la de inicio");
+        }
+
+        // Actualizar campos
+        trip.setTitle(request.getTitle());
+        trip.setDestination(request.getDestination());
+        trip.setDescription(request.getDescription());
+        trip.setStartDate(request.getStartDate());
+        trip.setEndDate(request.getEndDate());
+        trip.setBudget(request.getBudget());
+
+        Trip updatedTrip = tripRepository.save(trip);
+        return mapToDTO(updatedTrip);
+    }
+
+    /**
+     * Elimina un viaje.
+     * Solo el OWNER puede eliminar.
+     */
+    @Transactional
+    public void deleteTrip(Long tripId, Long userId) {
+        // Obtener viaje
+        Optional<Trip> tripOptional = tripRepository.findById(tripId);
+        if (!tripOptional.isPresent()) {
+            throw new ResourceNotFoundException("Viaje no encontrado");
+        }
+        Trip trip = tripOptional.get();
+
+        // Verificar que el usuario es OWNER
+        Optional<TripMember> memberOptional = tripMemberRepository.findByTripIdAndUserId(tripId, userId);
+        if (!memberOptional.isPresent() || !memberOptional.get().isOwner()) {
+            throw new ValidationException("No tienes permisos para eliminar este viaje");
+        }
+
+        tripRepository.delete(trip);
     }
 
     /**

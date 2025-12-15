@@ -19,7 +19,12 @@ public class UserService {
     private final UserRepository userRepository;
 
     /**
-     * Registra un nuevo usuario.
+     * 1. Registra un nuevo usuario.
+     * Verifica que el email no esté ya registrado.
+     * 
+     * @param request DTO con los datos del usuario
+     * @return DTO del usuario creado
+     * @throws DuplicateResourceException si el email ya existe
      */
     @Transactional
     public UserDTO registerUser(UserCreateRequestDTO request) {
@@ -37,7 +42,11 @@ public class UserService {
     }
 
     /**
-     * Obtiene un usuario por ID.
+     * 2. Obtiene un usuario por ID.
+     * 
+     * @param userId ID del usuario
+     * @return DTO del usuario encontrado
+     * @throws ResourceNotFoundException si el usuario no existe
      */
     @Transactional(readOnly = true)
     public UserDTO getUserById(Long userId) {
@@ -50,7 +59,11 @@ public class UserService {
     }
 
     /**
-     * Obtiene un usuario por email.
+     * 3. Obtiene un usuario por email.
+     * 
+     * @param email Email del usuario
+     * @return DTO del usuario encontrado
+     * @throws ResourceNotFoundException si el usuario no existe
      */
     @Transactional(readOnly = true)
     public UserDTO getUserByEmail(String email) {
@@ -60,6 +73,49 @@ public class UserService {
         }
         
         return mapToDTO(userOptional.get());
+    }
+
+    /**
+     * 4. Actualiza un usuario existente.
+     * Verifica que el nuevo email no esté en uso por otro usuario.
+     * 
+     * @param userId ID del usuario a actualizar
+     * @param request DTO con los nuevos datos
+     * @return DTO del usuario actualizado
+     * @throws ResourceNotFoundException si el usuario no existe
+     * @throws DuplicateResourceException si el nuevo email ya existe
+     */
+    @Transactional
+    public UserDTO updateUser(Long userId, UserCreateRequestDTO request) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        
+        // Verificar si el email ya está en uso por otro usuario
+        if (!user.getEmail().equals(request.getEmail()) && 
+            userRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateResourceException("El email ya está registrado");
+        }
+        
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPasswordHash(request.getPassword()); // TODO: Hashear con BCrypt
+        
+        User updatedUser = userRepository.save(user);
+        return mapToDTO(updatedUser);
+    }
+
+    /**
+     * 5. Elimina un usuario.
+     * 
+     * @param userId ID del usuario a eliminar
+     * @throws ResourceNotFoundException si el usuario no existe
+     */
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        
+        userRepository.delete(user);
     }
 
     /**
