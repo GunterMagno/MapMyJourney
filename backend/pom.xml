@@ -82,6 +82,36 @@
             <version>5.12.2</version>
             <scope>test</scope>
         </dependency>
+
+		<!-- Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- JWT -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.3</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.3</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -115,6 +145,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
             </plugin>
+            <!-- Javadoc plugin comentado - arreglar comentarios en el futuro 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -125,7 +156,7 @@
                         <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
-                            <goal>aggregate</goal> <!-- opcional para multi-módulo -->
+                            <goal>aggregate</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -134,6 +165,7 @@
                     <outputDirectory>${project.build.directory}/site/apidocs</outputDirectory>
                 </configuration>
             </plugin>
+            -->
 		</plugins>
 	</build>
 

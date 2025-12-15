@@ -17,5 +17,5 @@ public interface ExpenseSplitRepository extends JpaRepository<ExpenseSplit, Long
     /**
      * Obtiene todas las divisiones no pagadas de un usuario.
      */
-    List<ExpenseSplit> findByParticipantUserIdAndPaidFalse(Long userId);
+    List<ExpenseSplit> findByParticipantIdAndPaidFalse(Long userId);
 }

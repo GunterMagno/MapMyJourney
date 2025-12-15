@@ -81,19 +81,16 @@ public class Trip {
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Expense> expenses = new HashSet<>();
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     /**
-     * Valida que la fecha de fin sea posterior a la de inicio.
+     * Valida que la fecha de fin sea posterior a la de inicio y actualiza timestamp.
      */
     @PrePersist
     @PreUpdate
-    protected void validateDates() {
+    protected void validateDatesAndUpdate() {
         if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
             throw new IllegalArgumentException("La fecha de fin no puede ser anterior a la de inicio");
         }
+        // Actualizar timestamp al actualizar
+        updatedAt = LocalDateTime.now();
     }
 }

@@ -120,7 +120,7 @@ public class ExpenseSplitService {
             throw new ResourceNotFoundException("Usuario no encontrado");
         }
 
-        List<ExpenseSplit> splits = expenseSplitRepository.findByParticipantUserIdAndPaidFalse(userId);
+        List<ExpenseSplit> splits = expenseSplitRepository.findByParticipantIdAndPaidFalse(userId);
         List<ExpenseSplitDTO> dtos = new ArrayList<>();
 
         for (ExpenseSplit split : splits) {
@@ -207,7 +207,7 @@ public class ExpenseSplitService {
      */
     @Transactional(readOnly = true)
     public BigDecimal getTotalPendingDebt(Long userId) {
-        List<ExpenseSplit> pendingSplits = expenseSplitRepository.findByParticipantUserIdAndPaidFalse(userId);
+        List<ExpenseSplit> pendingSplits = expenseSplitRepository.findByParticipantIdAndPaidFalse(userId);
         
         BigDecimal total = BigDecimal.ZERO;
         for (ExpenseSplit split : pendingSplits) {

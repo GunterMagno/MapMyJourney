@@ -1,0 +1,227 @@
+{
+  "_type": "export",
+  "exportFormat": 4,
+  "exportDate": "2025-12-15T10:30:00.000Z",
+  "app": "insomnia",
+  "appVersion": "2024.1.0",
+  "resources": [
+    {
+      "_id": "wrk_mapmyjourney",
+      "_type": "workspace",
+      "parentId": null,
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "name": "MapMyJourney API",
+      "description": "Collection de endpoints de MapMyJourney Backend",
+      "scope": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_mapmyjourney",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "name": "Base",
+      "data": {
+        "base_url": "http://localhost:8080",
+        "email_test": "juan@example.com",
+        "password_test": "SecurePass123"
+      },
+      "dataPropertyOrder": {
+        "&base_url": {},
+        "&email_test": {},
+        "&password_test": {}
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1702641000000
+    },
+    {
+      "_id": "env_local",
+      "_type": "environment",
+      "parentId": "env_base",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "name": "Local",
+      "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      },
+      "dataPropertyOrder": {
+        "&token": {}
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1702641000000
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_mapmyjourney",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "name": "🔐 Autenticación",
+      "description": "Endpoints de autenticación y registro",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 1702641000100
+    },
+    {
+      "_id": "req_register",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "url": "{{ base_url }}/api/users/register",
+      "name": "Registrar Usuario",
+      "description": "POST - 201 Created",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Juan García\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1702641000000
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "url": "{{ base_url }}/api/users/login",
+      "name": "Login",
+      "description": "POST - 200 OK - Retorna JWT token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"{{ email_test }}\",\n  \"password\": \"{{ password_test }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1702641000001
+    },
+    {
+      "_id": "fld_users",
+      "_type": "request_group",
+      "parentId": "wrk_mapmyjourney",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "name": "👤 Usuarios",
+      "description": "Endpoints de gestión de usuarios",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 1702641000200
+    },
+    {
+      "_id": "req_get_user",
+      "_type": "request",
+      "parentId": "fld_users",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "url": "{{ base_url }}/api/users/1",
+      "name": "Obtener Usuario",
+      "description": "GET - 200 OK - Requiere autenticación",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1702641000000
+    },
+    {
+      "_id": "req_update_user",
+      "_type": "request",
+      "parentId": "fld_users",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "url": "{{ base_url }}/api/users/1",
+      "name": "Actualizar Usuario",
+      "description": "PUT - 200 OK",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Juan García Pérez\",\n  \"profilePicture\": \"https://example.com/pic.jpg\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ token }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1702641000001
+    },
+    {
+      "_id": "req_delete_user",
+      "_type": "request",
+      "parentId": "fld_users",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "url": "{{ base_url }}/api/users/1",
+      "name": "Eliminar Usuario",
+      "description": "DELETE - 204 No Content",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1702641000002
+    },
+    {
+      "_id": "fld_trips",
+      "_type": "request_group",
+      "parentId": "wrk_mapmyjourney",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "name": "✈️ Viajes",
+      "description": "Endpoints de viajes",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 1702641000300
+    },
+    {
+      "_id": "req_create_trip",
+      "_type": "request",
+      "parentId": "fld_trips",
+      "modified": 1702641000000,
+      "created": 1702641000000,
+      "url": "{{ base_url }}/api/trips",
+      "name": "Crear Viaje",
+      "description": "POST - 201 Created",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Viaje a París\",\n  \"destination\": \"París, Francia\",\n  \"description\": \"Fin de semana con amigos\",\n  \"startDate\": \"2025-06-01\",\n  \"endDate\": \"2025-06-05\",\n  \"budget\": 2000.00\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",\n          \"value\": \"Bearer {{ token }}\"\n        },\n        {\n          \"name\": \"Content-Type\",\n          \"value\": \"application/json\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000000\n    },\n    {\n      \"_id\": \"req_list_trips\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_trips\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/trips?page=0&size=10&sort=createdAt,desc\",\n      \"name\": \"Listar Viajes\",\n      \"description\": \"GET - 200 OK - Con paginación\",\n      \"method\": \"GET\",\n      \"body\": {},\n      \"parameters\": [\n        {\n          \"name\": \"page\",\n          \"value\": \"0\",\n          \"disabled\": false\n        },\n        {\n          \"name\": \"size\",\n          \"value\": \"10\",\n          \"disabled\": false\n        },\n        {\n          \"name\": \"sort\",\n          \"value\": \"createdAt,desc\",\n          \"disabled\": false\n        }\n      ],\n      \"headers\": [\n        {\n          \"name\": \"Authorization\",\n          \"value\": \"Bearer {{ token }}\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000001\n    },\n    {\n      \"_id\": \"req_get_trip\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_trips\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/trips/1\",\n      \"name\": \"Obtener Viaje\",\n      \"description\": \"GET - 200 OK\",\n      \"method\": \"GET\",\n      \"body\": {},\n      \"parameters\": [],\n      \"headers\": [\n        {\n          \"name\": \"Authorization\",\n          \"value\": \"Bearer {{ token }}\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000002\n    },\n    {\n      \"_id\": \"req_join_trip\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_trips\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/trips/PARIS2025/join\",\n      \"name\": \"Unirse a Viaje\",\n      \"description\": \"POST - 201 Created - Usa trip_code\",\n      \"method\": \"POST\",\n      \"body\": {},\n      \"parameters\": [],\n      \"headers\": [\n        {\n          \"name\": \"Authorization\",\n          \"value\": \"Bearer {{ token }}\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000003\n    },\n    {\n      \"_id\": \"fld_expenses\",\n      \"_type\": \"request_group\",\n      \"parentId\": \"wrk_mapmyjourney\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"name\": \"💰 Gastos\",\n      \"description\": \"Endpoints de gastos\",\n      \"environment\": {},\n      \"environmentPropertyOrder\": null,\n      \"metaSortKey\": 1702641000400\n    },\n    {\n      \"_id\": \"req_create_expense\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_expenses\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/trips/1/expenses\",\n      \"name\": \"Crear Gasto\",\n      \"description\": \"POST - 201 Created\",\n      \"method\": \"POST\",\n      \"body\": {\n        \"mimeType\": \"application/json\",\n        \"text\": \"{\n  \\\"description\\\": \\\"Cena en restaurante\\\",\n  \\\"amount\\\": 120.50,\n  \\\"expenseDate\\\": \\\"2025-12-15\\\",\n  \\\"splitType\\\": \\\"EQUAL\\\",\n  \\\"participants\\\": [1, 2, 3]\n}\"\n      },\n      \"parameters\": [],\n      \"headers\": [\n        {\n          \"name\": \"Authorization\",\n          \"value\": \"Bearer {{ token }}\"\n        },\n        {\n          \"name\": \"Content-Type\",\n          \"value\": \"application/json\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000000\n    },\n    {\n      \"_id\": \"req_list_expenses\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_expenses\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/trips/1/expenses?dateFrom=2025-06-01&dateTo=2025-06-30\",\n      \"name\": \"Listar Gastos\",\n      \"description\": \"GET - 200 OK - Con filtros\",\n      \"method\": \"GET\",\n      \"body\": {},\n      \"parameters\": [\n        {\n          \"name\": \"dateFrom\",\n          \"value\": \"2025-06-01\",\n          \"disabled\": false\n        },\n        {\n          \"name\": \"dateTo\",\n          \"value\": \"2025-06-30\",\n          \"disabled\": false\n        }\n      ],\n      \"headers\": [\n        {\n          \"name\": \"Authorization\",\n          \"value\": \"Bearer {{ token }}\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000001\n    },\n    {\n      \"_id\": \"fld_members\",\n      \"_type\": \"request_group\",\n      \"parentId\": \"wrk_mapmyjourney\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"name\": \"👥 Miembros de Viaje\",\n      \"description\": \"Endpoints de miembros\",\n      \"environment\": {},\n      \"environmentPropertyOrder\": null,\n      \"metaSortKey\": 1702641000500\n    },\n    {\n      \"_id\": \"req_list_members\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_members\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/trips/1/members\",\n      \"name\": \"Listar Miembros\",\n      \"description\": \"GET - 200 OK\",\n      \"method\": \"GET\",\n      \"body\": {},\n      \"parameters\": [],\n      \"headers\": [\n        {\n          \"name\": \"Authorization\",\n          \"value\": \"Bearer {{ token }}\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000000\n    },\n    {\n      \"_id\": \"req_add_member\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_members\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/trips/1/members/2\",\n      \"name\": \"Agregar Miembro\",\n      \"description\": \"POST - 201 Created\",\n      \"method\": \"POST\",\n      \"body\": {\n        \"mimeType\": \"application/json\",\n        \"text\": \"{\n  \\\"role\\\": \\\"EDITOR\\\"\n}\"\n      },\n      \"parameters\": [],\n      \"headers\": [\n        {\n          \"name\": \"Authorization\",\n          \"value\": \"Bearer {{ token }}\"\n        },\n        {\n          \"name\": \"Content-Type\",\n          \"value\": \"application/json\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000001\n    },\n    {\n      \"_id\": \"fld_test_errors\",\n      \"_type\": \"request_group\",\n      \"parentId\": \"wrk_mapmyjourney\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"name\": \"⚠️ Test Errores\",\n      \"description\": \"Endpoints para probar códigos de error\",\n      \"environment\": {},\n      \"environmentPropertyOrder\": null,\n      \"metaSortKey\": 1702641000600\n    },\n    {\n      \"_id\": \"req_error_401\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_test_errors\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/users/1\",\n      \"name\": \"401 Unauthorized (Sin Token)\",\n      \"description\": \"GET - Sin Authorization header\",\n      \"method\": \"GET\",\n      \"body\": {},\n      \"parameters\": [],\n      \"headers\": [],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000000\n    },\n    {\n      \"_id\": \"req_error_400\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_test_errors\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/users/register\",\n      \"name\": \"400 Bad Request (Email inválido)\",\n      \"description\": \"POST - Email sin @\",\n      \"method\": \"POST\",\n      \"body\": {\n        \"mimeType\": \"application/json\",\n        \"text\": \"{\n  \\\"name\\\": \\\"Juan\\\",\n  \\\"email\\\": \\\"invalid-email\\\",\n  \\\"password\\\": \\\"SecurePass123\\\"\n}\"\n      },\n      \"parameters\": [],\n      \"headers\": [\n        {\n          \"name\": \"Content-Type\",\n          \"value\": \"application/json\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000001\n    },\n    {\n      \"_id\": \"req_error_409\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_test_errors\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/users/register\",\n      \"name\": \"409 Conflict (Email duplicado)\",\n      \"description\": \"POST - Email ya existe\",\n      \"method\": \"POST\",\n      \"body\": {\n        \"mimeType\": \"application/json\",\n        \"text\": \"{\n  \\\"name\\\": \\\"Juan García\\\",\n  \\\"email\\\": \\\"juan@example.com\\\",\n  \\\"password\\\": \\\"SecurePass123\\\"\n}\"\n      },\n      \"parameters\": [],\n      \"headers\": [\n        {\n          \"name\": \"Content-Type\",\n          \"value\": \"application/json\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000002\n    },\n    {\n      \"_id\": \"req_error_404\",\n      \"_type\": \"request\",\n      \"parentId\": \"fld_test_errors\",\n      \"modified\": 1702641000000,\n      \"created\": 1702641000000,\n      \"url\": \"{{ base_url }}/api/users/99999\",\n      \"name\": \"404 Not Found (Usuario inexistente)\",\n      \"description\": \"GET - ID no existe\",\n      \"method\": \"GET\",\n      \"body\": {},\n      \"parameters\": [],\n      \"headers\": [\n        {\n          \"name\": \"Authorization\",\n          \"value\": \"Bearer {{ token }}\"\n        }\n      ],\n      \"authentication\": {},\n      \"metaSortKey\": 1702641000003\n    }\n  ]\n}

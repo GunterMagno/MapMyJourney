@@ -2,11 +2,17 @@ package com.mapmyjourney.backend.service;
 
 import com.mapmyjourney.backend.dto.UserCreateRequestDTO;
 import com.mapmyjourney.backend.dto.UserDTO;
+import com.mapmyjourney.backend.dto.LoginResponseDTO;
 import com.mapmyjourney.backend.exception.DuplicateResourceException;
 import com.mapmyjourney.backend.exception.ResourceNotFoundException;
 import com.mapmyjourney.backend.model.User;
 import com.mapmyjourney.backend.repository.UserRepository;
+import com.mapmyjourney.backend.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +23,9 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 1. Registra un nuevo usuario.
@@ -35,7 +44,7 @@ public class UserService {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPasswordHash(request.getPassword()); // TODO: Hashear con BCrypt
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
         User savedUser = userRepository.save(user);
         return mapToDTO(savedUser);
@@ -116,6 +125,33 @@ public class UserService {
             .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         
         userRepository.delete(user);
+    }
+
+    /**
+     * 6. Autentica un usuario con email y contraseña.
+     * 
+     * @param email Email del usuario
+     * @param password Contraseña en texto plano
+     * @return LoginResponseDTO con token JWT
+     * @throws ResourceNotFoundException si el usuario no existe
+     * @throws org.springframework.security.authentication.BadCredentialsException si la contraseña es incorrecta
+     */
+    @Transactional(readOnly = true)
+    public LoginResponseDTO authenticate(String email, String password) {
+        // Verifica que el usuario exista
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con email: " + email));
+
+        // Autentica usando AuthenticationManager
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+        );
+
+        // Genera el token JWT
+        String token = jwtTokenProvider.generateToken(authentication);
+        long expiresIn = jwtTokenProvider.getExpirationTime();
+
+        return new LoginResponseDTO(token, "Bearer", expiresIn);
     }
 
     /**
