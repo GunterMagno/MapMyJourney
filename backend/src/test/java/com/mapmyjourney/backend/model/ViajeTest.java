@@ -1,8 +1,8 @@
 package com.mapmyjourney.backend.model;
 
-// import com.mapmyjourney.backend.fileUtils.Markdown;
+import com.mapmyjourney.backend.fileUtils.Markdown;
 import org.junit.jupiter.api.Test;
-// import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,8 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * Clase de prueba para la clase {@link Viaje}.
  * <p>
  * Utiliza JUnit para comprobar si los títulos de los viajes son válidos.
+ * También guarda mensajes del resultado del test usando la clase {@link Markdown}.
  */
-// @ExtendWith(Markdown.class)
+@ExtendWith(Markdown.class)
 public class ViajeTest {
 
     /**
@@ -23,10 +24,10 @@ public class ViajeTest {
      * - Si el título está vacío o supera los 30 caracteres, se espera que falle.
      * - Si es válido, se espera que pase.
      * <p>
+     * El resultado del test se guarda en un archivo usando {@link Markdown#saveMessage(String)}.
+     * <p>
      * Usa la variable de entorno "TITULO_VIAJE". Si no existe, se pone un título largo por defecto.
      */
-    // Test comentado - clase Viaje no existe en este proyecto
-    /*
     @Test
     void validarTitulo() {
         String titulo = System.getenv("TITULO_VIAJE");
@@ -50,5 +51,4 @@ public class ViajeTest {
 
         Markdown.saveMessage(mensaje);
     }
-    */
 }
