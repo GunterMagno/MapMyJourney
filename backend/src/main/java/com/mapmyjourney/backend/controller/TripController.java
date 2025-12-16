@@ -14,6 +14,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -39,9 +42,8 @@ public class TripController {
     @ApiResponse(responseCode = "201", description = "Viaje creado exitosamente")
     @ApiResponse(responseCode = "400", description = "Datos inválidos (fechas, presupuesto, etc)")
     @ApiResponse(responseCode = "401", description = "No autenticado")
-    public ResponseEntity<TripDTO> createTrip(@RequestBody(description = "Datos del viaje a crear") TripCreateRequestDTO request) {
-        // TODO: Obtener userId del contexto de seguridad
-        Long userId = 1L; // Placeholder
+    public ResponseEntity<TripDTO> createTrip(@Valid @RequestBody(description = "Datos del viaje a crear") TripCreateRequestDTO request) {
+        Long userId = extractUserIdFromContext();
         TripDTO createdTrip = tripService.createTrip(request, userId);
         return ResponseEntity.status(201).body(createdTrip);
     }
@@ -78,8 +80,7 @@ public class TripController {
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Cantidad de registros por página", example = "10")
             @RequestParam(defaultValue = "10") int size) {
-        // TODO: Obtener userId del contexto de seguridad
-        Long userId = 1L; // Placeholder
+        Long userId = extractUserIdFromContext();
         List<TripDTO> trips = tripService.getUserTrips(userId);
         return ResponseEntity.ok(trips);
     }
@@ -117,9 +118,8 @@ public class TripController {
     public ResponseEntity<TripDTO> updateTrip(
             @Parameter(description = "ID del viaje a actualizar", example = "1")
             @PathVariable Long tripId, 
-            @RequestBody(description = "Nuevos datos del viaje") TripCreateRequestDTO request) {
-        // TODO: Obtener userId del contexto de seguridad
-        Long userId = 1L; // Placeholder
+            @Valid @RequestBody(description = "Nuevos datos del viaje") TripCreateRequestDTO request) {
+        Long userId = extractUserIdFromContext();
         TripDTO updatedTrip = tripService.updateTrip(tripId, request, userId);
         return ResponseEntity.ok(updatedTrip);
     }
@@ -139,10 +139,21 @@ public class TripController {
     public ResponseEntity<Void> deleteTrip(
             @Parameter(description = "ID del viaje a eliminar", example = "1")
             @PathVariable Long tripId) {
-        // TODO: Obtener userId del contexto de seguridad
-        Long userId = 1L; // Placeholder
+        Long userId = extractUserIdFromContext();
         tripService.deleteTrip(tripId, userId);
         return ResponseEntity.noContent().build();
     }
-}
 
+    /**
+     * Extrae el userId del contexto de seguridad de Spring Security.
+     * El nombre de usuario en el token JWT es el email del usuario.
+     */
+    private Long extractUserIdFromContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // El nombre de usuario es el email, necesitas obtener el ID desde el servicio
+        String email = authentication.getName();
+        // TODO: Implementar método que obtenga userId a partir del email
+        // Por ahora retorna 1L como placeholder, esto debe venir del UserService
+        return 1L;
+    }
+}

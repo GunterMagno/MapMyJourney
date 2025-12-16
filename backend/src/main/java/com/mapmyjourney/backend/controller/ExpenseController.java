@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -41,9 +44,8 @@ public class ExpenseController {
     public ResponseEntity<ExpenseDTO> createExpense(
             @Parameter(description = "ID del viaje", example = "1")
             @PathVariable Long tripId, 
-            @RequestBody(description = "Datos del gasto a registrar") ExpenseCreateRequestDTO request) {
-        // TODO: Obtener userId del contexto de seguridad
-        Long userId = 1L; // Placeholder
+            @Valid @RequestBody(description = "Datos del gasto a registrar") ExpenseCreateRequestDTO request) {
+        Long userId = extractUserIdFromContext();
         ExpenseDTO createdExpense = expenseService.createExpense(tripId, request, userId);
         return ResponseEntity.status(201).body(createdExpense);
     }
@@ -106,9 +108,8 @@ public class ExpenseController {
             @PathVariable Long tripId, 
             @Parameter(description = "ID del gasto a actualizar", example = "5")
             @PathVariable Long expenseId, 
-            @RequestBody(description = "Nuevos datos del gasto") ExpenseCreateRequestDTO request) {
-        // TODO: Obtener userId del contexto de seguridad
-        Long userId = 1L; // Placeholder
+            @Valid @RequestBody(description = "Nuevos datos del gasto") ExpenseCreateRequestDTO request) {
+        Long userId = extractUserIdFromContext();
         ExpenseDTO updatedExpense = expenseService.updateExpense(expenseId, request, userId);
         return ResponseEntity.ok(updatedExpense);
     }
@@ -130,10 +131,19 @@ public class ExpenseController {
             @PathVariable Long tripId, 
             @Parameter(description = "ID del gasto a eliminar", example = "5")
             @PathVariable Long expenseId) {
-        // TODO: Obtener userId del contexto de seguridad
-        Long userId = 1L; // Placeholder
+        Long userId = extractUserIdFromContext();
         expenseService.deleteExpense(expenseId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Extrae el userId del contexto de seguridad de Spring Security.
+     */
+    private Long extractUserIdFromContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        // TODO: Obtener userId a partir del email desde UserService
+        return 1L;
     }
 
 }

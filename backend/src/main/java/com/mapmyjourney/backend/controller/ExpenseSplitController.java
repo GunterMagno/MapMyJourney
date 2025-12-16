@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,7 +42,7 @@ public class ExpenseSplitController {
     public ResponseEntity<ExpenseSplitDTO> createSplit(
             @Parameter(description = "ID del gasto", example = "1")
             @PathVariable Long expenseId, 
-            @RequestBody(description = "Datos de la división") CreateSplitRequestDTO request) {
+            @Valid @RequestBody(description = "Datos de la división") CreateSplitRequestDTO request) {
         ExpenseSplitDTO createdSplit = expenseSplitService.createSplit(expenseId, request.getParticipantUserId(),
                 request.getAmount(), request.getPercentage());
         return ResponseEntity.status(201).body(createdSplit);

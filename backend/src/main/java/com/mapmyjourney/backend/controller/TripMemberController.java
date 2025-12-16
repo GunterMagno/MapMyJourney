@@ -13,6 +13,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -42,7 +45,7 @@ public class TripMemberController {
     public ResponseEntity<TripMemberDTO> addMember(
             @Parameter(description = "ID del viaje", example = "1")
             @PathVariable Long tripId, 
-            @RequestBody(description = "Datos del miembro a agregar") AddMemberRequestDTO request) {
+            @Valid @RequestBody(description = "Datos del miembro a agregar") AddMemberRequestDTO request) {
         TripMemberDTO newMember = tripMemberService.addMemberToTrip(tripId, request.getUserId(), request.getRole());
         return ResponseEntity.status(201).body(newMember);
     }
@@ -100,7 +103,7 @@ public class TripMemberController {
             @PathVariable Long tripId, 
             @Parameter(description = "ID del usuario", example = "5")
             @PathVariable Long userId, 
-            @RequestBody(description = "Nuevo rol del miembro") ChangeMemberRoleRequestDTO request) {
+            @Valid @RequestBody(description = "Nuevo rol del miembro") ChangeMemberRoleRequestDTO request) {
         TripMemberDTO updatedMember = tripMemberService.changeMemberRole(tripId, userId, request.getRole());
         return ResponseEntity.ok(updatedMember);
     }
@@ -140,10 +143,19 @@ public class TripMemberController {
     public ResponseEntity<Void> leaveTrip(
             @Parameter(description = "ID del viaje", example = "1")
             @PathVariable Long tripId) {
-        // TODO: Obtener userId del contexto de seguridad
-        Long userId = 1L; // Placeholder
+        Long userId = extractUserIdFromContext();
         tripMemberService.removeMemberFromTrip(tripId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Extrae el userId del contexto de seguridad de Spring Security.
+     */
+    private Long extractUserIdFromContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        // TODO: Obtener userId a partir del email desde UserService
+        return 1L;
     }
 
 }

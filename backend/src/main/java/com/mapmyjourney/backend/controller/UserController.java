@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,7 +38,7 @@ public class UserController {
     @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente")
     @ApiResponse(responseCode = "400", description = "Datos inválidos (email/contraseña débil)")
     @ApiResponse(responseCode = "409", description = "El email ya está registrado")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody(description = "Datos del usuario a registrar") UserCreateRequestDTO request) {
+    public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody(description = "Datos del usuario a registrar") UserCreateRequestDTO request) {
         UserDTO createdUser = userService.registerUser(request);
         return ResponseEntity.status(201).body(createdUser);
     }
@@ -53,7 +54,7 @@ public class UserController {
     @ApiResponse(responseCode = "400", description = "Email o contraseña inválidos")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     public ResponseEntity<LoginResponseDTO> login(
-            @RequestBody(description = "Email y contraseña del usuario") LoginRequestDTO request) {
+            @Valid @RequestBody(description = "Email y contraseña del usuario") LoginRequestDTO request) {
         LoginResponseDTO response = userService.authenticate(request.getEmail(), request.getPassword());
         return ResponseEntity.ok(response);
     }
@@ -107,7 +108,7 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(
             @Parameter(description = "ID del usuario a actualizar", example = "1")
             @PathVariable Long userId, 
-            @RequestBody(description = "Nuevos datos del usuario") UserCreateRequestDTO request) {
+            @Valid @RequestBody(description = "Nuevos datos del usuario") UserCreateRequestDTO request) {
         UserDTO updatedUser = userService.updateUser(userId, request);
         return ResponseEntity.ok(updatedUser);
     }
