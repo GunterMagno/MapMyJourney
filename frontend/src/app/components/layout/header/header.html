@@ -1,0 +1,35 @@
+<header class="header">
+  <section class="header__left">
+    <a routerLink="/">
+      <img src="assets/logo.png" alt="MapMyJourney-Logo" class="header__logo-img">
+    </a>
+  </section>
+
+  <section class="header__center">
+    <ng-content select="[header-content]"></ng-content>
+  </section>
+
+  <section class="header__right">
+    <button class="header__theme-btn" (click)="toggleTheme()">
+      {{ isDarkTheme ? '☀️' : '🌙' }}
+    </button>
+
+    <button *ngIf="!isLoggedIn" class="header__btn header__btn--primary" (click)="login()">
+      Iniciar Sesión
+    </button>
+    <button *ngIf="!isLoggedIn" class="header__btn header__btn--secondary" (click)="signup()">
+      Registrarse
+    </button>
+
+    <button *ngIf="isLoggedIn && showMyTripsBtn" class="header__btn header__btn--primary" (click)="goToTrips()">
+      Mis Viajes
+    </button>
+    <button *ngIf="isLoggedIn && showCreateTripBtn" class="header__btn header__btn--primary" (click)="createTrip()">
+      Crear un viaje
+    </button>
+
+    <article *ngIf="isLoggedIn" class="header__profile">
+      <span class="header__profile-avatar">👤</span>
+    </article>
+  </section>
+</header>

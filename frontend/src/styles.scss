@@ -1,6 +1,7 @@
 /* ITCSS: Settings -> Tools -> Generic -> Elements -> Layout */
 
 @use "./styles/00-settings/variables";
+@use "./styles/00-settings/css-variables";
 @use "./styles/01-tools/mixins";
 @use "./styles/02-generic/reset";
 @use "./styles/03-elements/base";

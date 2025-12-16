@@ -1,0 +1,56 @@
+<aside class="sidebar" [class.sidebar--collapsed]="isCollapsed">
+  <button class="sidebar__toggle" (click)="toggleSidebar()" title="Toggle sidebar">
+    {{ isCollapsed ? '→' : '←' }}
+  </button>
+
+  <div class="sidebar__header" *ngIf="!isCollapsed">
+    <h3 class="sidebar__trip-title">{{ tripTitle }}</h3>
+    <p class="sidebar__trip-dates">{{ tripDates }}</p>
+  </div>
+
+  <nav class="sidebar__nav">
+    <h2 class="sidebar__nav-title" *ngIf="!isCollapsed">Gestión del Viaje</h2>
+    <ul class="sidebar__list">
+      <li class="sidebar__item">
+        <a routerLink="/dashboard" routerLinkActive="active" class="sidebar__link" title="Dashboard">
+          <img class="sidebar__icon" src="/assets/images/dashboard-icon.svg" alt="Dashboard">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Dashboard</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a routerLink="/itinerario" routerLinkActive="active" class="sidebar__link" title="Itinerario">
+          <img class="sidebar__icon" src="/assets/images/itinerary-icon.svg" alt="Itinerario">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Itinerario</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a routerLink="/gastos" routerLinkActive="active" class="sidebar__link" title="Gastos">
+          <img class="sidebar__icon" src="/assets/images/expenses-icon.svg" alt="Gastos">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Gastos</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a routerLink="/documentos" routerLinkActive="active" class="sidebar__link" title="Documentos">
+          <img class="sidebar__icon" src="/assets/images/documents-icon.svg" alt="Documentos">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Documentos</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a routerLink="/votaciones" routerLinkActive="active" class="sidebar__link" title="Votaciones">
+          <img class="sidebar__icon" src="/assets/images/voting-icon.svg" alt="Votaciones">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Votaciones</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a routerLink="/compartir" routerLinkActive="active" class="sidebar__link" title="Compartir">
+          <img class="sidebar__icon" src="/assets/images/share-icon.svg" alt="Compartir">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Compartir</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <button class="sidebar__chat-btn" title="Chat">
+    <img src="/assets/images/chat-icon.svg" alt="Chat">
+  </button>
+</aside>

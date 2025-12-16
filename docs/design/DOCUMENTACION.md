@@ -323,3 +323,387 @@ De esta forma, todos los componentes pueden usar `$color-primary-500`, `$spacing
 El archivo `src/styles.scss` contiene estilos que aplican a toda la aplicación (body, html, resets, etc.)
 
 Esta estrategia proporciona el mejor balance entre aislamiento y reutilización de código.
+
+---
+
+## 2. HTML Semántico y Componentes de Layout
+
+### 2.1 Jerarquía de Headings (h1-h6)
+
+La estructura de headings sigue un orden jerárquico lógico que facilita la navegación y accesibilidad:
+
+**Niveles de Headings:**
+
+- **h1**: Título principal de la página (único por página)
+  - Ejemplo: "MapMyJourney" en la página de inicio
+  - Uso: Define el tema principal de toda la página
+  
+- **h2**: Títulos de secciones principales
+  - Ejemplo: "Gestión del Viaje" en el sidebar
+  - Ejemplo: "Únete a MapMyJourney" en el formulario de registro
+  - Uso: Divide el contenido en áreas temáticas principales
+  
+- **h3**: Subtítulos dentro de secciones
+  - Ejemplo: "Itinerario del día 1", "Gastos de transporte"
+  - Uso: Organiza subsecciones dentro de una sección h2
+  
+- **h4**: Títulos de tarjetas o componentes individuales
+  - Ejemplo: Título de una tarjeta de viaje, nombre de actividad
+  - Uso: Elementos más pequeños dentro de subsecciones
+  
+- **h5-h6**: Uso ocasional para niveles muy específicos
+  - Ejemplo: Subtítulos dentro de descripciones largas
+  - Uso: Raramente necesarios, solo en contenido muy estructurado
+
+**Reglas de uso:**
+- Nunca saltar niveles (no ir de h2 a h4 sin h3)
+- Mantener un solo h1 por página
+- Los headings deben describir el contenido que les sigue
+- Usar estilos CSS para cambiar apariencia, no el nivel del heading
+
+### 2.2 Elementos Semánticos de Layout
+
+#### 2.2.1 `<header>` - Encabezado Principal
+
+**Ubicación:** `components/layout/header`
+
+**Estructura:**
+```html
+<header class="header">
+  <section class="header__left">
+    <a routerLink="/">
+      <img src="assets/logo.png" alt="MapMyJourney-Logo" class="header__logo-img">
+    </a>
+  </section>
+
+  <section class="header__center">
+    <ng-content select="[header-content]"></ng-content>
+  </section>
+
+  <section class="header__right">
+    <button class="header__theme-btn" (click)="toggleTheme()">
+      {{ isDarkTheme ? '☀️' : '🌙' }}
+    </button>
+
+    <button *ngIf="!isLoggedIn" class="header__btn header__btn--primary" (click)="login()">
+      Iniciar Sesión
+    </button>
+    <button *ngIf="!isLoggedIn" class="header__btn header__btn--secondary" (click)="signup()">
+      Registrarse
+    </button>
+
+    <button *ngIf="isLoggedIn && showMyTripsBtn" class="header__btn header__btn--primary" (click)="goToTrips()">
+      Mis Viajes
+    </button>
+    <button *ngIf="isLoggedIn && showCreateTripBtn" class="header__btn header__btn--primary" (click)="createTrip()">
+      Crear un viaje
+    </button>
+
+    <article *ngIf="isLoggedIn" class="header__profile">
+      <span class="header__profile-avatar">👤</span>
+    </article>
+  </section>
+</header>
+```
+
+**Propósito:** 
+- Contiene la navegación principal de la aplicación
+- Logo y branding de MapMyJourney
+- Acciones globales (login/logout, cambio de tema)
+
+**Elementos clave:**
+- `<nav>`: Navegación principal con enlaces a secciones clave
+- Enlaces semánticos con `routerLink` de Angular
+- Botones de acción claramente identificados
+
+**Justificación:**
+El `<header>` es el elemento adecuado porque contiene contenido introductorio y de navegación que se repite en todas las páginas. Los lectores de pantalla y motores de búsqueda reconocen este elemento como el encabezado del sitio.
+
+#### 2.2.2 `<aside>` - Sidebar de Navegación
+
+**Ubicación:** `components/layout/sidebar`
+
+**Estructura:**
+```html
+<aside class="sidebar" [class.sidebar--collapsed]="isCollapsed">
+  <button class="sidebar__toggle" (click)="toggleSidebar()" title="Toggle sidebar">
+    {{ isCollapsed ? '→' : '←' }}
+  </button>
+
+  <div class="sidebar__header" *ngIf="!isCollapsed">
+    <h3 class="sidebar__trip-title">{{ tripTitle }}</h3>
+    <p class="sidebar__trip-dates">{{ tripDates }}</p>
+  </div>
+
+  <nav class="sidebar__nav">
+    <h2 class="sidebar__nav-title" *ngIf="!isCollapsed">Gestión del Viaje</h2>
+    <ul class="sidebar__list">
+      <li class="sidebar__item">
+        <a routerLink="/dashboard" routerLinkActive="active" class="sidebar__link" title="Dashboard">
+          <img class="sidebar__icon" src="/assets/images/dashboard-icon.svg" alt="Dashboard">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Dashboard</span>
+        </a>
+      </li>
+      <!-- Más items de navegación -->
+    </ul>
+  </nav>
+
+  <button class="sidebar__chat-btn" title="Chat">
+    <img src="/assets/images/chat-icon.svg" alt="Chat">
+  </button>
+</aside>
+```
+
+**Propósito:**
+- Navegación secundaria para gestión de viajes
+- Accesos rápidos a funcionalidades específicas del contexto
+- Contenido complementario al contenido principal
+
+**Estructura:**
+```html
+<aside class="sidebar">
+  <nav>
+    <h2>Gestión del Viaje</h2>
+    <ul>
+      <li><a>Dashboard</a></li>
+      <li><a>Itinerario</a></li>
+      <!-- más enlaces -->
+    </ul>
+  </nav>
+</aside>
+```
+
+**Justificación:**
+El elemento `<aside>` representa contenido tangencialmente relacionado con el contenido principal. En nuestro caso, el sidebar proporciona navegación contextual que complementa pero no es esencial para el contenido principal (`<main>`). Es perfecto para menús laterales, widgets y navegación secundaria.
+
+#### 2.2.3 `<nav>` - Navegación
+
+**Uso múltiple:**
+- Dentro del `<header>` para navegación principal
+- Dentro del `<aside>` para navegación contextual
+- En el `<footer>` para enlaces legales
+
+**Propósito:**
+- Agrupa conjuntos de enlaces de navegación
+- Identifica secciones de navegación para tecnologías asistivas
+- Mejora la estructura semántica del documento
+
+**Características:**
+- Contiene listas `<ul>` con enlaces `<a>`
+- Puede tener un `aria-label` para mayor claridad
+- Solo se usa para grupos de navegación importantes
+
+**Justificación:**
+`<nav>` es el elemento estándar para secciones de navegación. Los lectores de pantalla pueden identificar y listar todos los elementos `<nav>`, permitiendo a los usuarios saltar rápidamente entre diferentes áreas de navegación.
+
+#### 2.2.4 `<main>` - Contenido Principal
+
+**Ubicación:** `components/layout/main`
+
+**Estructura:**
+```html
+<main class="main">
+  <ng-content></ng-content>
+</main>
+```
+
+**Propósito:**
+- Contiene el contenido principal único de cada página
+- Excluye contenido repetido (header, footer, sidebar)
+- Usa `<ng-content>` para proyectar contenido dinámico
+
+**Estructura:**
+```html
+<main class="main">
+  <ng-content></ng-content>
+</main>
+```
+
+**Justificación:**
+Debe haber un solo `<main>` por página y debe contener el contenido central. Esto permite a los lectores de pantalla saltar directamente al contenido principal, evitando la navegación repetitiva. En Angular, usamos proyección de contenido para que cada vista inyecte su contenido específico.
+
+#### 2.2.5 `<footer>` - Pie de Página
+
+**Ubicación:** `components/layout/footer`
+
+**Estructura:**
+```html
+<footer class="footer">
+  <article class="footer__container">
+    <section class="footer__section footer__logo-section">
+      <article class="footer__logo">
+        <img src="assets/logo.png" alt="MapMyJourney" class="footer__logo-img">
+      </article>
+      <p class="footer__description">Planifica viajes. Crea recuerdos.</p>
+      <nav class="footer__social">
+        <a href="#" class="footer__social-link">📱</a>
+        <a href="#" class="footer__social-link">🐦</a>
+        <a href="#" class="footer__social-link">👍</a>
+        <a href="#" class="footer__social-link">✉️</a>
+      </nav>
+    </section>
+
+    <section class="footer__section footer__features-section">
+      <h3 class="footer__section-title">Características</h3>
+      <nav class="footer__nav">
+        <a href="#">Viajes</a>
+        <a href="#">Itinerario</a>
+        <a href="#">Gastos</a>
+        <a href="#">Documentos</a>
+      </nav>
+    </section>
+  </article>
+
+  <hr class="footer__divider">
+
+  <p class="footer__copyright">
+    © 2025 MapMyJourney. Todos los derechos reservados. Hecho con ❤️ para viajeros.
+  </p>
+</footer>
+```
+
+**Propósito:**
+- Enlaces legales y de información
+- Copyright y derechos de autor
+- Navegación secundaria global
+
+**Estructura:**
+```html
+<footer class="footer">
+  <nav>
+    <ul>
+      <li><a>Términos y Condiciones</a></li>
+      <li><a>Política de Privacidad</a></li>
+      <li><a>Contacto</a></li>
+    </ul>
+  </nav>
+  <p>&copy; 2025 MapMyJourney</p>
+</footer>
+```
+
+**Justificación:**
+El `<footer>` es ideal para información de cierre, legal y de contacto que aparece al final de cada página. Es reconocido por tecnologías asistivas como el final del contenido principal.
+
+### 2.3 Elementos Semánticos de Formularios
+
+#### 2.3.1 `<fieldset>` y `<legend>`
+
+**Uso:** Formulario de registro (`signup-form`)
+
+**Propósito:**
+- `<fieldset>`: Agrupa campos relacionados
+- `<legend>`: Proporciona un título descriptivo al grupo
+
+**Ejemplo:**
+```html
+<fieldset class="signup__fieldset">
+  <legend>Únete a MapMyJourney</legend>
+  <!-- campos del formulario -->
+</fieldset>
+```
+
+**Justificación:**
+`<fieldset>` y `<legend>` son elementos semánticos específicamente diseñados para agrupar controles de formulario relacionados. Los lectores de pantalla anuncian el contenido del `<legend>` cuando el usuario navega por los campos del formulario, proporcionando contexto importante. Aunque a menudo se omiten por razones estéticas, son fundamentales para la accesibilidad.
+
+#### 2.3.2 `<label>` vinculado con `for` e `id`
+
+**Uso:** Componente `form-input` reutilizable
+
+**Estructura:**
+```html
+<label [for]="inputId" class="form-input__label">
+  {{ label }}
+  <span *ngIf="required" class="form-input__required">*</span>
+</label>
+<input
+  [id]="inputId"
+  [type]="type"
+  [placeholder]="placeholder"
+  [required]="required"
+  class="form-input__field"
+  [class.form-input__field--error]="hasError"
+/>
+<span *ngIf="hasError && errorMessage" class="form-input__error">
+  {{ errorMessage }}
+</span>
+```
+
+**Beneficios:**
+- Asociación explícita entre etiqueta y campo
+- Clic en el label enfoca el input
+- Lectores de pantalla anuncian el label al enfocar el input
+- Mejora la accesibilidad y usabilidad
+
+**Justificación:**
+La vinculación explícita mediante `for` e `id` es una práctica esencial de accesibilidad. Garantiza que cada campo de formulario tenga una etiqueta descriptiva que sea reconocida por tecnologías asistivas y que mejore la experiencia de usuario al permitir clic en el label.
+
+#### 2.3.3 `<section>` - Secciones de Contenido
+
+**Uso:** Contenedor del formulario de registro
+
+**Propósito:**
+- Define una sección temática del documento
+- Agrupa contenido relacionado bajo un tema común
+- Generalmente contiene un heading (h1-h6)
+
+**Ejemplo:**
+```html
+<section class="signup">
+  <form><!-- formulario --></form>
+</section>
+```
+
+**Justificación:**
+`<section>` es el elemento apropiado para agrupar contenido temático. En el caso del formulario de registro, todo el contenido relacionado con el registro de usuarios se agrupa semánticamente. A diferencia de `<div>`, `<section>` comunica significado y estructura al documento.
+
+### 2.4 Beneficios del HTML Semántico en MapMyJourney
+
+1. **Accesibilidad mejorada**
+   - Lectores de pantalla pueden navegar por la estructura del documento
+   - Usuarios con teclado pueden saltar entre secciones principales
+   - ARIA landmarks automáticos para tecnologías asistivas
+
+2. **SEO optimizado**
+   - Los motores de búsqueda entienden mejor la estructura del contenido
+   - Mejora el ranking y la indexación de páginas
+   - Fragmentos enriquecidos en resultados de búsqueda
+
+3. **Mantenibilidad**
+   - El código es más legible y autodocumentado
+   - Fácil identificar la estructura y propósito de cada sección
+   - Reducción de errores al trabajar en equipo
+
+4. **Compatibilidad futura**
+   - Preparado para nuevas tecnologías y navegadores
+   - Estándares web modernos y buenas prácticas
+   - Menor deuda técnica a largo plazo
+
+### 2.5 Patrón de Estructura de Página
+
+**Estructura típica de una página en MapMyJourney:**
+
+```html
+<app-header></app-header>
+
+<div class="page-layout">
+  <app-sidebar *ngIf="showSidebar"></app-sidebar>
+  
+  <app-main>
+    <article>
+      <h1>Título de la Página</h1>
+      <section>
+        <h2>Sección Principal</h2>
+        <!-- contenido -->
+      </section>
+    </article>
+  </app-main>
+</div>
+
+<app-footer></app-footer>
+```
+
+Esta estructura garantiza:
+- Orden lógico de lectura (header → sidebar → main → footer)
+- Semántica clara y predecible
+- Fácil mantenimiento y extensión
+- Excelente accesibilidad y SEO

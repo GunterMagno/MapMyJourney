@@ -1,0 +1,15 @@
+<label [for]="inputId" class="form-input__label">
+  {{ label }}
+  <span *ngIf="required" class="form-input__required">*</span>
+</label>
+<input
+  [id]="inputId"
+  [type]="type"
+  [placeholder]="placeholder"
+  [required]="required"
+  class="form-input__field"
+  [class.form-input__field--error]="hasError"
+/>
+<span *ngIf="hasError && errorMessage" class="form-input__error">
+  {{ errorMessage }}
+</span>

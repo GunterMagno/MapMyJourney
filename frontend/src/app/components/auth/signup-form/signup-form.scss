@@ -1,0 +1,97 @@
+.signup {
+  max-width: 500px;
+  margin: var(--spacing-8) auto;
+  padding: var(--spacing-6);
+
+  &__form {
+    background-color: var(--bg-elevated);
+    padding: var(--spacing-8);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &__fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+
+    legend {
+      font-family: var(--font-primary);
+      font-size: var(--font-size-tittle-h2);
+      font-weight: var(--font-weight-bold);
+      color: var(--principal-color);
+      margin-bottom: var(--spacing-6);
+      text-align: center;
+      width: 100%;
+    }
+
+    app-form-input {
+      display: block;
+      margin-bottom: var(--spacing-4);
+    }
+  }
+
+  &__checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin: var(--spacing-4) 0;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    a {
+      color: var(--principal-color);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__submit {
+    width: 100%;
+    padding: var(--spacing-4);
+    background-color: var(--principal-color);
+    color: var(--text-inverse);
+    border: none;
+    border-radius: var(--border-radius-small);
+    font-size: var(--font-size-medium);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+
+    &:hover {
+      background-color: var(--principal-color-hover);
+    }
+  }
+
+  &__login-link {
+    text-align: center;
+    margin-top: var(--spacing-4);
+    color: var(--text-secondary);
+
+    a {
+      color: var(--principal-color);
+      text-decoration: none;
+      font-weight: var(--font-weight-medium);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @media (max-width: var(--breakpoint-tablet)) {
+    padding: var(--spacing-4);
+
+    &__form {
+      padding: var(--spacing-6);
+    }
+  }
+}

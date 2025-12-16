@@ -1,0 +1,50 @@
+<section class="signup">
+  <form class="signup__form" (ngSubmit)="onSubmit()">
+    <fieldset class="signup__fieldset">
+      <legend>Únete a MapMyJourney</legend>
+
+      <app-form-input
+        label="Usuario"
+        type="text"
+        placeholder="Ej: viajero123"
+        inputId="username"
+        [required]="true"
+      ></app-form-input>
+
+      <app-form-input
+        label="Email"
+        type="email"
+        placeholder="tu@email.com"
+        inputId="email"
+        [required]="true"
+      ></app-form-input>
+
+      <app-form-input
+        label="Contraseña"
+        type="password"
+        placeholder="Mínimo 8 caracteres"
+        inputId="password"
+        [required]="true"
+      ></app-form-input>
+
+      <app-form-input
+        label="Confirmar Contraseña"
+        type="password"
+        placeholder="Repite tu contraseña"
+        inputId="confirmPassword"
+        [required]="true"
+      ></app-form-input>
+
+      <label class="signup__checkbox">
+        <input type="checkbox" required>
+        <span>Acepto los <a href="/terminos">Términos y Condiciones</a></span>
+      </label>
+
+      <button type="submit" class="signup__submit">Registrarse</button>
+
+      <p class="signup__login-link">
+        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+      </p>
+    </fieldset>
+  </form>
+</section>
