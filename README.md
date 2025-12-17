@@ -84,8 +84,7 @@ npm start
 
 ## Estado de los tests
 
-### ✅ - Test Correctos## 📋 Índice de Recursos
-
+### ✅ - Test Correctos
 ### Documentación Principal
 - [README Backend](/backend/README.md) - Configuración específica del backend
 - [Documentación API](/docs/backend/Documentacion.md) - Detalles completos de endpoints
