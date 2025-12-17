@@ -52,7 +52,7 @@ public class ExpenseController {
 
     /**
      * 2. Obtiene todos los gastos del viaje (con paginación).
-     * GET /api/trips/{tripId}/expenses?page=0&size=20&sort=expenseDate,desc
+     * GET /api/trips/{tripId}/expenses?page=0&amp;size=20&amp;sort=expenseDate,desc
      */
     @GetMapping
     @PreAuthorize("hasRole('USER')")

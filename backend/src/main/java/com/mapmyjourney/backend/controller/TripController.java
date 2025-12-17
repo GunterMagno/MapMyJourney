@@ -67,7 +67,7 @@ public class TripController {
 
     /**
      * 3. Obtiene todos los viajes del usuario logueado (con paginación).
-     * GET /api/trips/my-trips?page=0&size=10&sort=createdAt,desc
+     * GET /api/trips/my-trips?page=0&amp;size=10&amp;sort=createdAt,desc
      */
     @GetMapping("/my-trips")
     @PreAuthorize("hasRole('USER')")
