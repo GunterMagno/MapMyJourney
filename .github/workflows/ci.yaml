@@ -92,11 +92,8 @@ jobs:
 
       # 1️⃣2️⃣ Publicar en GitHub Pages
       - name: Deploy a GitHub Pages
-        uses: Cecilapp/GitHub-Pages-deploy@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          email: aborcru560@g.educaand.es
-          build_dir: docs
-          branch: gh-pages
-          commit_message: "Deploy documentación Javadoc"
+        run: |
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git subtree push --prefix docs origin gh-pages || git push origin :gh-pages && git subtree push --prefix docs origin gh-pages
