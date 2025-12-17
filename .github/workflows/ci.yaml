@@ -73,8 +73,8 @@ jobs:
       - name: Copiar documentación HTML y PDF a /docs/javadoc-api
         run: |
           cd ..
+          rm -rf docs/javadoc-api
           mkdir -p docs/javadoc-api/pdf
-          rm -rf docs/javadoc-api/*
           cp -r backend/target/reports/apidocs/* docs/javadoc-api/
           cp -r backend/target/reports/pdf/* docs/javadoc-api/pdf/
           touch docs/.nojekyll
