@@ -84,8 +84,7 @@ npm start
 
 ## Estado de los tests
 
-### ✅ - Test Correctos- [README Backend](/backend/report.md)
-- [Documentación API](/docs/backend/Documentacion.md) - Detalles completos de endpoints
+### ✅ - Test Correctos- [Documentación API](/docs/backend/Documentacion.md) - Detalles completos de endpoints
 - [Arquitectura CSS](/docs/design/DOCUMENTACION.md) - Guía de diseño visual
 - [Instrucciones Deploy](/docs/deploy/deploy-instructions.md) - Guía de despliegue
 
