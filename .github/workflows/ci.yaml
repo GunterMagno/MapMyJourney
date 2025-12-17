@@ -94,11 +94,11 @@ jobs:
       - name: Deploy a GitHub Pages
         run: |
           cd ..
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           mkdir -p /tmp/javadoc-deploy && rm -rf /tmp/javadoc-deploy/* && cp -r docs/javadoc-api/* /tmp/javadoc-deploy/
           cd /tmp/javadoc-deploy
           git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Deploy Javadoc API to GitHub Pages"
           git push -u https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:gh-pages -f
