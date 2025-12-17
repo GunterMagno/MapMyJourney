@@ -24,7 +24,7 @@
 |---------|-------------|--------|
 | **Backend API** | Documentación completa de endpoints y arquitectura | [Backend Docs](/docs/backend/Documentacion.md) |
 | **Diseño & CSS** | Arquitectura visual y sistema de diseño | [Guía de Diseño](/docs/design/DOCUMENTACION.md) |
-| **Javadoc API** | Documentación automática del código Java | [API Documentation](/docs/javadoc-api/index.html) |
+| **Javadoc API** | Documentación automática del código Java subido a GitHub Pages | [API Documentation](https://guntermagno.github.io/MapMyJourney/) |
 | **Deploy & CI/CD** | Guía de despliegue y GitHub Actions | [Deploy Guide](/docs/deploy/deploy-instructions.md) |
 | **Base de Datos** | Diagrama ER y modelo de datos | [Database Docs](/docs/backend/) |
 
