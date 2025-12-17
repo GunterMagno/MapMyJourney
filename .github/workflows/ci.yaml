@@ -69,14 +69,14 @@ jobs:
           
           echo "✅ PDFs generados en target/reports/pdf"
 
-      # 🔟 Copiar documentación a /docs
-      - name: Copiar documentación HTML y PDF a /docs
+      # 🔟 Copiar documentación a /docs/javadoc-api
+      - name: Copiar documentación HTML y PDF a /docs/javadoc-api
         run: |
           cd ..
-          rm -rf docs/*
-          mkdir -p docs/pdf
-          cp -r backend/target/site/apidocs/* docs/
-          cp -r backend/target/reports/pdf/* docs/pdf/
+          mkdir -p docs/javadoc-api/pdf
+          rm -rf docs/javadoc-api/*
+          cp -r backend/target/site/apidocs/* docs/javadoc-api/
+          cp -r backend/target/reports/pdf/* docs/javadoc-api/pdf/
           touch docs/.nojekyll
 
       # 1️⃣1️⃣ Commit automático
