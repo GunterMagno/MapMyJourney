@@ -85,7 +85,6 @@ npm start
 ## Estado de los tests
 
 ### ✅ - Test Correctos
-
 ---
 
 ## 📋 Índice de Recursos
