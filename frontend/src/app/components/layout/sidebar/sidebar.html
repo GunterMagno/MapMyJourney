@@ -3,10 +3,10 @@
     {{ isCollapsed ? '→' : '←' }}
   </button>
 
-  <div class="sidebar__header" *ngIf="!isCollapsed">
+  <article class="sidebar__header" *ngIf="!isCollapsed">
     <h3 class="sidebar__trip-title">{{ tripTitle }}</h3>
     <p class="sidebar__trip-dates">{{ tripDates }}</p>
-  </div>
+  </article>
 
   <nav class="sidebar__nav">
     <h2 class="sidebar__nav-title" *ngIf="!isCollapsed">Gestión del Viaje</h2>
@@ -30,6 +30,18 @@
         </a>
       </li>
       <li class="sidebar__item">
+        <a routerLink="/miembros" routerLinkActive="active" class="sidebar__link" title="Miembros">
+          <img class="sidebar__icon" src="/assets/images/members-icon.svg" alt="Miembros">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Miembros</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
+        <a routerLink="/chat" routerLinkActive="active" class="sidebar__link" title="Chat">
+          <img class="sidebar__icon" src="/assets/images/chat-icon.svg" alt="Chat">
+          <span class="sidebar__label" *ngIf="!isCollapsed">Chat</span>
+        </a>
+      </li>
+      <li class="sidebar__item">
         <a routerLink="/documentos" routerLinkActive="active" class="sidebar__link" title="Documentos">
           <img class="sidebar__icon" src="/assets/images/documents-icon.svg" alt="Documentos">
           <span class="sidebar__label" *ngIf="!isCollapsed">Documentos</span>
@@ -41,16 +53,6 @@
           <span class="sidebar__label" *ngIf="!isCollapsed">Votaciones</span>
         </a>
       </li>
-      <li class="sidebar__item">
-        <a routerLink="/compartir" routerLinkActive="active" class="sidebar__link" title="Compartir">
-          <img class="sidebar__icon" src="/assets/images/share-icon.svg" alt="Compartir">
-          <span class="sidebar__label" *ngIf="!isCollapsed">Compartir</span>
-        </a>
-      </li>
     </ul>
   </nav>
-
-  <button class="sidebar__chat-btn" title="Chat">
-    <img src="/assets/images/chat-icon.svg" alt="Chat">
-  </button>
 </aside>

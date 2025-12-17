@@ -1,6 +1,7 @@
 <label [for]="inputId" class="form-input__label">
   {{ label }}
   <span *ngIf="required" class="form-input__required">*</span>
+  <span *ngIf="isValid" class="form-input__success-icon">✓</span>
 </label>
 <input
   [id]="inputId"
@@ -9,7 +10,12 @@
   [required]="required"
   class="form-input__field"
   [class.form-input__field--error]="hasError"
+  [class.form-input__field--valid]="isValid && !hasError"
+  (input)="onInput($event)"
 />
 <span *ngIf="hasError && errorMessage" class="form-input__error">
   {{ errorMessage }}
+</span>
+<span *ngIf="isValid && !hasError" class="form-input__success-message">
+  ✓ Válido
 </span>

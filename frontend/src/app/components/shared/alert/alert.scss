@@ -1,0 +1,135 @@
+.alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-small);
+  border-left: var(--border-thick) solid;
+  animation: slideIn var(--transition-medium) ease-in-out;
+  margin-bottom: var(--spacing-4);
+
+  &.ng-leave {
+    animation: slideOut var(--transition-medium) ease-in-out forwards;
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+
+  &__message {
+    font-size: var(--font-size-medium);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-normal);
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-small);
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      transform: scale(1.1);
+    }
+
+    &:focus {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  // Success variant
+  &--success {
+    background-color: rgba(141, 204, 82, 0.15);
+    border-left-color: var(--correct-color);
+    color: var(--correct-color);
+
+    .alert__close {
+      color: var(--correct-color);
+
+      &:hover {
+        background-color: rgba(141, 204, 82, 0.25);
+      }
+    }
+  }
+
+  // Error variant
+  &--error {
+    background-color: rgba(235, 53, 26, 0.15);
+    border-left-color: var(--error-color);
+    color: var(--error-color);
+
+    .alert__close {
+      color: var(--error-color);
+
+      &:hover {
+        background-color: rgba(235, 53, 26, 0.25);
+      }
+    }
+  }
+
+  // Warning variant
+  &--warning {
+    background-color: rgba(243, 119, 72, 0.15);
+    border-left-color: var(--warning-color);
+    color: var(--warning-color);
+
+    .alert__close {
+      color: var(--warning-color);
+
+      &:hover {
+        background-color: rgba(243, 119, 72, 0.25);
+      }
+    }
+  }
+
+  // Info variant
+  &--info {
+    background-color: rgba(17, 138, 178, 0.15);
+    border-left-color: var(--info-color);
+    color: var(--info-color);
+
+    .alert__close {
+      color: var(--info-color);
+
+      &:hover {
+        background-color: rgba(17, 138, 178, 0.25);
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}

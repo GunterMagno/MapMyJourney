@@ -1,0 +1,18 @@
+<label [for]="selectId" class="form-select__label">
+  {{ label }}
+  <span *ngIf="required" class="form-select__required">*</span>
+</label>
+<select
+  [id]="selectId"
+  [required]="required"
+  class="form-select__field"
+  [class.form-select__field--error]="hasError"
+>
+  <option value="" disabled selected>{{ placeholder }}</option>
+  <option *ngFor="let option of options" [value]="option.value">
+    {{ option.label }}
+  </option>
+</select>
+<span *ngIf="hasError && errorMessage" class="form-select__error">
+  {{ errorMessage }}
+</span>

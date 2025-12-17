@@ -707,3 +707,937 @@ Esta estructura garantiza:
 - Semántica clara y predecible
 - Fácil mantenimiento y extensión
 - Excelente accesibilidad y SEO
+
+---
+
+## 3. Sistema de Componentes UI (Fase 3)
+
+### 3.1 Componentes Implementados
+
+La Fase 3 introduce componentes UI reutilizables y altamente configurables que implementan los design tokens y la metodología BEM definidos en Fase 2.
+
+#### 3.1.1 Button Component
+
+**Propósito:** 
+Componente botón flexible para toda clase de acciones (envío de formularios, navegación, llamadas a acción).
+
+**Ubicación:** `src/app/components/shared/button/`
+
+**Variantes disponibles:**
+1. **primary** - Acción principal (#EF476F rosa~rojo)
+2. **secondary** - Acción secundaria (#F37748 naranja)
+3. **ghost** - Botón transparente con borde
+4. **danger** - Acciones destructivas (#EB351A rojo)
+
+**Tamaños:**
+- `sm` - 32px alto (pequeño)
+- `md` - 40px alto (mediano, por defecto)
+- `lg` - 48px alto (grande)
+
+**Estados manejados:**
+- **Default** - Estado normal
+- **Hover** - Darkening de color + elevación (-2px translateY)
+- **Focus** - Outline 3px a 2px offset
+- **Active** - Presionado
+- **Disabled** - Opacidad 0.6, cursor not-allowed
+
+**@Input properties:**
+```typescript
+@Input() label: string = 'Button';
+@Input() variant: 'primary' | 'secondary' | 'ghost' | 'danger' = 'primary';
+@Input() size: 'sm' | 'md' | 'lg' = 'md';
+@Input() disabled: boolean = false;
+@Input() type: string = 'button';
+```
+
+**Ejemplo de uso:**
+```html
+<!-- Botón primario mediano -->
+<app-button label="Guardar" variant="primary" size="md"></app-button>
+
+<!-- Botón secundario pequeño -->
+<app-button label="Cancelar" variant="secondary" size="sm"></app-button>
+
+<!-- Botón danger deshabilitado -->
+<app-button 
+  label="Eliminar" 
+  variant="danger" 
+  size="lg" 
+  [disabled]="true">
+</app-button>
+
+<!-- Botón ghost con navegación -->
+<app-button label="Ver más" variant="ghost" size="md"></app-button>
+```
+
+**Nomenclatura BEM:**
+```scss
+.button {
+  // Bloque base - aplica estilos comunes a todos los botones
+  
+  &--primary { /* Modificador: variante primaria */ }
+  &--secondary { /* Modificador: variante secundaria */ }
+  &--ghost { /* Modificador: variante ghost */ }
+  &--danger { /* Modificador: variante danger */ }
+  
+  &--sm { /* Modificador: tamaño pequeño */ }
+  &--md { /* Modificador: tamaño mediano */ }
+  &--lg { /* Modificador: tamaño grande */ }
+  
+  &--disabled { /* Modificador: estado deshabilitado */ }
+}
+```
+
+---
+
+#### 3.1.2 Card Component
+
+**Propósito:**
+Contenedor visual para agrupar información relacionada (detalles de viajes, resúmenes, etc). Soporta contenido flexible via proyección de contenido.
+
+**Ubicación:** `src/app/components/shared/card/`
+
+**Estructura:**
+```html
+<app-card>
+  <article class="card__header">
+    <h3 class="card__title">Viaje a París</h3>
+  </article>
+  <article class="card__content">
+    <p>Experiencia increíble visitando monumentos icónicos</p>
+    <p><strong>Duración:</strong> 7 días</p>
+    <p><strong>Costo:</strong> $1,500 USD</p>
+  </article>
+</app-card>
+```
+
+**Variantes:** Sin variantes (es flexible vía proyección)
+
+**Tamaños:** Sin tamaños fijos (se adapta al contenido)
+
+**Estados manejados:**
+- **Default** - Card normal con shadow-md
+- **Hover** - Elevación aumenta a shadow-lg, translateY -4px
+
+**@Input properties:** Ninguno (usa ng-content para flexibilidad)
+
+**Ejemplo de uso:**
+```html
+<!-- Card simple -->
+<app-card>
+  <article class="card__header">
+    <h3 class="card__title">Información del Viaje</h3>
+  </article>
+  <article class="card__content">
+    <!-- contenido dinámico -->
+  </article>
+</app-card>
+
+<!-- Card con imagen y footer -->
+<app-card>
+  <article class="card__image">
+    <img src="trip.jpg" alt="Trip photo">
+  </article>
+  <article class="card__content">
+    <h4 class="card__title">New York</h4>
+    <p>The city that never sleeps</p>
+  </article>
+  <article class="card__footer">
+    <app-button label="View" variant="primary" size="sm"></app-button>
+  </article>
+</app-card>
+```
+
+**Nomenclatura BEM:**
+```scss
+.card {
+  // Bloque contenedor
+  
+  &__header { /* Elemento: encabezado de la tarjeta */ }
+  &__title { /* Elemento: título dentro del header */ }
+  &__image { /* Elemento: imagen de la tarjeta */ }
+  &__content { /* Elemento: contenido principal */ }
+  &__footer { /* Elemento: pie de la tarjeta */ }
+  
+  &:hover { /* Estado hover - aplica a todo el bloque */ }
+}
+```
+
+---
+
+#### 3.1.3 Alert Component
+
+**Propósito:**
+Mostrar mensajes de estado y notificaciones inline (éxito, error, advertencia, información).
+
+**Ubicación:** `src/app/components/shared/alert/`
+
+**Variantes (tipos):**
+1. **success** - Mensaje exitoso (verde #8DCC52)
+2. **error** - Mensaje de error (rojo #EB351A)
+3. **warning** - Advertencia (naranja #F37748)
+4. **info** - Información (azul #118AB2)
+
+**Tamaños:** Sin tamaños específicos (adapta al contenido)
+
+**Estados manejados:**
+- **Visible** - Aparece con animación slideIn
+- **Closeable** - Botón × para cerrar manualmente
+- **Auto-close** - Desaparece automáticamente después de 5s (configurable)
+- **Error highlight** - Borde izquierdo de 4px con color del tipo
+
+**@Input properties:**
+```typescript
+@Input() type: 'success' | 'error' | 'warning' | 'info' = 'info';
+@Input() message: string = '';
+@Input() closeable: boolean = true;
+@Output() closed = new EventEmitter<void>();
+```
+
+**Ejemplo de uso:**
+```html
+<!-- Alert de éxito -->
+<app-alert
+  type="success"
+  message="¡Viaje guardado exitosamente!"
+  [closeable]="true"
+></app-alert>
+
+<!-- Alert de error con cierre -->
+<app-alert
+  *ngIf="showError"
+  type="error"
+  message="Error al guardar los cambios. Intenta nuevamente."
+  [closeable]="true"
+  (closed)="onErrorClosed()">
+</app-alert>
+
+<!-- Alert info permanente -->
+<app-alert
+  type="info"
+  message="Los gastos pueden editarse hasta 30 días después de su creación."
+  [closeable]="false">
+</app-alert>
+```
+
+**Nomenclatura BEM:**
+```scss
+.alert {
+  // Bloque base
+  
+  &--success { /* Modificador: tipo éxito */ }
+  &--error { /* Modificador: tipo error */ }
+  &--warning { /* Modificador: tipo advertencia */ }
+  &--info { /* Modificador: tipo información */ }
+  
+  &__message { /* Elemento: texto del mensaje */ }
+  &__close { /* Elemento: botón de cierre */ }
+  
+  &__icon { /* Elemento: ícono del tipo */ }
+}
+```
+
+---
+
+#### 3.1.4 Form Textarea Component
+
+**Propósito:**
+Entrada de texto largo con validación integrada (descripciones, notas, comentarios).
+
+**Ubicación:** `src/app/components/shared/form-textarea/`
+
+**Variantes:** Sin variantes (tema único)
+
+**Tamaños:**
+- `rows` - Configurable (defecto 5 filas)
+- Altura mínima: 120px
+- Redimensionable verticalmente
+
+**Estados manejados:**
+- **Default** - Border gris, altura normal
+- **Focus** - Border primary color, shadow rgba(239, 71, 111, 0.1)
+- **Filled** - Contenido visible
+- **Error** - Border rojo #EB351A, mensaje de error debajo
+- **Disabled** - Opacidad 0.6, background más claro
+
+**@Input properties:**
+```typescript
+@Input() label: string = '';
+@Input() placeholder: string = '';
+@Input() textareaId: string = '';
+@Input() required: boolean = false;
+@Input() hasError: boolean = false;
+@Input() errorMessage: string = '';
+@Input() rows: number = 5;
+```
+
+**Ejemplo de uso:**
+```html
+<!-- Textarea simple -->
+<app-form-textarea
+  label="Descripción del Viaje"
+  placeholder="Describe tu experiencia..."
+  textareaId="trip-desc"
+  [rows]="7">
+</app-form-textarea>
+
+<!-- Textarea con validación -->
+<app-form-textarea
+  label="Notas"
+  placeholder="Notas adicionales..."
+  textareaId="notes"
+  [required]="true"
+  [hasError]="hasError"
+  errorMessage="Este campo es obligatorio"
+  [rows]="4">
+</app-form-textarea>
+```
+
+**Nomenclatura BEM:**
+```scss
+.form-textarea {
+  &__label { /* Elemento: etiqueta */ }
+  &__required { /* Elemento: requerido */ }
+  &__field { /* Elemento: textarea */ }
+  &__field--error { /* Modificador: error state */ }
+  &__error { /* Elemento: mensaje de error */ }
+}
+```
+
+---
+
+#### 3.1.5 Form Select Component
+
+**Propósito:**
+Selector dropdown con opciones predefinidas (categorías, tipos, etc).
+
+**Ubicación:** `src/app/components/shared/form-select/`
+
+**Interface SelectOption:**
+```typescript
+interface SelectOption {
+  label: string;      // Texto visible
+  value: string | number; // Valor seleccionado
+}
+```
+
+**Variantes:** Sin variantes (tema único)
+
+**Tamaños:** Sin tamaños específicos
+
+**Estados manejados:**
+- **Default** - Select normal con chevron icon
+- **Hover** - Border color cambia a primary-hover
+- **Focus** - Border primary, shadow rgba(239, 71, 111, 0.1)
+- **Selected** - Opción resaltada en azul
+- **Error** - Border rojo, shadow rojo
+- **Disabled** - Opacidad 0.6, cursor not-allowed
+
+**@Input properties:**
+```typescript
+@Input() label: string = '';
+@Input() selectId: string = '';
+@Input() options: SelectOption[] = [];
+@Input() required: boolean = false;
+@Input() hasError: boolean = false;
+@Input() errorMessage: string = '';
+@Input() placeholder: string = 'Selecciona una opción';
+```
+
+**Ejemplo de uso:**
+```html
+<!-- Select simple -->
+<app-form-select
+  label="Categoría de Gasto"
+  selectId="expense-cat"
+  [options]="expenseCategories">
+</app-form-select>
+
+<!-- Select con validación -->
+<app-form-select
+  label="Tipo de Alojamiento"
+  selectId="accommodation"
+  [options]="accommodationTypes"
+  [required]="true"
+  [hasError]="hasError"
+  errorMessage="Selecciona un alojamiento"
+  placeholder="-- Selecciona --">
+</app-form-select>
+```
+
+**Icon SVG incrustado:**
+El componente incluye un icono ↓ como data URI SVG (#118AB2 color quinary):
+```scss
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23118AB2' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+```
+
+**Nomenclatura BEM:**
+```scss
+.form-select {
+  &__label { /* Elemento: etiqueta */ }
+  &__field { /* Elemento: select */ }
+  &__field--error { /* Modificador: estado error */ }
+  &__error { /* Elemento: mensaje de error */ }
+}
+```
+
+---
+
+#### 3.1.6 Notification Component (Toast)
+
+**Propósito:**
+Notificaciones flotantes con posicionamiento fixed en esquinas (similar a toast messages).
+
+**Ubicación:** `src/app/components/shared/notification/`
+
+**Variantes (tipos):**
+1. **success** - Verde (#8DCC52)
+2. **error** - Rojo (#EB351A)
+3. **warning** - Naranja (#F37748)
+4. **info** - Azul (#118AB2)
+
+**Posiciones:**
+- `top-right` - Esquina superior derecha
+- `top-left` - Esquina superior izquierda
+- `bottom-right` - Esquina inferior derecha
+- `bottom-left` - Esquina inferior izquierda
+- `top-center` - Centro superior
+- `bottom-center` - Centro inferior
+
+**Estados manejados:**
+- **Enter animation** - Slide in (opacity 0→1, translateY -20px→0)
+- **Exit animation** - Slide out (opacity 1→0, translateY 0→-20px)
+- **Auto-close** - Desaparece después de `duration` ms (configurable)
+- **Manual close** - Botón × para cerrar manualmente
+- **Responsive** - En mobile (<640px) ajusta márgenes y ancho máximo (90vw)
+
+**@Input properties:**
+```typescript
+@Input() type: NotificationType = 'info';
+@Input() message: string = '';
+@Input() duration: number = 5000; // ms, 0 = no auto-close
+@Input() position: NotificationPosition = 'top-right';
+@Input() dismissible: boolean = true;
+@Output() closed = new EventEmitter<void>();
+```
+
+**Ejemplo de uso:**
+```html
+<!-- Notificación de éxito esquina superior derecha -->
+<app-notification
+  type="success"
+  message="¡Cambios guardados correctamente!"
+  position="top-right"
+  [duration]="3000"
+  [dismissible]="true">
+</app-notification>
+
+<!-- Error centrado inferior, sin auto-close -->
+<app-notification
+  type="error"
+  message="Error al conectar con el servidor"
+  position="bottom-center"
+  [duration]="0"
+  [dismissible]="true"
+  (closed)="onNotificationClosed()">
+</app-notification>
+
+<!-- Info permanente esquina inferior izquierda -->
+<app-notification
+  type="info"
+  message="Nuevo mensaje recibido"
+  position="bottom-left"
+  [duration]="0"
+  [dismissible]="false">
+</app-notification>
+```
+
+**Nomenclatura BEM:**
+```scss
+.notification {
+  // Bloque base (position: fixed)
+  
+  &--top-right { /* Modificador: posición */ }
+  &--top-left { /* Modificador: posición */ }
+  &--bottom-right { /* Modificador: posición */ }
+  &--bottom-left { /* Modificador: posición */ }
+  &--top-center { /* Modificador: posición */ }
+  &--bottom-center { /* Modificador: posición */ }
+  
+  &--success { /* Modificador: tipo éxito */ }
+  &--error { /* Modificador: tipo error */ }
+  &--warning { /* Modificador: tipo advertencia */ }
+  &--info { /* Modificador: tipo información */ }
+  
+  &__icon { /* Elemento: ícono del tipo */ }
+  &__message { /* Elemento: texto del mensaje */ }
+  &__close { /* Elemento: botón de cierre */ }
+}
+```
+
+---
+
+#### 3.1.7 Header Component (Actualizado - Responsive)
+
+**Mejoras Fase 3:**
+El componente Header fue mejorado con responsividad mobile en Fase 3.
+
+**Nuevas características:**
+- **Hamburger menu** - Visible solo en mobile (<640px)
+- **Mobile menu overlay** - Menú desplegable full-screen en mobile
+- **Backdrop overlay** - Fondo oscuro (click cierra menú)
+- **Smooth animations** - Transiciones suave de slide-in/out
+
+**Métodos agregados:**
+```typescript
+toggleMobileMenu(): void { /* Abre/cierra menú */ }
+closeMobileMenu(): void { /* Cierra menú automáticamente */ }
+toggleTheme(): void { /* Cambia tema claro/oscuro */ }
+```
+
+**Eventos:**
+```typescript
+@HostListener('window:resize') onResize(): void {
+  // Auto-cierra menú mobile en resize a desktop
+}
+```
+
+**Estructura mobile menu:**
+```html
+<nav class="header__mobile-menu" [class.header__mobile-menu--open]="isMobileMenuOpen">
+  <article class="header__mobile-menu-header">
+    <h2 class="header__mobile-menu-title">Menú</h2>
+    <button class="header__mobile-menu-close" (click)="closeMobileMenu()">×</button>
+  </article>
+  <article class="header__mobile-menu-content">
+    <!-- Botones de acciones dinámicas -->
+  </article>
+</nav>
+<article class="header__overlay" *ngIf="isMobileMenuOpen" 
+         (click)="closeMobileMenu()"></article>
+```
+
+**Nomenclatura BEM:**
+```scss
+.header {
+  &__hamburger { /* Elemento: botón hamburguesa */ }
+  &__hamburger-line { /* Elemento: línea del hamburger */ }
+  
+  &__mobile-menu { /* Elemento: menú mobile */ }
+  &__mobile-menu--open { /* Modificador: menú abierto */ }
+  &__mobile-menu-header { /* Elemento: header del menú */ }
+  &__mobile-menu-content { /* Elemento: contenido del menú */ }
+  &__mobile-menu-close { /* Elemento: botón cerrar */ }
+  
+  &__overlay { /* Elemento: backdrop */ }
+}
+```
+
+---
+
+### 3.2 Nomenclatura y Metodología BEM en Componentes
+
+#### Estrategia BEM Aplicada
+
+**Principio fundamental:**
+Cada componente Angular = Un **Bloque BEM** independiente
+
+**Estructura típica:**
+```
+component/
+├── component.ts       → Define el bloque BEM
+├── component.html     → Estructura con elementos
+└── component.scss     → Estilos del bloque + elementos + modificadores
+```
+
+#### Ejemplo Real: Button Component
+
+**Archivo: button.html**
+```html
+<button
+  [ngClass]="[
+    'button',
+    `button--${variant}`,
+    `button--${size}`,
+    { 'button--disabled': disabled }
+  ]"
+  [disabled]="disabled"
+  [type]="type"
+>
+  <span class="button__text">{{ label }}</span>
+</button>
+```
+
+**Archivo: button.scss**
+```scss
+.button {
+  // BLOQUE: Estilos base aplicables a todos los botones
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  border: none;
+  border-radius: var(--border-radius-small);
+  font-family: var(--font-tertiary);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  // ELEMENTO: Texto del botón
+  &__text {
+    display: inline-block;
+  }
+
+  // MODIFICADOR: Variante primary
+  &--primary {
+    background-color: var(--principal-color);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: var(--principal-color-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    &:focus {
+      outline: 3px solid var(--principal-color);
+      outline-offset: 2px;
+    }
+  }
+
+  // MODIFICADOR: Variante secondary
+  &--secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: var(--secondary-color-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  // MODIFICADOR: Variante ghost
+  &--ghost {
+    background-color: transparent;
+    border: var(--border-medium) solid var(--principal-color);
+    color: var(--principal-color);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--principal-color);
+      color: white;
+    }
+  }
+
+  // MODIFICADOR: Variante danger
+  &--danger {
+    background-color: var(--error-color);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: darken(#EB351A, 10%);
+    }
+  }
+
+  // MODIFICADOR: Tamaño pequeño
+  &--sm {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-small);
+    height: 32px;
+  }
+
+  // MODIFICADOR: Tamaño mediano
+  &--md {
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--font-size-medium);
+    height: 40px;
+  }
+
+  // MODIFICADOR: Tamaño grande
+  &--lg {
+    padding: var(--spacing-4) var(--spacing-8);
+    font-size: var(--font-size-medium);
+    height: 48px;
+  }
+
+  // MODIFICADOR: Estado deshabilitado
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+```
+
+#### Decisiones de Nomenclatura
+
+**¿Block vs Element?**
+- **Block** (`.button`): Componente independiente reutilizable
+- **Element** (`.button__text`): Partes internas del componente
+
+**¿Cuándo usar Modificador vs Clase de Estado?**
+
+| Caso | Usar | Ejemplo |
+|------|------|---------|
+| Variación predefinida | Modificador | `.button--primary`, `.button--sm` |
+| Estado dinámico | Modificador dinámico | `.button--disabled` (binding) |
+| Pseudo-clase | CSS nativo | `:hover`, `:focus`, `:active` |
+| Estado temporal | Modificador | `.alert--visible` |
+
+**Ejemplo comparativo:**
+```html
+<!-- ✅ CORRECTO: Modificadores BEM + pseudo-classes CSS -->
+<button class="button button--primary button--lg button--disabled">
+  Disabled Primary Button
+</button>
+
+<!-- ❌ INCORRECTO: Estados inline -->
+<button style="background: blue; opacity: 0.6;">
+  No usar estilos inline
+</button>
+
+<!-- ❌ INCORRECTO: Clases infladas -->
+<button class="button-primary-lg-disabled-hover-focus">
+  No concatenar estados
+</button>
+```
+
+#### Ventajas de esta Nomenclatura en MapMyJourney
+
+1. **Escalabilidad**
+   ```scss
+   // Agregar nueva variante es trivial
+   &--tertiary {
+     background-color: var(--tertiary-color);
+   }
+   ```
+
+2. **Reutilización**
+   ```html
+   <!-- El mismo componente, diferentes contextos -->
+   <app-button variant="primary" size="lg"></app-button>
+   <app-button variant="secondary" size="sm"></app-button>
+   ```
+
+3. **Mantenimiento**
+   - Cambiar color primario en una variable CSS afecta a todos los botones
+   - No hay duplicación de código
+   - Fácil encontrar todos los elementos de un bloque
+
+4. **Documentación visual**
+   - Los nombres de clase describen su función: `.button--primary`, `.card__header`
+   - No necesitas comentarios para entender la estructura
+
+---
+
+### 3.3 Style Guide - Documentación Visual y Testing
+
+#### Propósito del Style Guide
+
+El Style Guide (`/style-guide`) es una página interactiva que:
+
+1. **Documenta todos los componentes** - Ejemplo visual de cada componente
+2. **Permite testing** - Verificar variantes, tamaños, y estados sin necesidad de crear nuevas páginas
+3. **Sirve como referencia** - Developers pueden ver cómo usar los componentes
+4. **Validación visual** - Asegurar consistencia de estilos en todos los navegadores
+
+#### Ubicación y Acceso
+
+- **Componente:** `src/app/components/pages/style-guide/`
+- **Ruta:** `/style-guide`
+- **Comando:** `ng serve` → http://localhost:4200/style-guide
+
+#### Estructura del Style Guide
+
+```html
+<article class="style-guide">
+  <header class="style-guide__header">
+    <!-- Título y descripción -->
+  </header>
+
+  <!-- Sección Botones -->
+  <section class="style-guide__section">
+    <h2>Botones</h2>
+    <article class="style-guide__subsection">
+      <h3>Variante Primary</h3>
+      <article class="style-guide__showcase">
+        <!-- Botones con diferentes tamaños -->
+      </article>
+    </article>
+  </section>
+
+  <!-- Sección Cards -->
+  <section class="style-guide__section">
+    <h2>Cards</h2>
+    <article class="style-guide__showcase">
+      <!-- 3 ejemplos de tarjetas -->
+    </article>
+  </section>
+
+  <!-- Sección Formularios -->
+  <section class="style-guide__section">
+    <h2>Formularios</h2>
+    <article class="style-guide__form-container">
+      <!-- form-input, textarea, select, etc. -->
+    </article>
+  </section>
+
+  <!-- Sección Alertas -->
+  <section class="style-guide__section">
+    <h2>Alertas</h2>
+    <article class="style-guide__alerts-container">
+      <!-- 4 alertas (success, error, warning, info) -->
+    </article>
+  </section>
+
+  <!-- Sección Paleta de Colores -->
+  <section class="style-guide__section">
+    <h2>Paleta de Colores</h2>
+    <article class="style-guide__color-palette">
+      <!-- 7 colores con código hex -->
+    </article>
+  </section>
+</article>
+```
+
+#### Secciones Documentadas
+
+**Botones:**
+- Variante Primary (sm, md, lg + disabled)
+- Variante Secondary (sm, md, lg + disabled)
+- Variante Ghost (sm, md, lg + disabled)
+- Variante Danger (sm, md, lg + disabled)
+
+**Cards:**
+- 3 ejemplos reales (París, Japón, Nueva York)
+- Demostrando estructura: header, content, datos
+
+**Formularios:**
+- Input de texto (normal)
+- Input con error (validación)
+- Textarea (descripción)
+- Select (categorías)
+- Select con error
+
+**Alertas:**
+- Success (✓ Viaje creado)
+- Error (✕ Error al guardar)
+- Warning (⚠ Excediendo presupuesto)
+- Info (ℹ Información sobre ediciones)
+
+**Paleta de Colores:**
+- Primary (#EF476F)
+- Secondary (#F37748)
+- Tertiary (#FFD166)
+- Quaternary (#3ECBA6)
+- Quinary (#118AB2)
+- Error (#EB351A)
+- Success (#8DCC52)
+
+#### Flujo de Testing
+
+**Paso 1: Verificación Visual**
+```
+1. npm start (inicia servidor)
+2. Navega a http://localhost:4200/style-guide
+3. Inspecciona cada sección:
+   - ¿Los colores son correctos?
+   - ¿Los tamaños son proporcionales?
+   - ¿Los estados (hover, focus, disabled) funcionan?
+   - ¿La tipografía es legible?
+```
+
+**Paso 2: Testing de Responsividad**
+```
+1. DevTools (F12) → Device Emulation
+2. Prueba en mobile (640px):
+   - ¿Se reorganizan los componentes?
+   - ¿Los buttons siguen siendo clickeables?
+   - ¿El spacing es adecuado?
+3. Prueba en tablet (768px) y desktop (1024px)
+```
+
+**Paso 3: Testing de Accesibilidad**
+```
+1. DevTools → Lighthouse → Accessibility
+2. Verificar:
+   - Color contrast ratios (WCAG AA minimum 4.5:1)
+   - Labels en inputs (for/id binding)
+   - Keyboard navigation (Tab, Enter)
+   - Screen reader compatibility
+```
+
+#### Nomenclatura BEM en Style Guide
+
+```scss
+.style-guide {
+  // Bloque principal
+  
+  &__header { /* Elemento: encabezado */ }
+  &__title { /* Elemento: título principal */ }
+  &__description { /* Elemento: descripción */ }
+  
+  &__section { /* Elemento: sección de componentes */ }
+  &__section-title { /* Elemento: título de sección */ }
+  &__section-description { /* Elemento: descripción de sección */ }
+  
+  &__subsection { /* Elemento: subsección (ej: Primary buttons) */ }
+  &__subsection-title { /* Elemento: título de subsección */ }
+  
+  &__showcase { /* Elemento: área de demostración */ }
+  
+  &__form-container { /* Elemento: contenedor de formularios */ }
+  &__form-group { /* Elemento: grupo de campos */ }
+  
+  &__alerts-container { /* Elemento: contenedor de alertas */ }
+  
+  &__color-palette { /* Elemento: grid de colores */ }
+  &__color-item { /* Elemento: item de color */ }
+  &__color-box { /* Elemento: caja de color */ }
+  &__color-item--primary { /* Modificador: color primario */ }
+  &__color-item--secondary { /* Modificador: color secundario */ }
+  /* ... más colores ... */
+}
+```
+
+#### Ejemplo de Uso del Style Guide
+
+**Escenario: Necesitas verificar si el botón danger se ve bien**
+
+```
+1. Abre /style-guide en navegador
+2. Baja a sección "Botones"
+3. Busca subsección "Variante Danger"
+4. Ves 4 botones:
+   - Pequeño (sm)
+   - Mediano (md) ← El más común
+   - Grande (lg)
+   - Deshabilitado
+5. Hoverea cada uno para verificar animaciones
+6. Abre DevTools e inspecciona estilos aplicados
+7. Compara con design tokens en variables.scss
+```
+
+#### Integración con Desarrollo
+
+**Al crear nuevo componente:**
+```
+1. Crea archivos ts/html/scss
+2. Agrega la sección al style-guide.html
+3. Importa el componente en style-guide.ts
+4. Documenta ejemplos de uso en style-guide.html
+5. Navega a /style-guide para validar visualmente
+6. Itera sobre estilos hasta estar satisfecho
+```
+
+**Al modificar componente existente:**
+```
+1. Cambia estilos en component.scss
+2. El style-guide se actualiza automáticamente (ng serve watch)
+3. Verifica visualmente en /style-guide
+4. Asegúrate de que todas las variantes sigan siendo correctas
+```

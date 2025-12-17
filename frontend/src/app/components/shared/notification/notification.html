@@ -1,0 +1,17 @@
+<article 
+  class="notification"
+  [class]="'notification--' + type"
+  [class]="'notification--' + position"
+  [@slideIn]
+>
+  <span class="notification__icon">{{ getIcon() }}</span>
+  <p class="notification__message">{{ message }}</p>
+  <button 
+    *ngIf="dismissible"
+    class="notification__close" 
+    (click)="close()"
+    aria-label="Cerrar notificación"
+  >
+    ×
+  </button>
+</article>

@@ -1,0 +1,88 @@
+.card {
+  background-color: var(--bg-elevated);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-6);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+  overflow: hidden;
+  border: var(--border-thick) solid transparent;
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  // Color variants for borders with background tints
+  &--primary {
+    border-color: var(--principal-color);
+    border-width: var(--border-thick);
+    background-color: rgba(239, 71, 111, 0.05);
+  }
+
+  &--secondary {
+    border-color: var(--secondary-color);
+    border-width: var(--border-thick);
+    background-color: rgba(243, 119, 72, 0.05);
+  }
+
+  &--tertiary {
+    border-color: var(--tertiary-color);
+    border-width: var(--border-thick);
+    background-color: rgba(255, 209, 102, 0.08);
+  }
+
+  &--quaternary {
+    border-color: var(--quaternary-color);
+    border-width: var(--border-thick);
+    background-color: rgba(62, 203, 166, 0.05);
+  }
+
+  &--quinary {
+    border-color: var(--quinary-color);
+    border-width: var(--border-thick);
+    background-color: rgba(17, 138, 178, 0.05);
+  }
+
+  &--success {
+    border-color: var(--correct-color);
+    border-width: var(--border-thick);
+    background-color: rgba(141, 204, 82, 0.05);
+  }
+
+  &--error {
+    border-color: var(--error-color);
+    border-width: var(--border-thick);
+    background-color: rgba(235, 53, 26, 0.05);
+  }
+
+  // Optional: Add content structure styles
+  &__header {
+    margin-bottom: var(--spacing-4);
+  }
+
+  &__title {
+    font-size: var(--font-size-tittle-h3);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  &__image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-small);
+    object-fit: cover;
+    margin-bottom: var(--spacing-4);
+  }
+
+  &__content {
+    color: var(--text-main);
+    line-height: var(--line-height-relaxed);
+  }
+
+  &__footer {
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: var(--border-thin) solid var(--border-color);
+  }
+}

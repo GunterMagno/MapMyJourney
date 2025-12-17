@@ -1,0 +1,15 @@
+<label [for]="textareaId" class="form-textarea__label">
+  {{ label }}
+  <span *ngIf="required" class="form-textarea__required">*</span>
+</label>
+<textarea
+  [id]="textareaId"
+  [placeholder]="placeholder"
+  [required]="required"
+  [rows]="rows"
+  class="form-textarea__field"
+  [class.form-textarea__field--error]="hasError"
+></textarea>
+<span *ngIf="hasError && errorMessage" class="form-textarea__error">
+  {{ errorMessage }}
+</span>

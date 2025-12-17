@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
-export class Sidebar {
+export class SidebarComponent {
   @Input() tripTitle: string = 'Título del Viaje';
   @Input() tripDates: string = 'Fecha Inicio - Fecha Fin';
   

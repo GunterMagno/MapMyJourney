@@ -1,0 +1,13 @@
+<article *ngIf="isVisible" [class]="alertClasses">
+  <article class="alert__content">
+    <span class="alert__message">{{ message }}</span>
+  </article>
+  <button
+    *ngIf="closeable"
+    class="alert__close"
+    (click)="closeAlert()"
+    aria-label="Cerrar alerta"
+  >
+    ×
+  </button>
+</article>

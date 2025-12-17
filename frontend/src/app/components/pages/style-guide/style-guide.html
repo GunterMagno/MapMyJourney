@@ -1,0 +1,367 @@
+<article class="style-guide">
+  <header class="style-guide__header">
+    <h1 class="style-guide__title">Style Guide - MapMyJourney</h1>
+    <p class="style-guide__description">
+      Guía completa de componentes y estilos de la aplicación. Use esta página para validar y testear visualmente todos los componentes.
+    </p>
+  </header>
+
+  <!-- Botones Section -->
+  <section class="style-guide__section">
+    <h2 class="style-guide__section-title">Botones</h2>
+    <p class="style-guide__section-description">Componente reutilizable con múltiples variantes y tamaños</p>
+
+    <!-- Primary Buttons -->
+    <article class="style-guide__subsection">
+      <h3 class="style-guide__subsection-title">Variante Primary</h3>
+      <article class="style-guide__showcase">
+        <app-button label="Pequeño" variant="primary" size="sm"></app-button>
+        <app-button label="Mediano" variant="primary" size="md"></app-button>
+        <app-button label="Grande" variant="primary" size="lg"></app-button>
+        <app-button label="Deshabilitado" variant="primary" size="md" [disabled]="true"></app-button>
+      </article>
+    </article>
+
+    <!-- Secondary Buttons -->
+    <article class="style-guide__subsection">
+      <h3 class="style-guide__subsection-title">Variante Secondary</h3>
+      <article class="style-guide__showcase">
+        <app-button label="Pequeño" variant="secondary" size="sm"></app-button>
+        <app-button label="Mediano" variant="secondary" size="md"></app-button>
+        <app-button label="Grande" variant="secondary" size="lg"></app-button>
+        <app-button label="Deshabilitado" variant="secondary" size="md" [disabled]="true"></app-button>
+      </article>
+    </article>
+
+    <!-- Ghost Buttons -->
+    <article class="style-guide__subsection">
+      <h3 class="style-guide__subsection-title">Variante Ghost</h3>
+      <article class="style-guide__showcase">
+        <app-button label="Pequeño" variant="ghost" size="sm"></app-button>
+        <app-button label="Mediano" variant="ghost" size="md"></app-button>
+        <app-button label="Grande" variant="ghost" size="lg"></app-button>
+        <app-button label="Deshabilitado" variant="ghost" size="md" [disabled]="true"></app-button>
+      </article>
+    </article>
+
+    <!-- Danger Buttons -->
+    <article class="style-guide__subsection">
+      <h3 class="style-guide__subsection-title">Variante Danger</h3>
+      <article class="style-guide__showcase">
+        <app-button label="Pequeño" variant="danger" size="sm"></app-button>
+        <app-button label="Mediano" variant="danger" size="md"></app-button>
+        <app-button label="Grande" variant="danger" size="lg"></app-button>
+        <app-button label="Deshabilitado" variant="danger" size="md" [disabled]="true"></app-button>
+      </article>
+    </article>
+  </section>
+
+  <!-- Cards Section -->
+  <section class="style-guide__section">
+    <h2 class="style-guide__section-title">Cards</h2>
+    <p class="style-guide__section-description">Componentes contenedores con bordes de color</p>
+
+    <article class="style-guide__showcase">
+      <app-card class="card--primary">
+        <article class="card__header">
+          <h3 class="card__title">Viaje a París</h3>
+        </article>
+        <article class="card__content">
+          <p>Experiencia increíble visitando los monumentos más icónicos de Francia.</p>
+          <p><strong>Duración:</strong> 7 días</p>
+          <p><strong>Costo Total:</strong> $1,500 USD</p>
+        </article>
+      </app-card>
+
+      <app-card class="card--secondary">
+        <article class="card__header">
+          <h3 class="card__title">Viaje a Japón</h3>
+        </article>
+        <article class="card__content">
+          <p>Exploración de cultura ancestral y tecnología moderna en Tokio y Kioto.</p>
+          <p><strong>Duración:</strong> 14 días</p>
+          <p><strong>Costo Total:</strong> $3,200 USD</p>
+        </article>
+      </app-card>
+
+      <app-card class="card--quinary">
+        <article class="card__header">
+          <h3 class="card__title">Viaje a Nueva York</h3>
+        </article>
+        <article class="card__content">
+          <p>La ciudad que nunca duerme: Broadway, Central Park y compras en 5ta Avenida.</p>
+          <p><strong>Duración:</strong> 5 días</p>
+          <p><strong>Costo Total:</strong> $2,100 USD</p>
+        </article>
+      </app-card>
+    </article>
+  </section>
+
+  <!-- Formularios Section -->
+  <section class="style-guide__section">
+    <h2 class="style-guide__section-title">Formularios</h2>
+    <p class="style-guide__section-description">Componentes de entrada de datos</p>
+
+    <article class="style-guide__form-container">
+      <!-- Text Input -->
+      <article class="style-guide__form-group">
+        <h3 class="style-guide__subsection-title">Input de Texto</h3>
+        <app-form-input
+          label="Nombre del Viaje"
+          placeholder="Ej: Viaje a París"
+          inputId="trip-name"
+          [required]="true"
+        ></app-form-input>
+      </article>
+
+      <!-- Input con Error -->
+      <article class="style-guide__form-group">
+        <h3 class="style-guide__subsection-title">Input con Error</h3>
+        <app-form-input
+          label="Email"
+          placeholder="Ej: usuario@ejemplo.com"
+          inputId="email-error"
+          type="email"
+          [hasError]="true"
+          errorMessage="Por favor ingresa un email válido"
+          [required]="true"
+        ></app-form-input>
+      </article>
+
+      <!-- Input Validado -->
+      <article class="style-guide__form-group">
+        <h3 class="style-guide__subsection-title">Input Validado</h3>
+        <app-form-input
+          label="Email"
+          placeholder="Ej: usuario@ejemplo.com"
+          inputId="email-valid"
+          type="email"
+          [required]="true"
+        ></app-form-input>
+      </article>
+
+      <!-- Textarea -->
+      <article class="style-guide__form-group">
+        <h3 class="style-guide__subsection-title">Textarea</h3>
+        <app-form-textarea
+          label="Descripción del Viaje"
+          placeholder="Describe tu experiencia..."
+          textareaId="trip-description"
+          [required]="true"
+          [rows]="5"
+        ></app-form-textarea>
+      </article>
+
+      <!-- Select -->
+      <article class="style-guide__form-group">
+        <h3 class="style-guide__subsection-title">Select</h3>
+        <app-form-select
+          label="Categoría de Gasto"
+          selectId="expense-category"
+          [options]="expenseCategories"
+          [required]="true"
+          placeholder="Selecciona una categoría"
+        ></app-form-select>
+      </article>
+
+      <!-- Select con Error -->
+      <article class="style-guide__form-group">
+        <h3 class="style-guide__subsection-title">Select con Error</h3>
+        <app-form-select
+          label="Tipo de Alojamiento"
+          selectId="accommodation-type"
+          [options]="expenseCategories"
+          [hasError]="true"
+          errorMessage="Este campo es obligatorio"
+          [required]="true"
+        ></app-form-select>
+      </article>
+    </article>
+  </section>
+
+  <!-- Alertas Section -->
+  <section class="style-guide__section">
+    <h2 class="style-guide__section-title">Alertas</h2>
+    <p class="style-guide__section-description">Componentes para mostrar mensajes de estado</p>
+
+    <article class="style-guide__alerts-container">
+      <!-- Success Alert -->
+      <app-alert
+        *ngIf="showAlerts.success"
+        type="success"
+        message="¡Viaje creado exitosamente! Ahora puedes comenzar a registrar tus gastos."
+        [closeable]="true"
+      ></app-alert>
+
+      <!-- Error Alert -->
+      <app-alert
+        *ngIf="showAlerts.error"
+        type="error"
+        message="Error al guardar los cambios. Por favor intenta nuevamente."
+        [closeable]="true"
+      ></app-alert>
+
+      <!-- Warning Alert -->
+      <app-alert
+        *ngIf="showAlerts.warning"
+        type="warning"
+        message="Advertencia: Estás por exceder tu presupuesto planeado para este mes."
+        [closeable]="true"
+      ></app-alert>
+
+      <!-- Info Alert -->
+      <app-alert
+        *ngIf="showAlerts.info"
+        type="info"
+        message="Información: Los gastos pueden ser editados hasta 30 días después de su creación."
+        [closeable]="true"
+      ></app-alert>
+    </article>
+  </section>
+
+  <!-- Color Palette Section -->
+  <section class="style-guide__section">
+    <h2 class="style-guide__section-title">Paleta de Colores</h2>
+    <p class="style-guide__section-description">Sistema de colores completo con variantes</p>
+
+    <!-- PRIMARY COLOR GROUP -->
+    <div class="style-guide__color-group">
+      <h3 class="style-guide__color-group-title">Primary</h3>
+      <article class="style-guide__color-palette">
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #EF476F;"></article>
+          <p class="style-guide__color-label">Primary</p>
+          <code>#EF476F</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #C83356;"></article>
+          <p class="style-guide__color-label">Hover</p>
+          <code>#C83356</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #FAC6D2;"></article>
+          <p class="style-guide__color-label">Disabled</p>
+          <code>#FAC6D2</code>
+        </article>
+      </article>
+    </div>
+
+    <!-- SECONDARY COLOR GROUP -->
+    <div class="style-guide__color-group">
+      <h3 class="style-guide__color-group-title">Secondary</h3>
+      <article class="style-guide__color-palette">
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #F37748;"></article>
+          <p class="style-guide__color-label">Secondary</p>
+          <code>#F37748</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #DB6B41;"></article>
+          <p class="style-guide__color-label">Hover</p>
+          <code>#DB6B41</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #F9BDA5;"></article>
+          <p class="style-guide__color-label">Disabled</p>
+          <code>#F9BDA5</code>
+        </article>
+      </article>
+    </div>
+
+    <!-- TERTIARY COLOR GROUP -->
+    <div class="style-guide__color-group">
+      <h3 class="style-guide__color-group-title">Tertiary</h3>
+      <article class="style-guide__color-palette">
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #FFD166;"></article>
+          <p class="style-guide__color-label">Tertiary</p>
+          <code>#FFD166</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #E6BC5C;"></article>
+          <p class="style-guide__color-label">Hover</p>
+          <code>#E6BC5C</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #FFF1D0;"></article>
+          <p class="style-guide__color-label">Disabled</p>
+          <code>#FFF1D0</code>
+        </article>
+      </article>
+    </div>
+
+    <!-- QUATERNARY COLOR GROUP -->
+    <div class="style-guide__color-group">
+      <h3 class="style-guide__color-group-title">Quaternary</h3>
+      <article class="style-guide__color-palette">
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #3ECBA6;"></article>
+          <p class="style-guide__color-label">Quaternary</p>
+          <code>#3ECBA6</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #38B795;"></article>
+          <p class="style-guide__color-label">Hover</p>
+          <code>#38B795</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #C3EFE3;"></article>
+          <p class="style-guide__color-label">Disabled</p>
+          <code>#C3EFE3</code>
+        </article>
+      </article>
+    </div>
+
+    <!-- QUINARY COLOR GROUP -->
+    <div class="style-guide__color-group">
+      <h3 class="style-guide__color-group-title">Quinary</h3>
+      <article class="style-guide__color-palette">
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #118AB2;"></article>
+          <p class="style-guide__color-label">Quinary</p>
+          <code>#118AB2</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #0F7CA0;"></article>
+          <p class="style-guide__color-label">Hover</p>
+          <code>#0F7CA0</code>
+        </article>
+        <article class="style-guide__color-item">
+          <article class="style-guide__color-box" style="background-color: #B5DBE7;"></article>
+          <p class="style-guide__color-label">Disabled</p>
+          <code>#B5DBE7</code>
+        </article>
+      </article>
+    </div>
+
+    <!-- STATE COLORS GROUP -->
+    <h3 class="style-guide__subsection-title" style="margin-top: var(--spacing-12); margin-bottom: var(--spacing-6);">Colores de Estado</h3>
+    <article class="style-guide__color-palette">
+      <article class="style-guide__color-item">
+        <article class="style-guide__color-box" style="background-color: #8DCC52;"></article>
+        <p class="style-guide__color-label">Success</p>
+        <code>#8DCC52</code>
+      </article>
+      <article class="style-guide__color-item">
+        <article class="style-guide__color-box" style="background-color: #EB351A;"></article>
+        <p class="style-guide__color-label">Error</p>
+        <code>#EB351A</code>
+      </article>
+      <article class="style-guide__color-item">
+        <article class="style-guide__color-box" style="background-color: #F37748;"></article>
+        <p class="style-guide__color-label">Warning</p>
+        <code>#F37748</code>
+      </article>
+      <article class="style-guide__color-item">
+        <article class="style-guide__color-box" style="background-color: #118AB2;"></article>
+        <p class="style-guide__color-label">Info</p>
+        <code>#118AB2</code>
+      </article>
+      <article class="style-guide__color-item">
+        <article class="style-guide__color-box" style="background-color: #141414;"></article>
+        <p class="style-guide__color-label">Dark</p>
+        <code>#141414</code>
+      </article>
+    </article>
+  </section>
+</article>
