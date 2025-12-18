@@ -1,4 +1,4 @@
-name: CI con AutoCommit y Documentación
+name: CI con AutoCommit, Documentación y GitHub Pages Deploy
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   test-and-update:
@@ -86,19 +88,53 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md backend/report.md docs
-          git commit -m "Update README.md, report.md y documentación Javadoc" || echo "No hay cambios que commitear"
+          git commit -m "Update Api Documentation with Javadoc and PDFs" || echo "No hay cambios que commitear"
           git push origin HEAD:${GITHUB_REF#refs/heads/}
 
 
-      # 1️⃣2️⃣ Publicar en GitHub Pages
-      - name: Deploy a GitHub Pages
+      # 1️⃣2️⃣ Build del Frontend Angular
+      - name: Instalar dependencias del Frontend
+        working-directory: frontend
+        run: npm install
+
+      - name: Build Frontend Angular
+        working-directory: frontend
+        run: npm run build -- --configuration production --base-href=/MapMyJourney/
+
+      # 1️⃣3️⃣ Preparar estructura para GitHub Pages
+      - name: Preparar directorio para GitHub Pages
         run: |
           cd ..
-          mkdir -p /tmp/javadoc-deploy && rm -rf /tmp/javadoc-deploy/* && cp -r docs/javadoc-api/* /tmp/javadoc-deploy/
-          cd /tmp/javadoc-deploy
-          git init
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Deploy Javadoc API to GitHub Pages"
-          git push -u https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git HEAD:gh-pages -f
+          # Crear estructura de GitHub Pages
+          mkdir -p /tmp/github-pages
+          
+          # Copiar frontend build al índice
+          cp -r frontend/dist/frontend/browser/* /tmp/github-pages/
+          
+          # Copiar documentación de API a subdirectorio
+          mkdir -p /tmp/github-pages/api-docs
+          cp -r docs/javadoc-api/* /tmp/github-pages/api-docs/
+          
+          # Crear archivos .nojekyll para que GitHub Pages sirva correctamente
+          touch /tmp/github-pages/.nojekyll
+          touch /tmp/github-pages/api-docs/.nojekyll
+          
+          echo "✅ Página de GitHub Pages preparada en /tmp/github-pages"
+          ls -la /tmp/github-pages/
+
+      # 1️⃣4️⃣ Deploy a GitHub Pages
+      - name: Deploy a GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '/tmp/github-pages'
+
+  deploy:
+    needs: test-and-update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
