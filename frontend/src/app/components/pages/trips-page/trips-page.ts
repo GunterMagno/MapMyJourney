@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ButtonComponent } from '../../shared/button/button';
+import { CardComponent } from '../../shared/card/card';
+import { HeaderComponent } from '../../layout/header/header';
+import { FooterComponent } from '../../layout/footer/footer';
 import { AuthService } from '../../../services/auth.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ToastService } from '../../../services/toast.service';
@@ -15,6 +18,7 @@ interface Trip {
   startDate: Date;
   endDate: Date;
   totalExpenses: number;
+  image?: string;
 }
 
 /**
@@ -29,7 +33,7 @@ interface Trip {
 @Component({
   selector: 'app-trips-page',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, CardComponent, HeaderComponent, FooterComponent],
   templateUrl: './trips-page.html',
   styleUrl: './trips-page.scss'
 })
@@ -70,11 +74,12 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.trips = [
       {
         id: '1',
-        name: 'Viaje a Barcelona',
-        destination: 'Barcelona, España',
-        startDate: new Date('2024-06-01'),
-        endDate: new Date('2024-06-07'),
-        totalExpenses: 850
+        name: 'Viaje a Japon',
+        destination: 'Tokio y Kioto, Japón',
+        startDate: new Date('2024-05-10'),
+        endDate: new Date('2024-05-24'),
+        totalExpenses: 2500,
+        image: 'images/japan.jpg'
       },
       {
         id: '2',
@@ -82,7 +87,8 @@ export class TripsPageComponent implements OnInit, OnDestroy {
         destination: 'París, Francia',
         startDate: new Date('2024-07-15'),
         endDate: new Date('2024-07-22'),
-        totalExpenses: 1200
+        totalExpenses: 1200,
+        image: 'images/paris.jpg'
       }
     ];
   }

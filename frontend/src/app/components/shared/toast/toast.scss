@@ -23,27 +23,31 @@
   pointer-events: auto;
   border-left: 6px solid;
 
+  &--exiting {
+    animation: slideOut 0.3s ease-in forwards;
+  }
+
   &--success {
     border-left-color: var(--correct-color);
-    background-color: rgba(102, 221, 51, 0.25);
+    background-color: var(--quaternary-color-disabled);
     color: var(--correct-color);
   }
 
   &--error {
     border-left-color: var(--error-color);
-    background-color: rgba(255, 107, 91, 0.25);
+    background-color: var(--principal-color-disabled);
     color: var(--error-color);
   }
 
   &--warning {
     border-left-color: var(--warning-color);
-    background-color: rgba(255, 140, 90, 0.25);
+    background-color: var(--secondary-color-disabled);
     color: var(--warning-color);
   }
 
   &--info {
     border-left-color: var(--info-color);
-    background-color: rgba(26, 175, 221, 0.25);
+    background-color: var(--quinary-color-disabled);
     color: var(--info-color);
   }
 }
@@ -87,6 +91,17 @@
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
   }
 }
 

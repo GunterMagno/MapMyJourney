@@ -82,6 +82,51 @@
     </div>
   </article>
 
+  <!-- Loading States Section -->
+  <article class="demo__section">
+    <h2>Estados de Carga - Botones Interactivos</h2>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Guardar"
+        variant="primary"
+        size="lg"
+        [loading]="isSaving"
+        loadingText="Guardando..."
+        (click)="handleSave()">
+      </app-button>
+
+      <app-button
+        label="Crear Nuevo"
+        variant="secondary"
+        size="lg"
+        [loading]="isCreating"
+        loadingText="Creando..."
+        (click)="handleCreate()">
+      </app-button>
+
+      <app-button
+        label="Eliminar"
+        variant="danger"
+        size="lg"
+        [loading]="isDeleting"
+        loadingText="Eliminando..."
+        (click)="handleDelete()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Global Page Loading Section -->
+  <article class="demo__section">
+    <h2>Carga Global de Página</h2>
+    <p>Simula la carga de una página completa con overlay oscuro y spinner.</p>
+    <app-button
+      label="Simular Carga de Página (2 segundos)"
+      variant="primary"
+      size="lg"
+      (click)="simulatePageLoad()">
+    </app-button>
+  </article>
+
   <!-- Modal Component -->
   <app-modal
     title="Modal de Demostración"

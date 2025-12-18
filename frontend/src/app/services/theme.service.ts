@@ -20,15 +20,15 @@ export class ThemeService {
   }
 
   /**
-   * Initializes theme from localStorage or system preference.
+   * Initializes theme from localStorage or defaults to 'light' mode.
    */
   private initializeTheme(): void {
     const savedTheme = this.getThemeFromStorage();
     if (savedTheme) {
       this.applyTheme(savedTheme);
     } else {
-      const prefersDark = this.detectSystemPreference();
-      this.applyTheme(prefersDark ? 'dark' : 'light');
+      // Default to light mode instead of system preference
+      this.applyTheme('light');
     }
   }
 

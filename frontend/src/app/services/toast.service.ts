@@ -9,6 +9,7 @@ export interface Toast {
   type: ToastType;
   duration?: number; // milliseconds, undefined = no auto-close
   dismissible?: boolean;
+  exiting?: boolean; // Used for dismissal animation
 }
 
 /**

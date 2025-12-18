@@ -25,8 +25,8 @@
   }
 
   &__section {
-    margin-bottom: var(--spacing-20);
-    padding: var(--spacing-12);
+    margin-bottom: var(--spacing-4);
+    padding: var(--spacing-6);
     background-color: transparent;
     border-radius: var(--border-radius-medium);
   }
@@ -41,11 +41,11 @@
   &__section-description {
     font-size: var(--font-size-small);
     color: var(--text-secondary);
-    margin: 0 0 var(--spacing-8) 0;
+    margin: 0 0 var(--spacing-4) 0;
   }
 
   &__subsection {
-    margin-bottom: var(--spacing-10);
+    margin-bottom: var(--spacing-4);
   }
 
   &__subsection-title {
@@ -58,18 +58,27 @@
   &__showcase {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-6);
+    gap: var(--spacing-4);
     padding: var(--spacing-6);
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: var(--border-radius-small);
     border: none;
-    align-items: flex-start;
+    align-items: center;
+
+    // Cards need grid layout
+    &:has(app-card) {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-6);
+      align-items: start;
+    }
 
     @media (max-width: var(--breakpoint-tablet)) {
-      gap: var(--spacing-4);
-      flex-direction: column;
+      &:has(app-card) {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+      }
 
-      app-button,
       app-card {
         width: 100%;
       }
@@ -311,4 +320,100 @@
   &:hover {
     box-shadow: 0 0 0 2px rgba(235, 53, 26, 0.1), var(--shadow-lg);
   }
+}
+
+/* Size Scales Styles */
+.style-guide__size-scale,
+.style-guide__radius-scale,
+.style-guide__border-scale {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-6);
+  margin-top: var(--spacing-4);
+}
+
+.style-guide__size-container {
+  padding: var(--spacing-6);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius-small);
+  border: 2px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-4);
+}
+
+.style-guide__size-item {
+  padding: var(--spacing-4);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius-small);
+  border: 2px solid var(--border-color);
+  text-align: center;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  p {
+    color: var(--text-main);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-2);
+  }
+
+  code {
+    font-size: var(--font-size-extra-small);
+    color: var(--text-secondary);
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--border-radius-small);
+    display: inline-block;
+  }
+}
+
+.style-guide__radius-item,
+.style-guide__border-item {
+  padding: var(--spacing-4);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius-small);
+  border: 2px solid var(--border-color);
+  text-align: center;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  code {
+    font-size: var(--font-size-extra-small);
+    color: var(--text-secondary);
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--border-radius-small);
+    display: inline-block;
+    margin-top: var(--spacing-2);
+  }
+}
+
+.style-guide__radius-box,
+.style-guide__border-box {
+  width: 100px;
+  height: 100px;
+  background-color: var(--principal-color);
+  margin: 0 auto var(--spacing-3);
+}
+
+/* Estilos específicos para border boxes con colores diferentes */
+.style-guide__border-item:nth-child(1) .style-guide__border-box {
+  border-color: var(--principal-color);
+}
+
+.style-guide__border-item:nth-child(2) .style-guide__border-box {
+  border-color: var(--quaternary-color);
+}
+
+.style-guide__border-item:nth-child(3) .style-guide__border-box {
+  border-color: var(--secondary-color);
 }

@@ -1,3 +1,6 @@
-<button [class]="buttonClasses" [disabled]="disabled" [type]="type">
-  {{ label }}
+<button [class]="buttonClasses" [disabled]="disabled || loading" [type]="type">
+  @if (loading) {
+    <span class="button__spinner"></span>
+  }
+  <span class="button__label">{{ displayLabel }}</span>
 </button>

@@ -1,10 +1,20 @@
 <div class="form-textarea">
-  <label [for]="textareaId" class="form-textarea__label">
-    {{ label }}
-    @if (control?.hasError('required') && control?.touched) {
-      <span class="form-textarea__required">*</span>
-    }
-  </label>
+  <div class="form-textarea__label-container">
+    <label [for]="textareaId" class="form-textarea__label">
+      {{ label }}
+      @if (control?.hasError('required') && !control?.value) {
+        <span class="form-textarea__required">*</span>
+      }
+    </label>
+    <div class="form-textarea__status">
+      @if (control?.valid && control?.value && !isInvalid) {
+        <span class="form-textarea__success" title="Válido">✓</span>
+      }
+      @if (isInvalid && control?.value) {
+        <span class="form-textarea__error-icon" title="Error">✕</span>
+      }
+    </div>
+  </div>
   
   <textarea
     [id]="textareaId"
@@ -12,17 +22,13 @@
     [rows]="rows"
     [formControl]="control!"
     class="form-textarea__field"
-    [class.form-textarea__field--invalid]="isInvalid"
-    [class.form-textarea__field--valid]="control?.valid && control?.touched && !isInvalid">
+    [class.form-textarea__field--error]="isInvalid && control?.value"
+    [class.form-textarea__field--valid]="control?.valid && control?.value && !isInvalid">
   </textarea>
   
-  @if (isInvalid) {
-    <span class="form-textarea__error" role="alert">
+  @if (isInvalid && control?.value) {
+    <span class="form-textarea__error-message" role="alert">
       {{ errorMessage }}
     </span>
-  }
-  
-  @if (control?.valid && control?.touched && !isInvalid) {
-    <span class="form-textarea__success">✓</span>
   }
 </div>

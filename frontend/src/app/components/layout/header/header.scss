@@ -1,10 +1,11 @@
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-6);
   padding: 0 var(--spacing-16);
-  height: 100px;
+  min-height: 100px;
   background-color: var(--quaternary-color);
   border-bottom: 2px solid var(--border-color);
   width: 100%;
@@ -40,22 +41,60 @@
 
   &__theme-btn {
     padding: 0.5rem;
-    border: none;
+    border: 2px solid var(--text-inverse);
     background: none;
-    font-size: var(--font-size-tittle-h3);
     cursor: pointer;
-    transition: transform var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    border-radius: var(--border-radius-small);
+    transition: all var(--transition-fast);
 
     &:hover {
-      transform: scale(1.1);
+      .header__theme-icon {
+        transform: scale(1.1);
+      }
     }
 
     &:focus {
       outline: 2px solid var(--text-inverse);
       outline-offset: 2px;
-      border-radius: var(--border-radius-small);
     }
   }
+
+  &__theme-icon {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    color: var(--text-inverse);
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+
+    &--sun {
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+
+    &--moon {
+      opacity: 0;
+      transform: rotate(-180deg);
+    }
+  }
+
+  &.dark-mode-active {
+    .header__theme-icon--sun {
+      opacity: 0;
+      transform: rotate(180deg);
+    }
+
+    .header__theme-icon--moon {
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+  }
+
 
   &__hamburger {
     display: none;
@@ -138,6 +177,12 @@
 
   &__profile-avatar {
     font-size: var(--font-size-tittle-h3);
+  }
+
+  &__profile-picture {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
   }
 
   // Mobile Menu Styles
@@ -246,6 +291,28 @@
         background-color: var(--quinary-color-hover);
       }
     }
+
+    &--theme {
+      background-color: var(--tertiary-color);
+      color: var(--text-inverse);
+      margin-bottom: var(--spacing-2);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: var(--spacing-4) var(--spacing-4);
+
+      &:hover {
+        background-color: var(--tertiary-color-hover);
+      }
+    }
+
+    &--danger {
+      background-color: var(--error-color);
+      color: var(--text-inverse);
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
   }
 
   &__overlay {
@@ -259,9 +326,8 @@
     animation: fadeIn var(--transition-medium);
   }
 
-  @media (max-width: var(--breakpoint-tablet)) {
-    height: 80px;
-    padding: 0 var(--spacing-12);
+  @media (max-width: 768px) {
+    padding: var(--spacing-4) var(--spacing-12);
     gap: var(--spacing-4);
 
     &__left {
@@ -276,22 +342,41 @@
       font-size: var(--font-size-tittle-h4);
     }
 
+    &__center {
+      display: none;
+    }
+
     &__right {
-      gap: var(--spacing-4);
+      gap: var(--spacing-3);
+    }
+
+    &__theme-btn {
+      display: none;
+    }
+
+    &__hamburger {
+      display: flex;
     }
 
     &__btn {
-      padding: var(--spacing-2) var(--spacing-4);
-      font-size: var(--font-size-small);
+      display: none;
+    }
+
+    &__profile {
+      display: none;
+    }
+
+    &__profile-picture {
+      display: none;
     }
   }
 
   @media (max-width: var(--breakpoint-mobile)) {
-    height: 70px;
-    padding: 0 var(--spacing-8);
+    padding: var(--spacing-3) var(--spacing-8);
 
     &__left {
       min-width: auto;
+      order: 1;
     }
 
     &__logo-img {
@@ -307,7 +392,13 @@
     }
 
     &__right {
+      order: 2;
       gap: var(--spacing-2);
+      flex-direction: row;
+    }
+
+    &__theme-btn {
+      display: none;
     }
 
     &__hamburger {
@@ -319,8 +410,11 @@
     }
 
     &__profile {
-      width: 40px;
-      height: 40px;
+      display: none;
+    }
+
+    &__profile-picture {
+      display: none;
     }
 
     &__profile-avatar {
@@ -335,6 +429,50 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes rotateSunClear {
+  from {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes rotateSunDark {
+  from {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0) rotate(180deg);
+  }
+}
+
+@keyframes rotateMoonClear {
+  from {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+}
+
+@keyframes rotateMoonDark {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
   }
 }
 

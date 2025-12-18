@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/button/button';
 import { CardComponent } from '../../shared/card/card';
 import { FormInputComponent } from '../../shared/form-input/form-input';
@@ -14,6 +15,7 @@ import { FooterComponent } from '../../layout/footer/footer';
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     ButtonComponent,
     CardComponent,
     FormInputComponent,
@@ -26,7 +28,13 @@ import { FooterComponent } from '../../layout/footer/footer';
   templateUrl: './style-guide.html',
   styleUrl: './style-guide.scss',
 })
-export class StyleGuideComponent {
+export class StyleGuideComponent implements OnInit {  // Form controls
+  tripNameControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  emailErrorControl = new FormControl('invalidemail', [Validators.required, Validators.email]);
+  emailValidControl = new FormControl('user@example.com', [Validators.required, Validators.email]);
+  descriptionControl = new FormControl('', [Validators.required, Validators.minLength(10)]);
+  categoryControl = new FormControl('', [Validators.required]);
+  categoryErrorControl = new FormControl('', [Validators.required]);
   // Form data
   expenseCategories: SelectOption[] = [
     { label: 'Transporte', value: 'transport' },
@@ -43,6 +51,13 @@ export class StyleGuideComponent {
     warning: true,
     info: true,
   };
+
+  ngOnInit(): void {
+    // Mark email error field as touched to show validation
+    this.emailErrorControl.markAsTouched();
+    this.emailValidControl.markAsTouched();
+    this.categoryErrorControl.markAsTouched();
+  }
 
   onAlertClose(type: string): void {
     this.showAlerts[type as keyof typeof this.showAlerts] = false;

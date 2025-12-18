@@ -1,10 +1,22 @@
 .form-textarea {
+  &__label-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-2);
+  }
+
   &__label {
     display: block;
-    margin-bottom: var(--spacing-2);
     color: var(--text-main);
     font-weight: var(--font-weight-medium);
     font-size: var(--font-size-medium);
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
   }
 
   &__required {
@@ -51,7 +63,21 @@
     }
   }
 
-  &__error {
+  &__success {
+    color: var(--correct-color);
+    font-size: var(--font-size-large);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+  }
+
+  &__error-icon {
+    color: var(--error-color);
+    font-size: var(--font-size-large);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+  }
+
+  &__error-message {
     display: block;
     margin-top: var(--spacing-2);
     color: var(--error-color);

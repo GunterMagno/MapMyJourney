@@ -2,6 +2,9 @@
   padding: var(--spacing-8);
   max-width: 1200px;
   margin: 0 auto;
+  min-height: calc(100vh - 80px - 200px);
+  display: flex;
+  flex-direction: column;
 }
 
 .trips-page__header {
@@ -43,56 +46,22 @@
   gap: var(--spacing-6);
 }
 
-.trip-card {
+// Estilos para contenido dentro de card
+.trip-card__content {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
-  padding: var(--spacing-6);
-  background-color: var(--bg-surface);
-  border: var(--border-thin) solid var(--border-color);
-  border-radius: var(--border-radius-medium);
-  transition: all var(--transition-duration-normal) var(--transition-timing);
-
-  &:hover {
-    box-shadow: var(--shadow-medium);
-    transform: translateY(-2px);
-  }
+  gap: var(--spacing-3);
+  height: 100%;
 }
 
-.trip-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-  gap: var(--spacing-4);
-}
-
-.trip-card__title {
-  margin: 0;
-  font-size: var(--font-size-tittle-h3);
-  color: var(--text-main);
-}
-
-.trip-card__badge {
-  display: inline-block;
-  padding: var(--spacing-2) var(--spacing-3);
-  background-color: var(--principal-color);
-  color: white;
-  border-radius: var(--border-radius-small);
-  font-size: var(--font-size-small);
-  font-weight: var(--font-weight-semibold);
-  white-space: nowrap;
-}
-
-.trip-card__details {
+.trip-card__info {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
   padding: var(--spacing-4) 0;
-  border-top: var(--border-thin) solid var(--border-color);
-  border-bottom: var(--border-thin) solid var(--border-color);
 }
 
-.trip-card__detail {
+.trip-card__expense {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -113,6 +82,7 @@
 .trip-card__actions {
   display: flex;
   gap: var(--spacing-3);
+  margin-top: auto;
 }
 
 .trip-card__actions app-button {
@@ -127,19 +97,6 @@ html.dark-mode {
 
   .trips-page__empty p {
     color: var(--text-secondary-dark);
-  }
-
-  .trip-card {
-    background-color: var(--bg-surface-dark);
-    border-color: var(--border-color-dark);
-  }
-
-  .trip-card__title {
-    color: var(--text-main-dark);
-  }
-
-  .trip-card__details {
-    border-color: var(--border-color-dark);
   }
 
   .trip-card__label {
@@ -159,7 +116,8 @@ html.dark-mode {
   .trips-page__header {
     flex-direction: column;
     gap: var(--spacing-4);
-    align-items: stretch;
+    align-items: center;
+    text-align: center;
   }
 
   .trips-page__header h1 {
@@ -176,5 +134,74 @@ html.dark-mode {
 
   .trip-card__actions {
     flex-direction: column;
+  }
+}
+
+// Card color variants
+.card--primary {
+  border-color: var(--principal-color) !important;
+  border-width: var(--border-thick) !important;
+  
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(239, 71, 111, 0.1), var(--shadow-lg);
+    border-color: var(--principal-color-hover) !important;
+  }
+}
+
+.card--secondary {
+  border-color: var(--secondary-color) !important;
+  border-width: var(--border-thick) !important;
+  
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(243, 119, 72, 0.1), var(--shadow-lg);
+    border-color: var(--secondary-color-hover) !important;
+  }
+}
+
+.card--tertiary {
+  border-color: var(--tertiary-color) !important;
+  border-width: var(--border-thick) !important;
+  
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(255, 209, 102, 0.1), var(--shadow-lg);
+    border-color: var(--tertiary-color-hover) !important;
+  }
+}
+
+.card--quaternary {
+  border-color: var(--quaternary-color) !important;
+  border-width: var(--border-thick) !important;
+  
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(62, 203, 166, 0.1), var(--shadow-lg);
+    border-color: var(--quaternary-color-hover) !important;
+  }
+}
+
+.card--quinary {
+  border-color: var(--quinary-color) !important;
+  border-width: var(--border-thick) !important;
+  
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(17, 138, 178, 0.1), var(--shadow-lg);
+    border-color: var(--quinary-color-hover) !important;
+  }
+}
+
+.card--success {
+  border-color: var(--correct-color) !important;
+  border-width: var(--border-thick) !important;
+  
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(141, 204, 82, 0.1), var(--shadow-lg);
+  }
+}
+
+.card--error {
+  border-color: var(--error-color) !important;
+  border-width: var(--border-thick) !important;
+  
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(235, 53, 26, 0.1), var(--shadow-lg);
   }
 }

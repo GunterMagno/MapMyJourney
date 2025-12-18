@@ -1,10 +1,20 @@
 <div class="form-input">
-  <label [for]="inputId" class="form-input__label">
-    {{ label }}
-    @if (control?.hasError('required') && control?.touched) {
-      <span class="form-input__required">*</span>
-    }
-  </label>
+  <div class="form-input__label-container">
+    <label [for]="inputId" class="form-input__label">
+      {{ label }}
+      @if (control?.hasError('required') && !control?.value) {
+        <span class="form-input__required">*</span>
+      }
+    </label>
+    <div class="form-input__status">
+      @if (control?.valid && control?.value && !isInvalid) {
+        <span class="form-input__success" title="Válido">✓</span>
+      }
+      @if (isInvalid && control?.value) {
+        <span class="form-input__error-icon" title="Error">✕</span>
+      }
+    </div>
+  </div>
   
   <input
     [id]="inputId"
@@ -12,16 +22,12 @@
     [placeholder]="placeholder"
     [formControl]="control!"
     class="form-input__field"
-    [class.form-input__field--invalid]="isInvalid"
-    [class.form-input__field--valid]="control?.valid && control?.touched && !isInvalid">
+    [class.form-input__field--error]="isInvalid && control?.value"
+    [class.form-input__field--valid]="control?.valid && control?.value && !isInvalid">
   
-  @if (isInvalid) {
-    <span class="form-input__error" role="alert">
+  @if (isInvalid && control?.value) {
+    <span class="form-input__error-message" role="alert">
       {{ errorMessage }}
     </span>
-  }
-  
-  @if (control?.valid && control?.touched && !isInvalid) {
-    <span class="form-input__success">✓</span>
   }
 </div>

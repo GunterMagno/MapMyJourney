@@ -64,37 +64,16 @@
     <p class="style-guide__section-description">Componentes contenedores con bordes de color</p>
 
     <article class="style-guide__showcase">
-      <app-card class="card--primary">
-        <article class="card__header">
-          <h3 class="card__title">Viaje a París</h3>
-        </article>
-        <article class="card__content">
-          <p>Experiencia increíble visitando los monumentos más icónicos de Francia.</p>
-          <p><strong>Duración:</strong> 7 días</p>
-          <p><strong>Costo Total:</strong> $1,500 USD</p>
-        </article>
+      <app-card class="card--primary" title="Viaje a Paris" description="Experiencia increible visitando los monumentos mas iconicos de Francia. Duracion: 7 dias" image="images/paris.jpg">
+        <app-button label="Ver Detalles" variant="primary" size="md"></app-button>
       </app-card>
 
-      <app-card class="card--secondary">
-        <article class="card__header">
-          <h3 class="card__title">Viaje a Japón</h3>
-        </article>
-        <article class="card__content">
-          <p>Exploración de cultura ancestral y tecnología moderna en Tokio y Kioto.</p>
-          <p><strong>Duración:</strong> 14 días</p>
-          <p><strong>Costo Total:</strong> $3,200 USD</p>
-        </article>
+      <app-card class="card--secondary" title="Viaje a Japon" description="Exploracion de cultura ancestral y tecnologia moderna en Tokio y Kioto. Duracion: 14 dias" image="images/japan.jpg">
+        <app-button label="Ver Detalles" variant="primary" size="md"></app-button>
       </app-card>
 
-      <app-card class="card--quinary">
-        <article class="card__header">
-          <h3 class="card__title">Viaje a Nueva York</h3>
-        </article>
-        <article class="card__content">
-          <p>La ciudad que nunca duerme: Broadway, Central Park y compras en 5ta Avenida.</p>
-          <p><strong>Duración:</strong> 5 días</p>
-          <p><strong>Costo Total:</strong> $2,100 USD</p>
-        </article>
+      <app-card class="card--quinary" title="Viaje a Nueva York" description="La ciudad que nunca duerme: Broadway, Central Park y compras en 5ta Avenida. Duracion: 5 dias" image="images/newyork.jpg">
+        <app-button label="Ver Detalles" variant="primary" size="md"></app-button>
       </app-card>
     </article>
   </section>
@@ -111,7 +90,8 @@
         <app-form-input
           label="Nombre del Viaje"
           placeholder="Ej: Viaje a París"
-          inputId="trip-name">
+          inputId="trip-name"
+          [control]="tripNameControl">
         </app-form-input>
       </article>
 
@@ -123,7 +103,8 @@
           placeholder="Ej: usuario@ejemplo.com"
           inputId="email-error"
           type="email"
-          errorMessage="Por favor ingresa un email válido">
+          errorMessage="Por favor ingresa un email válido"
+          [control]="emailErrorControl">
         </app-form-input>
       </article>
 
@@ -134,7 +115,8 @@
           label="Email"
           placeholder="Ej: usuario@ejemplo.com"
           inputId="email-valid"
-          type="email">
+          type="email"
+          [control]="emailValidControl">
         </app-form-input>
       </article>
 
@@ -145,7 +127,8 @@
           label="Descripción del Viaje"
           placeholder="Describe tu experiencia..."
           textareaId="trip-description"
-          [rows]="5">
+          [rows]="5"
+          [control]="descriptionControl">
         </app-form-textarea>
       </article>
 
@@ -156,7 +139,8 @@
           label="Categoría de Gasto"
           selectId="expense-category"
           [options]="expenseCategories"
-          placeholder="Selecciona una categoría">
+          placeholder="Selecciona una categoría"
+          [control]="categoryControl">
         </app-form-select>
       </article>
 
@@ -167,7 +151,8 @@
           label="Tipo de Alojamiento"
           selectId="accommodation-type"
           [options]="expenseCategories"
-          errorMessage="Este campo es obligatorio">
+          errorMessage="Este campo es obligatorio"
+          [control]="categoryErrorControl">
         </app-form-select>
       </article>
     </article>
@@ -223,19 +208,19 @@
       <h3 class="style-guide__color-group-title">Primary</h3>
       <article class="style-guide__color-palette">
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #EF476F;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--principal-color);"></article>
           <p class="style-guide__color-label">Primary</p>
-          <code>#EF476F</code>
+          <code>var(--principal-color)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #C83356;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--principal-color-hover);"></article>
           <p class="style-guide__color-label">Hover</p>
-          <code>#C83356</code>
+          <code>var(--principal-color-hover)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #FAC6D2;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--principal-color-disabled);"></article>
           <p class="style-guide__color-label">Disabled</p>
-          <code>#FAC6D2</code>
+          <code>var(--principal-color-disabled)</code>
         </article>
       </article>
     </div>
@@ -245,19 +230,19 @@
       <h3 class="style-guide__color-group-title">Secondary</h3>
       <article class="style-guide__color-palette">
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #F37748;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--secondary-color);"></article>
           <p class="style-guide__color-label">Secondary</p>
-          <code>#F37748</code>
+          <code>var(--secondary-color)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #DB6B41;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--secondary-color-hover);"></article>
           <p class="style-guide__color-label">Hover</p>
-          <code>#DB6B41</code>
+          <code>var(--secondary-color-hover)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #F9BDA5;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--secondary-color-disabled);"></article>
           <p class="style-guide__color-label">Disabled</p>
-          <code>#F9BDA5</code>
+          <code>var(--secondary-color-disabled)</code>
         </article>
       </article>
     </div>
@@ -267,19 +252,19 @@
       <h3 class="style-guide__color-group-title">Tertiary</h3>
       <article class="style-guide__color-palette">
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #FFD166;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--tertiary-color);"></article>
           <p class="style-guide__color-label">Tertiary</p>
-          <code>#FFD166</code>
+          <code>var(--tertiary-color)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #E6BC5C;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--tertiary-color-hover);"></article>
           <p class="style-guide__color-label">Hover</p>
-          <code>#E6BC5C</code>
+          <code>var(--tertiary-color-hover)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #FFF1D0;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--tertiary-color-disabled);"></article>
           <p class="style-guide__color-label">Disabled</p>
-          <code>#FFF1D0</code>
+          <code>var(--tertiary-color-disabled)</code>
         </article>
       </article>
     </div>
@@ -289,19 +274,19 @@
       <h3 class="style-guide__color-group-title">Quaternary</h3>
       <article class="style-guide__color-palette">
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #3ECBA6;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--quaternary-color);"></article>
           <p class="style-guide__color-label">Quaternary</p>
-          <code>#3ECBA6</code>
+          <code>var(--quaternary-color)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #38B795;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--quaternary-color-hover);"></article>
           <p class="style-guide__color-label">Hover</p>
-          <code>#38B795</code>
+          <code>var(--quaternary-color-hover)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #C3EFE3;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--quaternary-color-disabled);"></article>
           <p class="style-guide__color-label">Disabled</p>
-          <code>#C3EFE3</code>
+          <code>var(--quaternary-color-disabled)</code>
         </article>
       </article>
     </div>
@@ -311,19 +296,19 @@
       <h3 class="style-guide__color-group-title">Quinary</h3>
       <article class="style-guide__color-palette">
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #118AB2;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--quinary-color);"></article>
           <p class="style-guide__color-label">Quinary</p>
-          <code>#118AB2</code>
+          <code>var(--quinary-color)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #0F7CA0;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--quinary-color-hover);"></article>
           <p class="style-guide__color-label">Hover</p>
-          <code>#0F7CA0</code>
+          <code>var(--quinary-color-hover)</code>
         </article>
         <article class="style-guide__color-item">
-          <article class="style-guide__color-box" style="background-color: #B5DBE7;"></article>
+          <article class="style-guide__color-box" style="background-color: var(--quinary-color-disabled);"></article>
           <p class="style-guide__color-label">Disabled</p>
-          <code>#B5DBE7</code>
+          <code>var(--quinary-color-disabled)</code>
         </article>
       </article>
     </div>
@@ -332,32 +317,108 @@
     <h3 class="style-guide__subsection-title" style="margin-top: var(--spacing-12); margin-bottom: var(--spacing-6);">Colores de Estado</h3>
     <article class="style-guide__color-palette">
       <article class="style-guide__color-item">
-        <article class="style-guide__color-box" style="background-color: #8DCC52;"></article>
+        <article class="style-guide__color-box" style="background-color: var(--correct-color);"></article>
         <p class="style-guide__color-label">Success</p>
-        <code>#8DCC52</code>
+        <code>var(--correct-color)</code>
       </article>
       <article class="style-guide__color-item">
-        <article class="style-guide__color-box" style="background-color: #EB351A;"></article>
+        <article class="style-guide__color-box" style="background-color: var(--error-color);"></article>
         <p class="style-guide__color-label">Error</p>
-        <code>#EB351A</code>
+        <code>var(--error-color)</code>
       </article>
       <article class="style-guide__color-item">
-        <article class="style-guide__color-box" style="background-color: #F37748;"></article>
+        <article class="style-guide__color-box" style="background-color: var(--warning-color);"></article>
         <p class="style-guide__color-label">Warning</p>
-        <code>#F37748</code>
+        <code>var(--warning-color)</code>
       </article>
       <article class="style-guide__color-item">
-        <article class="style-guide__color-box" style="background-color: #118AB2;"></article>
+        <article class="style-guide__color-box" style="background-color: var(--info-color);"></article>
         <p class="style-guide__color-label">Info</p>
-        <code>#118AB2</code>
+        <code>var(--info-color)</code>
       </article>
       <article class="style-guide__color-item">
-        <article class="style-guide__color-box" style="background-color: #141414;"></article>
+        <article class="style-guide__color-box" style="background-color: var(--dark-color);"></article>
         <p class="style-guide__color-label">Dark</p>
-        <code>#141414</code>
+        <code>var(--dark-color)</code>
       </article>
     </article>
   </section>
-</article>
+  <!-- Escalas de Tamaños Section -->
+  <section class="style-guide__section">
+    <h2 class="style-guide__section-title">Escalas de Tamaños</h2>
+    
+    <!-- Font Sizes -->
+    <article class="style-guide__subsection">
+      <h3 class="style-guide__subsection-title">Tamaños de Letra</h3>
+      <article class="style-guide__size-container">
+        <article class="style-guide__size-item">
+          <p style="font-size: var(--font-size-tittle-h1); margin: 0;">Titulo H1</p>
+          <code>68px - H1</code>
+        </article>
+        <article class="style-guide__size-item">
+          <p style="font-size: var(--font-size-tittle-h2); margin: 0;">Titulo H2</p>
+          <code>42px - H2</code>
+        </article>
+        <article class="style-guide__size-item">
+          <p style="font-size: var(--font-size-tittle-h3); margin: 0;">Titulo H3</p>
+          <code>26px - H3</code>
+        </article>
+        <article class="style-guide__size-item">
+          <p style="font-size: var(--font-size-tittle-h4); margin: 0;">Titulo H4</p>
+          <code>20px - H4</code>
+        </article>
+        <article class="style-guide__size-item">
+          <p style="font-size: var(--font-size-medium); margin: 0;">Texto Mediano</p>
+          <code>16px - Medium</code>
+        </article>
+        <article class="style-guide__size-item">
+          <p style="font-size: var(--font-size-small); margin: 0;">Texto Pequeno</p>
+          <code>14px - Small</code>
+        </article>
+        <article class="style-guide__size-item">
+          <p style="font-size: var(--font-size-extra-small); margin: 0;">Texto Extra Pequeno</p>
+          <code>12px - Extra Small</code>
+        </article>
+      </article>
+    </article>
+
+    <!-- Border Radius -->
+    <article class="style-guide__subsection">
+      <h3 class="style-guide__subsection-title">Radio de Borde</h3>
+      <article class="style-guide__radius-scale">
+        <article class="style-guide__radius-item">
+          <article class="style-guide__radius-box" style="border-radius: var(--border-radius-small);"></article>
+          <code>10px - Pequeno</code>
+        </article>
+        <article class="style-guide__radius-item">
+          <article class="style-guide__radius-box" style="border-radius: var(--border-radius-medium);"></article>
+          <code>20px - Mediano</code>
+        </article>
+        <article class="style-guide__radius-item">
+          <article class="style-guide__radius-box" style="border-radius: var(--border-radius-full);"></article>
+          <code>9999px - Redondeado</code>
+        </article>
+      </article>
+    </article>
+
+    <!-- Border Widths -->
+    <article class="style-guide__subsection">
+      <h3 class="style-guide__subsection-title">Espesor de Borde</h3>
+      <article class="style-guide__border-scale">
+        <article class="style-guide__border-item">
+          <article class="style-guide__border-box" style="border: var(--border-thin) solid var(--principal-color);"></article>
+          <code>1px - Delgado</code>
+        </article>
+        <article class="style-guide__border-item">
+          <article class="style-guide__border-box" style="border: var(--border-medium) solid var(--principal-color);"></article>
+          <code>2px - Mediano</code>
+        </article>
+        <article class="style-guide__border-item">
+          <article class="style-guide__border-box" style="border: var(--border-thick) solid var(--principal-color);"></article>
+          <code>4px - Grueso</code>
+        </article>
+      </article>
+    </article>
+  </section></article>
 
 <app-footer></app-footer>

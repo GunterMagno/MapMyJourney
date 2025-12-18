@@ -27,10 +27,27 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isLoading$ = this.loadingService.isLoading$
-      .pipe(map(counter => counter > 0));
+      .pipe(
+        map(counter => counter > 0)
+      );
+
+    // Subscribe to toggle body class
+    this.loadingService.isLoading$
+      .pipe(
+        map(counter => counter > 0),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((isLoading: boolean) => {
+        if (isLoading) {
+          document.body.classList.add('loading-active');
+        } else {
+          document.body.classList.remove('loading-active');
+        }
+      });
   }
 
   ngOnDestroy(): void {
+    document.body.classList.remove('loading-active');
     this.destroy$.next();
     this.destroy$.complete();
   }

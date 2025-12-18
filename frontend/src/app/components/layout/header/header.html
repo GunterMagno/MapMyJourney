@@ -1,4 +1,4 @@
-<header class="header">
+<header class="header" [class.dark-mode-active]="isDarkTheme">
   <section class="header__left">
     <a routerLink="/">
       <img src="assets/logo.png" alt="MapMyJourney-Logo" class="header__logo-img">
@@ -11,7 +11,20 @@
 
   <section class="header__right">
     <button class="header__theme-btn" (click)="toggleTheme()" aria-label="Cambiar tema">
-      {{ isDarkTheme ? '☀️' : '🌙' }}
+      <svg class="header__theme-icon header__theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="header__theme-icon header__theme-icon--moon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
     </button>
 
     <button class="header__hamburger" (click)="toggleMobileMenu()" aria-label="Abrir menú">
@@ -22,7 +35,7 @@
 
     @if (!isLoggedIn) {
       <button class="header__btn header__btn--primary" (click)="login()">
-        Iniciar Sesión
+        Iniciar Sesion
       </button>
       <button class="header__btn header__btn--secondary" (click)="signup()">
         Registrarse
@@ -40,13 +53,10 @@
           Crear un viaje
         </button>
       }
-      <div class="header__profile">
-        <span class="header__profile-avatar">👤</span>
-        <span class="header__profile-name">{{ currentUserName }}</span>
-        <button class="header__logout-btn" (click)="logout()" aria-label="Cerrar sesión">
-          Salir
-        </button>
-      </div>
+      <img src="assets/profile-picture.png" alt="Perfil" class="header__profile-picture">
+      <button class="header__btn header__btn--secondary" (click)="logout()" aria-label="Cerrar sesion">
+        Cerrar sesion
+      </button>
     }
   </section>
 
@@ -54,13 +64,17 @@
   <nav class="header__mobile-menu" [class.header__mobile-menu--open]="isMobileMenuOpen" #mobileMenu>
     <article class="header__mobile-menu-header">
       <h2 class="header__mobile-menu-title">Menú</h2>
-      <button class="header__mobile-menu-close" (click)="closeMobileMenu()" aria-label="Cerrar menú">×</button>
+      <button class="header__mobile-menu-close" (click)="closeMobileMenu()" aria-label="Cerrar menu">×</button>
     </article>
     
     <article class="header__mobile-menu-content">
+      <button class="header__mobile-menu-btn header__mobile-menu-btn--theme" (click)="toggleTheme()">
+        {{ isDarkTheme ? 'Modo Claro' : 'Modo Oscuro' }}
+      </button>
+
       @if (!isLoggedIn) {
         <button class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="login(); closeMobileMenu()">
-          Iniciar Sesión
+          Iniciar Sesion
         </button>
         <button class="header__mobile-menu-btn header__mobile-menu-btn--secondary" (click)="signup(); closeMobileMenu()">
           Registrarse
@@ -79,7 +93,7 @@
           </button>
         }
         <button class="header__mobile-menu-btn header__mobile-menu-btn--danger" (click)="logout(); closeMobileMenu()">
-          Salir
+          Cerrar sesion
         </button>
       }
     </article>

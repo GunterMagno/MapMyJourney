@@ -63,17 +63,28 @@ export class ToastComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Manually dismiss a toast.
+   * Manually dismiss a toast with animation.
    */
   dismissToast(id: string): void {
-    this.toastService.dismiss(id);
+    // Add exit animation class
+    const toastIndex = this.toasts.findIndex(t => t.id === id);
+    if (toastIndex !== -1) {
+      this.toasts[toastIndex].exiting = true;
+      setTimeout(() => {
+        this.toastService.dismiss(id);
+      }, 300); // Match animation duration
+    }
   }
 
   /**
    * Gets CSS class for toast type.
    */
   getToastClass(toast: Toast): string {
-    return `toast toast--${toast.type}`;
+    let classes = `toast toast--${toast.type}`;
+    if (toast.exiting) {
+      classes += ' toast--exiting';
+    }
+    return classes;
   }
 
   ngOnDestroy(): void {
