@@ -22,9 +22,10 @@
 
 | Sección | Descripción | Enlace |
 |---------|-------------|--------|
+| **GitHub Pages** | Sitio web completo desplegado en GitHub Pages | [MapMyJourney Live](https://guntermagno.github.io/MapMyJourney/demo) |
 | **Backend API** | Documentación completa de endpoints y arquitectura | [Backend Docs](/docs/backend/Documentacion.md) |
 | **Diseño & CSS** | Arquitectura visual y sistema de diseño | [Guía de Diseño](/docs/design/DOCUMENTACION.md) |
-| **Javadoc API** | Documentación automática del código Java subido a GitHub Pages | [API Documentation](https://guntermagno.github.io/MapMyJourney/) |
+| **Javadoc API** | Documentación automática del código Java | [API Documentation](https://guntermagno.github.io/MapMyJourney/api-docs) |
 | **Deploy & CI/CD** | Guía de despliegue y GitHub Actions | [Deploy Guide](/docs/deploy/deploy-instructions.md) |
 | **Base de Datos** | Diagrama ER y modelo de datos | [Database Docs](/docs/backend/) |
 
