@@ -84,8 +84,7 @@ npm start
 
 ## Estado de los tests
 
-### ✅ - Test Correctos### Recursos Técnicos
-- [Javadoc Completo](/docs/javadoc-api/) - Documentación automática del código
+### ✅ - Test Correctos- [Javadoc Completo](/docs/javadoc-api/) - Documentación automática del código
 - [Diagrama ER](/docs/backend/Diagrama%20ER.png) - Modelo de base de datos
 - [Modelo de Datos](/docs/backend/Modelo%20de%20datos.txt) - Descripción de entidades
 
