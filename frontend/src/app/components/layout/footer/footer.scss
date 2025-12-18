@@ -105,14 +105,14 @@
     &::before {
       content: '→';
       position: absolute;
-      left: -15px;
+      left: -20px;
       opacity: 0;
       transition: all var(--transition-fast);
     }
 
     &:hover {
       color: #FFFFFF;
-      padding-left: 15px;
+      padding-left: 20px;
 
       &::before {
         opacity: 1;

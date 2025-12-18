@@ -57,11 +57,13 @@ import { ButtonComponent } from '../../shared/button/button';
       font-size: 120px;
       font-weight: var(--font-weight-bold);
       line-height: 1;
+      color: var(--dark-color);
     }
 
     .not-found__subtitle {
       margin: var(--spacing-4) 0 var(--spacing-6) 0;
       font-size: var(--font-size-tittle-h1);
+      color: var(--dark-color);
     }
 
     .not-found__message {
@@ -71,6 +73,7 @@ import { ButtonComponent } from '../../shared/button/button';
       max-width: 400px;
       margin-left: auto;
       margin-right: auto;
+      color: var(--dark-color);
     }
 
     .not-found__actions {
