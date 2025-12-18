@@ -6,6 +6,8 @@ import { FormInputComponent } from '../../shared/form-input/form-input';
 import { FormTextareaComponent } from '../../shared/form-textarea/form-textarea';
 import { FormSelectComponent, SelectOption } from '../../shared/form-select/form-select';
 import { AlertComponent } from '../../shared/alert/alert';
+import { HeaderComponent } from '../../layout/header/header';
+import { FooterComponent } from '../../layout/footer/footer';
 
 @Component({
   selector: 'app-style-guide',
@@ -18,6 +20,8 @@ import { AlertComponent } from '../../shared/alert/alert';
     FormTextareaComponent,
     FormSelectComponent,
     AlertComponent,
+    HeaderComponent,
+    FooterComponent,
   ],
   templateUrl: './style-guide.html',
   styleUrl: './style-guide.scss',

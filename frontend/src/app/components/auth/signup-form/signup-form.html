@@ -1,5 +1,9 @@
-<section class="signup">
-  <form class="signup__form" [formGroup]="signupForm" (ngSubmit)="onSubmit()" #formElement>
+<section class="signup-page">
+  <app-header></app-header>
+  
+  <main class="signup-page__content">
+    <section class="signup">
+      <form class="signup__form" [formGroup]="signupForm" (ngSubmit)="onSubmit()" #formElement>
     <fieldset class="signup__fieldset">
       <legend>Únete a MapMyJourney</legend>
 
@@ -121,4 +125,8 @@
       </p>
     </fieldset>
   </form>
+    </section>
+  </main>
+
+  <app-footer></app-footer>
 </section>

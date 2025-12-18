@@ -5,6 +5,8 @@ import { Router, RouterModule } from '@angular/router';
 import { FormInputComponent } from '../../shared/form-input/form-input';
 import { FormCheckboxComponent } from '../../shared/form-checkbox/form-checkbox';
 import { ButtonComponent } from '../../shared/button/button';
+import { HeaderComponent } from '../../layout/header/header';
+import { FooterComponent } from '../../layout/footer/footer';
 import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
@@ -29,7 +31,9 @@ import { LoadingService } from '../../../services/loading.service';
     RouterModule,
     FormInputComponent,
     FormCheckboxComponent,
-    ButtonComponent
+    ButtonComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.scss'

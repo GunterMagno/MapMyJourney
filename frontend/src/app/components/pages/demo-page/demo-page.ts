@@ -4,6 +4,8 @@ import { ModalComponent } from '../../shared/modal/modal';
 import { TabsComponent, TabItem } from '../../shared/tabs/tabs';
 import { TooltipComponent } from '../../shared/tooltip/tooltip';
 import { ButtonComponent } from '../../shared/button/button';
+import { HeaderComponent } from '../../layout/header/header';
+import { FooterComponent } from '../../layout/footer/footer';
 import { CommunicationService } from '../../../services/communication.service';
 import { ToastService } from '../../../services/toast.service';
 
@@ -19,7 +21,9 @@ import { ToastService } from '../../../services/toast.service';
     ModalComponent,
     TabsComponent,
     TooltipComponent,
-    ButtonComponent
+    ButtonComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: './demo-page.html',
   styleUrl: './demo-page.scss'

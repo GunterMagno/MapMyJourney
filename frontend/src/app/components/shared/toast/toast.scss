@@ -21,29 +21,29 @@
   font-weight: var(--font-weight-medium);
   animation: slideIn 0.3s ease-out forwards;
   pointer-events: auto;
-  border-left: 4px solid;
+  border-left: 6px solid;
 
   &--success {
     border-left-color: var(--correct-color);
-    background-color: rgba(141, 204, 82, 0.1);
+    background-color: rgba(102, 221, 51, 0.25);
     color: var(--correct-color);
   }
 
   &--error {
     border-left-color: var(--error-color);
-    background-color: rgba(235, 53, 26, 0.1);
+    background-color: rgba(255, 107, 91, 0.25);
     color: var(--error-color);
   }
 
   &--warning {
     border-left-color: var(--warning-color);
-    background-color: rgba(243, 119, 72, 0.1);
+    background-color: rgba(255, 140, 90, 0.25);
     color: var(--warning-color);
   }
 
   &--info {
     border-left-color: var(--info-color);
-    background-color: rgba(17, 138, 178, 0.1);
+    background-color: rgba(26, 175, 221, 0.25);
     color: var(--info-color);
   }
 }

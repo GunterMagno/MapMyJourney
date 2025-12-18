@@ -18,6 +18,8 @@ import {
 import { FormInputComponent } from '../../shared/form-input/form-input';
 import { FormTextareaComponent } from '../../shared/form-textarea/form-textarea';
 import { ButtonComponent } from '../../shared/button/button';
+import { HeaderComponent } from '../../layout/header/header';
+import { FooterComponent } from '../../layout/footer/footer';
 import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
 import { CustomValidators } from '../../../services/custom-validators';
@@ -43,7 +45,9 @@ import { takeUntil } from 'rxjs/operators';
     ReactiveFormsModule,
     FormInputComponent,
     FormTextareaComponent,
-    ButtonComponent
+    ButtonComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: './signup-form.html',
   styleUrl: './signup-form.scss'
