@@ -84,8 +84,7 @@ npm start
 
 ## Estado de los tests
 
-### ✅ - Test Correctos- [Arquitectura CSS](/docs/design/DOCUMENTACION.md) - Guía de diseño visual
-- [Instrucciones Deploy](/docs/deploy/deploy-instructions.md) - Guía de despliegue
+### ✅ - Test Correctos- [Instrucciones Deploy](/docs/deploy/deploy-instructions.md) - Guía de despliegue
 
 ### Recursos Técnicos
 - [Javadoc Completo](/docs/javadoc-api/) - Documentación automática del código
