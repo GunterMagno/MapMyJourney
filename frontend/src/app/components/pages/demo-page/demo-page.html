@@ -15,6 +15,19 @@
     <app-tabs [tabs]="tabItems"></app-tabs>
   </article>
 
+  <!-- Accordion Section -->
+  <article class="demo__section">
+    <h2>Acordeón - Expand/Collapse Items</h2>
+    <app-accordion [items]="accordionItems" [allowMultiple]="true"></app-accordion>
+  </article>
+
+  <!-- Dynamic Content Section -->
+  <article class="demo__section">
+    <h2>DOM Dinámico - Crear/Eliminar Elementos</h2>
+    <p>Usa Renderer2 para createElement, appendChild, removeChild</p>
+    <app-dynamic-content></app-dynamic-content>
+  </article>
+
   <!-- Modal Section -->
   <article class="demo__section">
     <h2>Modal - Click para abrir (ESC para cerrar)</h2>
@@ -47,6 +60,15 @@
       </app-tooltip>
     </div>
   </article>
+
+  <!-- FASE 2: Servicios y Comunicación -->
+  <header class="demo__header" style="margin-top: 40px;">
+    <h1>FASE 2: Servicios y Comunicación</h1>
+    <p class="demo__subtitle">
+      Los servicios (CommunicationService, ToastService, LoadingService) gestionan estado y lógica.
+      Los componentes solo manejan presentación.
+    </p>
+  </header>
 
   <!-- Toast Section -->
   <article class="demo__section">

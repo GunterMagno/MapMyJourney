@@ -16,6 +16,9 @@ export type { TooltipPosition } from './components/shared/tooltip/tooltip';
 export { TooltipComponent } from './components/shared/tooltip/tooltip';
 export { ButtonComponent } from './components/shared/button/button';
 export { DemoPageComponent } from './components/pages/demo-page/demo-page';
+export type { AccordionItem } from './components/shared/accordion/accordion';
+export { AccordionComponent } from './components/shared/accordion/accordion';
+export { DynamicContentComponent } from './components/shared/dynamic-content/dynamic-content';
 
 // PHASE 2: Global Components
 export { ToastComponent } from './components/shared/toast/toast';

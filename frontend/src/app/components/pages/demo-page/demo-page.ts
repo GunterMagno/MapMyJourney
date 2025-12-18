@@ -4,6 +4,8 @@ import { ModalComponent } from '../../shared/modal/modal';
 import { TabsComponent, TabItem } from '../../shared/tabs/tabs';
 import { TooltipComponent } from '../../shared/tooltip/tooltip';
 import { ButtonComponent } from '../../shared/button/button';
+import { AccordionComponent, AccordionItem } from '../../shared/accordion/accordion';
+import { DynamicContentComponent } from '../../shared/dynamic-content/dynamic-content';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
 import { CommunicationService } from '../../../services/communication.service';
@@ -12,7 +14,7 @@ import { LoadingService } from '../../../services/loading.service';
 
 /**
  * Demo component showcasing FASE 1: DOM and Events
- * Features interactive components: Modal, Tabs, Tooltips
+ * Features interactive components: Modal, Tabs, Tooltips, Accordion, Dynamic Content
  */
 @Component({
   selector: 'app-demo-page',
@@ -23,6 +25,8 @@ import { LoadingService } from '../../../services/loading.service';
     TabsComponent,
     TooltipComponent,
     ButtonComponent,
+    AccordionComponent,
+    DynamicContentComponent,
     HeaderComponent,
     FooterComponent
   ],
@@ -32,6 +36,7 @@ import { LoadingService } from '../../../services/loading.service';
 })
 export class DemoPageComponent implements OnInit {
   tabItems: TabItem[] = [];
+  accordionItems: AccordionItem[] = [];
   
   // Loading states
   isSaving = false;
@@ -47,6 +52,7 @@ export class DemoPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeTabs();
+    this.initializeAccordion();
   }
 
   private initializeTabs(): void {
@@ -65,6 +71,26 @@ export class DemoPageComponent implements OnInit {
         id: 'tab3',
         label: 'Toast Demo',
         content: 'Muestra notificaciones que se auto-cierran'
+      }
+    ];
+  }
+
+  private initializeAccordion(): void {
+    this.accordionItems = [
+      {
+        id: 'accordion-1',
+        title: 'Funcionalidades de FASE 1',
+        content: 'DOM Manipulation con ViewChild y ElementRef, Event Binding, @HostListener para teclado y mouse, Renderer2 para operaciones seguras'
+      },
+      {
+        id: 'accordion-2',
+        title: 'Funcionalidades de FASE 2',
+        content: 'Servicios de comunicación, Observable/Subject para estado reactivo, ToastService, LoadingService, ThemeService con persistencia'
+      },
+      {
+        id: 'accordion-3',
+        title: 'Funcionalidades de FASE 3',
+        content: 'Reactive Forms con FormBuilder, Validadores síncronos y asincronos, FormArray dinámico, Cross-field validation, Feedback visual completo'
       }
     ];
   }
