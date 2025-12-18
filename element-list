@@ -1,0 +1,10 @@
+com.mapmyjourney.backend
+com.mapmyjourney.backend.config
+com.mapmyjourney.backend.controller
+com.mapmyjourney.backend.dto
+com.mapmyjourney.backend.exception
+com.mapmyjourney.backend.model
+com.mapmyjourney.backend.model.enums
+com.mapmyjourney.backend.repository
+com.mapmyjourney.backend.security
+com.mapmyjourney.backend.service
