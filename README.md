@@ -85,8 +85,7 @@ npm start
 
 ## Estado de los tests
 
-### ✅ - Test Correctos- [Modelo de Datos](/docs/backend/Modelo%20de%20datos.txt) - Descripción de entidades
-
+### ✅ - Test Correctos
 ### Configuración del Proyecto
 - [pom.xml](/backend/pom.xml) - Dependencias Maven
 - [Insomnia Collection](/backend/MapMyJourney_Insomnia.json) - Requests de API para testing
