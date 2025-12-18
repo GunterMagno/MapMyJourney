@@ -109,9 +109,8 @@
         <app-form-input
           label="Nombre del Viaje"
           placeholder="Ej: Viaje a París"
-          inputId="trip-name"
-          [required]="true"
-        ></app-form-input>
+          inputId="trip-name">
+        </app-form-input>
       </article>
 
       <!-- Input con Error -->
@@ -122,10 +121,8 @@
           placeholder="Ej: usuario@ejemplo.com"
           inputId="email-error"
           type="email"
-          [hasError]="true"
-          errorMessage="Por favor ingresa un email válido"
-          [required]="true"
-        ></app-form-input>
+          errorMessage="Por favor ingresa un email válido">
+        </app-form-input>
       </article>
 
       <!-- Input Validado -->
@@ -135,9 +132,8 @@
           label="Email"
           placeholder="Ej: usuario@ejemplo.com"
           inputId="email-valid"
-          type="email"
-          [required]="true"
-        ></app-form-input>
+          type="email">
+        </app-form-input>
       </article>
 
       <!-- Textarea -->
@@ -147,9 +143,8 @@
           label="Descripción del Viaje"
           placeholder="Describe tu experiencia..."
           textareaId="trip-description"
-          [required]="true"
-          [rows]="5"
-        ></app-form-textarea>
+          [rows]="5">
+        </app-form-textarea>
       </article>
 
       <!-- Select -->
@@ -159,9 +154,8 @@
           label="Categoría de Gasto"
           selectId="expense-category"
           [options]="expenseCategories"
-          [required]="true"
-          placeholder="Selecciona una categoría"
-        ></app-form-select>
+          placeholder="Selecciona una categoría">
+        </app-form-select>
       </article>
 
       <!-- Select con Error -->
@@ -171,10 +165,8 @@
           label="Tipo de Alojamiento"
           selectId="accommodation-type"
           [options]="expenseCategories"
-          [hasError]="true"
-          errorMessage="Este campo es obligatorio"
-          [required]="true"
-        ></app-form-select>
+          errorMessage="Este campo es obligatorio">
+        </app-form-select>
       </article>
     </article>
   </section>

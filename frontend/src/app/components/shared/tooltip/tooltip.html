@@ -1,0 +1,9 @@
+<div class="tooltip-wrapper">
+  <ng-content></ng-content>
+  
+  @if (isVisible) {
+    <div [class]="getTooltipClass()" role="tooltip" #tooltipContent>
+      {{ text }}
+    </div>
+  }
+</div>

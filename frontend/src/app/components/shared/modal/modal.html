@@ -1,0 +1,23 @@
+<div class="modal" [class.modal--open]="isOpen">
+  <div class="modal__backdrop" (click)="onBackdropClick()"></div>
+  
+  <div class="modal__content" (click)="onModalContentClick($event)">
+    @if (title) {
+      <div class="modal__header">
+        <h2 class="modal__title">{{ title }}</h2>
+        @if (isDismissible) {
+          <button
+            class="modal__close-btn"
+            (click)="closeModal()"
+            aria-label="Cerrar modal">
+            ✕
+          </button>
+        }
+      </div>
+    }
+    
+    <div class="modal__body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

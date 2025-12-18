@@ -6,46 +6,58 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { existsSync } from 'node:fs';
 
-const browserDistFolder = join(import.meta.dirname, '../browser');
+// Try multiple possible locations for the build output
+const possibleBuildDirs = [
+  join(import.meta.dirname, '../browser'),           // SSR build output
+  join(import.meta.dirname, '../../dist/frontend'),   // SSR build output location 2
+  join(import.meta.dirname, '../dist'),              // Alternative dist location
+];
+
+let browserDistFolder = possibleBuildDirs[0];
+for (const dir of possibleBuildDirs) {
+  if (existsSync(dir)) {
+    browserDistFolder = dir;
+    console.log(`Using build folder: ${browserDistFolder}`);
+    break;
+  }
+}
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
-
-/**
- * Serve static files from /browser
- */
-app.use(
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
-
-/**
- * Handle all other requests by rendering the Angular application.
- */
-app.use((req, res, next) => {
-  angularApp
-    .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
-    .catch(next);
-});
+// Only serve static if build folder exists
+if (existsSync(browserDistFolder)) {
+  app.use(express.static(browserDistFolder, { maxAge: '1y' }));
+  app.use((req, res) => {
+    res.sendFile(join(browserDistFolder, 'index.html'));
+  });
+} else {
+  // Fallback for development - serve index.html for any route
+  // In dev mode, Vite/Angular CLI handles the actual rendering from memory
+  // Just send index.html for all routes to enable client-side SPA routing
+  const fallbackPaths = [
+    join(import.meta.dirname, '.angular/vite-root/frontend/index.html'),
+    join(import.meta.dirname, '.angular/cache/frontend/index.html'),
+    join(import.meta.dirname, './index.html'),
+  ];
+  
+  let indexPath = null;
+  for (const path of fallbackPaths) {
+    if (existsSync(path)) {
+      indexPath = path;
+      break;
+    }
+  }
+  
+  app.use((req, res) => {
+    if (indexPath && existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send('Development mode: index.html not found. Tried: ' + fallbackPaths.join(', '));
+    }
+  });
+}
 
 /**
  * Start the server if this module is the main entry point, or it is ran via PM2.

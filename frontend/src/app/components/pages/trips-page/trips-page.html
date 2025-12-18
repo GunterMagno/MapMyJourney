@@ -1,0 +1,66 @@
+<section class="trips-page">
+  <header class="trips-page__header">
+    <h1>Mis Viajes</h1>
+    <app-button
+      label="Crear Nuevo Viaje"
+      variant="primary"
+      size="lg"
+      (click)="createTrip()">
+    </app-button>
+  </header>
+
+  @if (trips.length === 0) {
+    <div class="trips-page__empty">
+      <p>No tienes viajes registrados aún.</p>
+      <app-button
+        label="Crear tu primer viaje"
+        variant="primary"
+        (click)="createTrip()">
+      </app-button>
+    </div>
+  } @else {
+    <div class="trips-page__grid">
+      @for (trip of trips; track trip.id) {
+        <article class="trip-card">
+          <div class="trip-card__header">
+            <h3 class="trip-card__title">{{ trip.name }}</h3>
+            <span class="trip-card__badge">{{ trip.destination }}</span>
+          </div>
+
+          <div class="trip-card__details">
+            <div class="trip-card__detail">
+              <span class="trip-card__label">Fechas:</span>
+              <span class="trip-card__value">
+                {{ trip.startDate | date: 'dd/MM/yyyy' }} -
+                {{ trip.endDate | date: 'dd/MM/yyyy' }}
+              </span>
+            </div>
+
+            <div class="trip-card__detail">
+              <span class="trip-card__label">Gastos:</span>
+              <span class="trip-card__value">
+                {{ trip.totalExpenses }}€
+              </span>
+            </div>
+          </div>
+
+          <div class="trip-card__actions">
+            <app-button
+              label="Ver Detalles"
+              variant="primary"
+              size="sm"
+              (click)="viewTrip(trip.id)">
+            </app-button>
+
+            <app-button
+              label="Eliminar"
+              variant="danger"
+              size="sm"
+              (click)="deleteTrip(trip.id)">
+            </app-button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

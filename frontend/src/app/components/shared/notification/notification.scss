@@ -94,7 +94,7 @@
   &--success {
     background-color: var(--correct-color);
     color: white;
-    border-left: var(--border-thick) solid darken(#8DCC52, 15%);
+    border-left: var(--border-thick) solid #6ba538;
 
     .notification__icon {
       color: white;
@@ -105,7 +105,7 @@
   &--error {
     background-color: var(--error-color);
     color: white;
-    border-left: var(--border-thick) solid darken(#EB351A, 15%);
+    border-left: var(--border-thick) solid #b8280d;
 
     .notification__icon {
       color: white;
@@ -116,7 +116,7 @@
   &--warning {
     background-color: var(--secondary-color);
     color: white;
-    border-left: var(--border-thick) solid darken(#F37748, 15%);
+    border-left: var(--border-thick) solid #d45f2d;
 
     .notification__icon {
       color: white;
@@ -127,7 +127,7 @@
   &--info {
     background-color: var(--quinary-color);
     color: white;
-    border-left: var(--border-thick) solid darken(#118AB2, 15%);
+    border-left: var(--border-thick) solid #0c5f7f;
 
     .notification__icon {
       color: white;

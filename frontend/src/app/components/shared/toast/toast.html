@@ -1,0 +1,31 @@
+<div class="toast-container">
+  @for (toast of toasts; track toast.id) {
+    <div [class]="getToastClass(toast)" role="status" aria-live="polite">
+      <span class="toast__icon">
+        @switch (toast.type) {
+          @case ('success') {
+            ✓
+          }
+          @case ('error') {
+            ✕
+          }
+          @case ('warning') {
+            ⚠
+          }
+          @case ('info') {
+            ℹ
+          }
+        }
+      </span>
+      <span class="toast__message">{{ toast.message }}</span>
+      @if (toast.dismissible) {
+        <button
+          class="toast__close-btn"
+          (click)="dismissToast(toast.id)"
+          aria-label="Cerrar notificación">
+          ✕
+        </button>
+      }
+    </div>
+  }
+</div>

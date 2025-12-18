@@ -1,0 +1,31 @@
+<div class="tabs">
+  <div class="tabs__header" role="tablist">
+    @for (tab of tabs; track tab.id) {
+      <button
+        class="tabs__tab"
+        [class.tabs__tab--active]="isTabActive(tab.id)"
+        (click)="selectTab(tab.id)"
+        [attr.aria-selected]="isTabActive(tab.id)"
+        [attr.aria-controls]="'tab-content-' + tab.id"
+        role="tab">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <div class="tabs__content">
+    @if (getActiveTab(); as activeTab) {
+      <div
+        [id]="'tab-content-' + activeTab.id"
+        class="tabs__panel"
+        role="tabpanel"
+        [attr.aria-labelledby]="activeTab.id">
+        @if (activeTab.content) {
+          {{ activeTab.content }}
+        } @else {
+          <ng-content></ng-content>
+        }
+      </div>
+    }
+  </div>
+</div>

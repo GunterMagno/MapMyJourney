@@ -20,49 +20,73 @@
       <span class="header__hamburger-line"></span>
     </button>
 
-    <button *ngIf="!isLoggedIn" class="header__btn header__btn--primary" (click)="login()">
-      Iniciar Sesión
-    </button>
-    <button *ngIf="!isLoggedIn" class="header__btn header__btn--secondary" (click)="signup()">
-      Registrarse
-    </button>
+    @if (!isLoggedIn) {
+      <button class="header__btn header__btn--primary" (click)="login()">
+        Iniciar Sesión
+      </button>
+      <button class="header__btn header__btn--secondary" (click)="signup()">
+        Registrarse
+      </button>
+    }
 
-    <button *ngIf="isLoggedIn && showMyTripsBtn" class="header__btn header__btn--primary" (click)="goToTrips()">
-      Mis Viajes
-    </button>
-    <button *ngIf="isLoggedIn && showCreateTripBtn" class="header__btn header__btn--primary" (click)="createTrip()">
-      Crear un viaje
-    </button>
-
-    <article *ngIf="isLoggedIn" class="header__profile">
-      <span class="header__profile-avatar">👤</span>
-    </article>
+    @if (isLoggedIn) {
+      @if (showMyTripsBtn) {
+        <button class="header__btn header__btn--primary" (click)="goToTrips()">
+          Mis Viajes
+        </button>
+      }
+      @if (showCreateTripBtn) {
+        <button class="header__btn header__btn--primary" (click)="createTrip()">
+          Crear un viaje
+        </button>
+      }
+      <div class="header__profile">
+        <span class="header__profile-avatar">👤</span>
+        <span class="header__profile-name">{{ currentUserName }}</span>
+        <button class="header__logout-btn" (click)="logout()" aria-label="Cerrar sesión">
+          Salir
+        </button>
+      </div>
+    }
   </section>
 
   <!-- Mobile Menu Overlay -->
-  <nav class="header__mobile-menu" [class.header__mobile-menu--open]="isMobileMenuOpen">
+  <nav class="header__mobile-menu" [class.header__mobile-menu--open]="isMobileMenuOpen" #mobileMenu>
     <article class="header__mobile-menu-header">
       <h2 class="header__mobile-menu-title">Menú</h2>
       <button class="header__mobile-menu-close" (click)="closeMobileMenu()" aria-label="Cerrar menú">×</button>
     </article>
     
     <article class="header__mobile-menu-content">
-      <button *ngIf="!isLoggedIn" class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="login(); closeMobileMenu()">
-        Iniciar Sesión
-      </button>
-      <button *ngIf="!isLoggedIn" class="header__mobile-menu-btn header__mobile-menu-btn--secondary" (click)="signup(); closeMobileMenu()">
-        Registrarse
-      </button>
+      @if (!isLoggedIn) {
+        <button class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="login(); closeMobileMenu()">
+          Iniciar Sesión
+        </button>
+        <button class="header__mobile-menu-btn header__mobile-menu-btn--secondary" (click)="signup(); closeMobileMenu()">
+          Registrarse
+        </button>
+      }
 
-      <button *ngIf="isLoggedIn && showMyTripsBtn" class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="goToTrips(); closeMobileMenu()">
-        Mis Viajes
-      </button>
-      <button *ngIf="isLoggedIn && showCreateTripBtn" class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="createTrip(); closeMobileMenu()">
-        Crear un viaje
-      </button>
+      @if (isLoggedIn) {
+        @if (showMyTripsBtn) {
+          <button class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="goToTrips(); closeMobileMenu()">
+            Mis Viajes
+          </button>
+        }
+        @if (showCreateTripBtn) {
+          <button class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="createTrip(); closeMobileMenu()">
+            Crear un viaje
+          </button>
+        }
+        <button class="header__mobile-menu-btn header__mobile-menu-btn--danger" (click)="logout(); closeMobileMenu()">
+          Salir
+        </button>
+      }
     </article>
   </nav>
 
   <!-- Overlay backdrop -->
-  <article class="header__overlay" *ngIf="isMobileMenuOpen" (click)="closeMobileMenu()"></article>
+  @if (isMobileMenuOpen) {
+    <article class="header__overlay" (click)="closeMobileMenu()"></article>
+  }
 </header>

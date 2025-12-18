@@ -1,49 +1,123 @@
 <section class="signup">
-  <form class="signup__form" (ngSubmit)="onSubmit()">
+  <form class="signup__form" [formGroup]="signupForm" (ngSubmit)="onSubmit()" #formElement>
     <fieldset class="signup__fieldset">
       <legend>Únete a MapMyJourney</legend>
 
+      <!-- Name field -->
       <app-form-input
-        label="Usuario"
+        label="Nombre Completo"
         type="text"
-        placeholder="Ej: viajero123"
-        inputId="username"
-        [required]="true"
-      ></app-form-input>
+        placeholder="Ej: Juan García"
+        inputId="name"
+        [control]="$any(signupForm.get('name'))">
+      </app-form-input>
 
+      <!-- Email field with async validation -->
       <app-form-input
         label="Email"
         type="email"
         placeholder="tu@email.com"
         inputId="email"
-        [required]="true"
-      ></app-form-input>
+        [control]="$any(signupForm.get('email'))">
+      </app-form-input>
 
+      <!-- NIF field with custom sync validation and async check -->
+      <app-form-input
+        label="NIF (Número de Identificación Fiscal)"
+        type="text"
+        placeholder="12345678Z"
+        inputId="nif"
+        [control]="$any(signupForm.get('nif'))">
+      </app-form-input>
+
+      <!-- Password field with strength validation -->
       <app-form-input
         label="Contraseña"
         type="password"
-        placeholder="Mínimo 8 caracteres"
+        placeholder="Min. 8 chars, mayús., minús., número, especial"
         inputId="password"
-        [required]="true"
-      ></app-form-input>
+        [control]="$any(signupForm.get('password'))">
+      </app-form-input>
 
+      <!-- Confirm password field with cross-field validation -->
       <app-form-input
         label="Confirmar Contraseña"
         type="password"
         placeholder="Repite tu contraseña"
         inputId="confirmPassword"
-        [required]="true"
-      ></app-form-input>
+        [control]="$any(signupForm.get('confirmPassword'))">
+      </app-form-input>
 
+      <!-- Optional bio field -->
+      <app-form-textarea
+        label="Cuéntanos sobre ti (Opcional)"
+        placeholder="Soy un viajero apasionado..."
+        textareaId="bio"
+        [rows]="4"
+        [control]="$any(signupForm.get('bio'))">
+      </app-form-textarea>
+
+      <!-- Dynamic phone numbers FormArray -->
+      <div class="signup__phones" formArrayName="phoneNumbers">
+        <label class="signup__label">Números de Teléfono</label>
+        @for (phone of phoneNumbers.controls; track $index) {
+          <div class="signup__phone-group">
+            <input
+              [formControl]="$any(phone)"
+              type="tel"
+              placeholder="Ej: +34 123 456 789"
+              class="signup__phone-input"
+              [class.signup__phone-input--invalid]="phone.invalid && phone.touched">
+            <button
+              type="button"
+              (click)="removePhoneNumber($index)"
+              [disabled]="phoneNumbers.length === 1"
+              class="signup__phone-remove">
+              ✕
+            </button>
+            @if (phone.invalid && phone.touched) {
+              <span class="signup__error">Formato de teléfono inválido</span>
+            }
+          </div>
+        }
+        <button
+          type="button"
+          (click)="addPhoneNumber()"
+          class="signup__phone-add">
+          + Agregar teléfono
+        </button>
+      </div>
+
+      <!-- Terms acceptance checkbox -->
       <label class="signup__checkbox">
-        <input type="checkbox" required>
+        <input
+          type="checkbox"
+          formControlName="acceptTerms"
+          [class.signup__checkbox-input--invalid]="
+            signupForm.get('acceptTerms')?.invalid &&
+            signupForm.get('acceptTerms')?.touched
+          ">
         <span>Acepto los <a href="/terminos">Términos y Condiciones</a></span>
       </label>
+      @if (
+        signupForm.get('acceptTerms')?.invalid &&
+        signupForm.get('acceptTerms')?.touched
+      ) {
+        <p class="signup__error">Debes aceptar los términos y condiciones</p>
+      }
 
-      <button type="submit" class="signup__submit">Registrarse</button>
+      <!-- Submit button -->
+      <app-button
+        label="Registrarse"
+        variant="primary"
+        size="lg"
+        type="submit"
+        [disabled]="!canSubmit">
+      </app-button>
 
+      <!-- Link to login -->
       <p class="signup__login-link">
-        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+        ¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión</a>
       </p>
     </fieldset>
   </form>

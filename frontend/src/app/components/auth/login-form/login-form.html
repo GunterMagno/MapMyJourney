@@ -1,0 +1,38 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+  <h2 class="login-form__title">Inicia Sesión</h2>
+
+  <app-form-input
+    label="Email"
+    type="email"
+    placeholder="tu.email@ejemplo.com"
+    [control]="$any(emailControl)">
+  </app-form-input>
+
+  <app-form-input
+    label="Contraseña"
+    type="password"
+    placeholder="••••••••"
+    [control]="$any(passwordControl)">
+  </app-form-input>
+
+  <app-form-checkbox
+    label="Recuérdame"
+    [control]="$any(rememberMeControl)">
+  </app-form-checkbox>
+
+  <app-button
+    label="Iniciar Sesión"
+    variant="primary"
+    size="lg"
+    type="submit"
+    [disabled]="loginForm.invalid || isSubmitting"
+    class="login-form__submit">
+  </app-button>
+
+  <div class="login-form__footer">
+    <p>
+      ¿No tienes cuenta?
+      <a routerLink="/auth/signup" class="login-form__link">Regístrate aquí</a>
+    </p>
+  </div>
+</form>

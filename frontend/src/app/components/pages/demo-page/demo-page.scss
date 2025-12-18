@@ -1,0 +1,105 @@
+.demo {
+  padding: var(--spacing-8);
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+.demo__header {
+  text-align: center;
+  margin-bottom: var(--spacing-12);
+}
+
+.demo__header h1 {
+  font-size: var(--font-size-tittle-h2);
+  margin: 0 0 var(--spacing-4) 0;
+  color: var(--principal-color);
+}
+
+.demo__subtitle {
+  font-size: var(--font-size-medium);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+}
+
+.demo__section {
+  background-color: var(--bg-surface);
+  border: var(--border-thin) solid var(--border-color);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-8);
+  margin-bottom: var(--spacing-8);
+}
+
+.demo__section h2 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-6);
+  font-size: var(--font-size-tittle-h3);
+  color: var(--principal-color);
+}
+
+.demo__tooltip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-6);
+  padding: var(--spacing-4);
+}
+
+.demo__toast-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.demo__modal-content {
+  padding: var(--spacing-4) 0;
+}
+
+.demo__modal-content p {
+  margin: 0 0 var(--spacing-4) 0;
+  font-weight: var(--font-weight-medium);
+}
+
+.demo__modal-content ul {
+  margin: 0 0 var(--spacing-6) 0;
+  padding-left: var(--spacing-6);
+  list-style-type: disc;
+}
+
+.demo__modal-content li {
+  margin-bottom: var(--spacing-3);
+  line-height: var(--line-height-normal);
+}
+
+.demo__modal-buttons {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-6);
+}
+
+@media (max-width: 768px) {
+  .demo {
+    padding: var(--spacing-4);
+  }
+
+  .demo__header h1 {
+    font-size: var(--font-size-tittle-h3);
+  }
+
+  .demo__section {
+    padding: var(--spacing-4);
+  }
+
+  .demo__tooltip-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .demo__toast-buttons {
+    flex-direction: column;
+  }
+
+  .demo__toast-buttons app-button {
+    width: 100%;
+  }
+}

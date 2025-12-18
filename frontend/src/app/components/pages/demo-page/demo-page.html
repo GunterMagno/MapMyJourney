@@ -1,0 +1,109 @@
+<section class="demo">
+  <header class="demo__header">
+    <h1>FASE 1: DOM y Eventos - Demostración Interactiva</h1>
+    <p class="demo__subtitle">
+      Interactúa con los componentes para ver cómo funcionan:
+      Modal con ESC, Tooltips en hover, Tabs dinámicos, Toasts de notificación
+    </p>
+  </header>
+
+  <!-- Tabs Section -->
+  <article class="demo__section">
+    <h2>Tabs - Selecciona una pestaña</h2>
+    <app-tabs [tabs]="tabItems"></app-tabs>
+  </article>
+
+  <!-- Modal Section -->
+  <article class="demo__section">
+    <h2>Modal - Click para abrir (ESC para cerrar)</h2>
+    <app-button
+      label="Abrir Modal"
+      variant="primary"
+      size="lg"
+      (click)="openModal()">
+    </app-button>
+  </article>
+
+  <!-- Tooltip Section -->
+  <article class="demo__section">
+    <h2>Tooltips - Hovea los botones para ver posiciones</h2>
+    <div class="demo__tooltip-grid">
+      <app-tooltip text="Tooltip arriba" position="top">
+        <app-button label="Top" variant="secondary"></app-button>
+      </app-tooltip>
+
+      <app-tooltip text="Tooltip abajo" position="bottom">
+        <app-button label="Bottom" variant="secondary"></app-button>
+      </app-tooltip>
+
+      <app-tooltip text="Tooltip a la izquierda" position="left">
+        <app-button label="Left" variant="secondary"></app-button>
+      </app-tooltip>
+
+      <app-tooltip text="Tooltip a la derecha" position="right">
+        <app-button label="Right" variant="secondary"></app-button>
+      </app-tooltip>
+    </div>
+  </article>
+
+  <!-- Toast Section -->
+  <article class="demo__section">
+    <h2>Toasts - Notificaciones Globales</h2>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Success Toast"
+        variant="primary"
+        size="lg"
+        (click)="showSuccessToast()">
+      </app-button>
+
+      <app-button
+        label="Error Toast"
+        variant="danger"
+        size="lg"
+        (click)="showErrorToast()">
+      </app-button>
+
+      <app-button
+        label="Warning Toast"
+        variant="secondary"
+        size="lg"
+        (click)="showWarningToast()">
+      </app-button>
+
+      <app-button
+        label="Info Toast"
+        variant="primary"
+        size="lg"
+        (click)="showInfoToast()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Modal Component -->
+  <app-modal
+    title="Modal de Demostración"
+    [isDismissible]="true">
+    <div class="demo__modal-content">
+      <p>
+        <strong>Características del Modal (FASE 1):</strong>
+      </p>
+      <ul>
+        <li>Abre/cierra con estado booleano</li>
+        <li>Presiona ESC para cerrar (@HostListener)</li>
+        <li>Click en backdrop para cerrar</li>
+        <li>Previene que clicks internos cierren el modal (stopPropagation)</li>
+        <li>Manipulación segura del DOM con Renderer2</li>
+        <li>Bloquea scroll del body al abrir</li>
+      </ul>
+
+      <div class="demo__modal-buttons">
+        <app-button
+          label="Cerrar Modal"
+          variant="primary"
+          (click)="closeModal()">
+        </app-button>
+      </div>
+    </div>
+  </app-modal>
+</section>
