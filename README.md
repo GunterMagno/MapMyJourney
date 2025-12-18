@@ -84,8 +84,7 @@ npm start
 
 ## Estado de los tests
 
-### ✅ - Test Correctos- [Instrucciones Deploy](/docs/deploy/deploy-instructions.md) - Guía de despliegue
-
+### ✅ - Test Correctos
 ### Recursos Técnicos
 - [Javadoc Completo](/docs/javadoc-api/) - Documentación automática del código
 - [Diagrama ER](/docs/backend/Diagrama%20ER.png) - Modelo de base de datos
