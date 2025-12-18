@@ -84,7 +84,9 @@ npm start
 
 ## Estado de los tests
 
-### ✅ - Test Correctos- [Diagrama ER](/docs/backend/Diagrama%20ER.png) - Modelo de base de datos
+### ✅ - Test Correctos
+
+- [Diagrama ER](/docs/backend/Diagrama%20ER.png) - Modelo de base de datos
 - [Modelo de Datos](/docs/backend/Modelo%20de%20datos.txt) - Descripción de entidades
 
 ### Configuración del Proyecto
