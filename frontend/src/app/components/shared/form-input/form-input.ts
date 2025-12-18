@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-form-input',
@@ -15,6 +15,7 @@ export class FormInputComponent {
   @Input() placeholder: string = '';
   @Input() inputId: string = '';
   @Input() control: FormControl | null = null;
+  @Input() parentForm: FormGroup | null = null;
   
   /**
    * Gets all validation errors from FormControl.
@@ -32,9 +33,33 @@ export class FormInputComponent {
 
   /**
    * Checks if field is invalid and has been touched or is dirty.
+   * Also checks parent form errors (matchPassword)
    */
   get isInvalid(): boolean {
-    return !!this.control && this.control.invalid && (this.control.dirty || this.control.touched);
+    const controlInvalid = !!this.control && this.control.invalid && (this.control.dirty || this.control.touched);
+    
+    // Check for matchPassword error on confirmPassword field
+    if (this.inputId === 'confirmPassword' && this.parentForm?.hasError('matchPassword') && this.control?.touched) {
+      return true;
+    }
+    
+    return controlInvalid;
+  }
+
+  /**
+   * Checks if field is valid (accounting for parent form errors)
+   */
+  get isValid(): boolean {
+    if (!this.control || !this.control.value) {
+      return false;
+    }
+    
+    // If it's confirmPassword field, check matchPassword error
+    if (this.inputId === 'confirmPassword' && this.parentForm?.hasError('matchPassword')) {
+      return false;
+    }
+    
+    return this.control.valid && !this.isInvalid;
   }
 
   /**
@@ -42,6 +67,10 @@ export class FormInputComponent {
    */
   get errorMessage(): string {
     if (!this.control?.errors || !this.isTouched) {
+      // Check matchPassword error on form level
+      if (this.inputId === 'confirmPassword' && this.parentForm?.hasError('matchPassword') && this.control?.touched) {
+        return 'Las contraseñas no coinciden';
+      }
       return '';
     }
 
@@ -62,7 +91,9 @@ export class FormInputComponent {
     }
     if (errors['pattern']) return 'Formato inválido';
     if (errors['passwordStrength']) return errors['passwordStrength'];
-    if (errors['nif']) return 'NIF inválido';
+    if (errors['nif']) return errors['nif'];
+    if (errors['emailTaken']) return 'Este email ya está registrado';
+    if (errors['nifTaken']) return 'Este NIF ya está registrado';
     
     return 'Campo inválido';
   }

@@ -11,6 +11,7 @@ import { FooterComponent } from '../../layout/footer/footer';
 import { CommunicationService } from '../../../services/communication.service';
 import { ToastService } from '../../../services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
+import { Router } from '@angular/router';
 
 /**
  * Demo component showcasing FASE 1: DOM and Events
@@ -47,7 +48,8 @@ export class DemoPageComponent implements OnInit {
     private communicationService: CommunicationService,
     private toastService: ToastService,
     private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -154,5 +156,19 @@ export class DemoPageComponent implements OnInit {
   async simulatePageLoad(): Promise<void> {
     await this.loadingService.simulateLoading(2000);
     this.toastService.info('¡Página cargada completamente!');
+  }
+
+  /**
+   * Navigate to login form
+   */
+  goToLogin(): void {
+    this.router.navigate(['/auth/login']);
+  }
+
+  /**
+   * Navigate to signup form
+   */
+  goToSignup(): void {
+    this.router.navigate(['/auth/signup']);
   }
 }

@@ -175,6 +175,41 @@
       </div>
     </div>
   </app-modal>
+
+  <!-- FASE 3: Formularios Reactivos -->
+  <header class="demo__header" style="margin-top: 40px;">
+    <h1>FASE 3: Formularios Reactivos y Validación</h1>
+    <p class="demo__subtitle">
+      Formularios reactivos con FormBuilder, validadores síncronos y asincronos, 
+      FormArray dinámico, y validación cross-field completa.
+    </p>
+  </header>
+
+  <!-- Formularios Section -->
+  <article class="demo__section">
+    <h2>Acceder a Formularios Reactivos</h2>
+    <p>
+      Incluye: validadores síncronos (passwordStrength, nif), 
+      asincronos (uniqueEmail, uniqueNif con 500ms debounce), 
+      validación cross-field (matchPassword), 
+      y FormArray para teléfonos dinámicos.
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ir a Login Form"
+        variant="primary"
+        size="lg"
+        (click)="goToLogin()">
+      </app-button>
+
+      <app-button
+        label="Ir a Signup Form"
+        variant="secondary"
+        size="lg"
+        (click)="goToSignup()">
+      </app-button>
+    </div>
+  </article>
 </section>
 
 <app-footer></app-footer>

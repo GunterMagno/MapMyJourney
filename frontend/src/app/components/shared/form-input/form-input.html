@@ -7,7 +7,7 @@
       }
     </label>
     <div class="form-input__status">
-      @if (control?.valid && control?.value && !isInvalid) {
+      @if (isValid && control?.value) {
         <span class="form-input__success" title="Válido">✓</span>
       }
       @if (isInvalid && control?.value) {
@@ -23,7 +23,7 @@
     [formControl]="control!"
     class="form-input__field"
     [class.form-input__field--error]="isInvalid && control?.value"
-    [class.form-input__field--valid]="control?.valid && control?.value && !isInvalid">
+    [class.form-input__field--valid]="isValid && control?.value">
   
   @if (isInvalid && control?.value) {
     <span class="form-input__error-message" role="alert">

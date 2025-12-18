@@ -29,7 +29,7 @@
       <app-form-input
         label="NIF (Número de Identificación Fiscal)"
         type="text"
-        placeholder="12345678Z"
+        placeholder="Ej: 12345678M (o 12345678-M)"
         inputId="nif"
         [control]="$any(signupForm.get('nif'))">
       </app-form-input>
@@ -49,7 +49,8 @@
         type="password"
         placeholder="Repite tu contraseña"
         inputId="confirmPassword"
-        [control]="$any(signupForm.get('confirmPassword'))">
+        [control]="$any(signupForm.get('confirmPassword'))"
+        [parentForm]="signupForm">
       </app-form-input>
 
       <!-- Optional bio field -->
@@ -62,26 +63,35 @@
       </app-form-textarea>
 
       <!-- Dynamic phone numbers FormArray -->
-      <div class="signup__phones" formArrayName="phoneNumbers">
-        <label class="signup__label">Números de Teléfono</label>
-        @for (phone of phoneNumbers.controls; track $index) {
-          <div class="signup__phone-group">
-            <input
-              [formControl]="$any(phone)"
-              type="tel"
-              placeholder="Ej: +34 123 456 789"
-              class="signup__phone-input"
-              [class.signup__phone-input--invalid]="phone.invalid && phone.touched">
+      <div class="signup__phones-section" formArrayName="phoneNumbers">
+        <label class="signup__phones-label">Números de Teléfono</label>
+        @for (phone of phoneNumbers.controls; let i = $index; track i) {
+          <div class="signup__phone-item" [formGroupName]="i">
+            <div class="signup__phone-input-wrapper">
+              <input
+                [formControlName]="'phone'"
+                type="tel"
+                placeholder="Ej: +34 123 456 789"
+                class="signup__phone-input"
+                [class.signup__phone-input--valid]="phone.valid && phone.value && phone.touched"
+                [class.signup__phone-input--invalid]="phone.invalid && phone.touched">
+              <div class="signup__phone-status">
+                @if (phone.valid && phone.value && phone.touched) {
+                  <span class="signup__phone-icon--valid">✓</span>
+                }
+                @if (phone.invalid && phone.value && phone.touched) {
+                  <span class="signup__phone-icon--invalid">✕</span>
+                }
+              </div>
+            </div>
             <button
               type="button"
-              (click)="removePhoneNumber($index)"
+              (click)="removePhoneNumber(i)"
               [disabled]="phoneNumbers.length === 1"
-              class="signup__phone-remove">
-              ✕
+              class="signup__phone-remove"
+              title="Eliminar teléfono">
+              ✕ Eliminar
             </button>
-            @if (phone.invalid && phone.touched) {
-              <span class="signup__error">Formato de teléfono inválido</span>
-            }
           </div>
         }
         <button

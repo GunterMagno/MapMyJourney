@@ -46,28 +46,33 @@ export class CustomValidators {
 
   /**
    * Validates Spanish NIF (Número de Identificación Fiscal)
-   * Format: 8 digits + 1 letter
+   * Format: 8 digits + 1 letter (with optional spaces and hyphens)
    */
   static nif(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
+      let value = control.value;
 
       if (!value) {
         return null;
       }
 
-      const nifRegex = /^[0-9]{8}[A-Z]$/i;
+      // Remove spaces and hyphens, convert to uppercase
+      value = value.replace(/[\s\-]/g, '').toUpperCase();
+
+      // Check format: 8 digits + 1 letter
+      const nifRegex = /^[0-9]{8}[A-Z]$/;
       if (!nifRegex.test(value)) {
-        return { nif: 'NIF debe tener formato: 8 dígitos + 1 letra' };
+        return { nif: 'NIF debe tener formato: 8 dígitos + 1 letra (ej: 12345678Z)' };
       }
 
+      // Validate with mod 23 algorithm
       const nifsLetters = 'TRWAGMYFPDXBNJZSQVHLCKE';
       const dniNumber = parseInt(value.substring(0, 8), 10);
-      const expectedLetter = nifsLetters[dniNumber % 23].toUpperCase();
-      const providedLetter = value.charAt(8).toUpperCase();
+      const expectedLetter = nifsLetters[dniNumber % 23];
+      const providedLetter = value.charAt(8);
 
       if (expectedLetter !== providedLetter) {
-        return { nif: 'Letra del NIF no válida' };
+        return { nif: 'Letra del NIF no válida según el algoritmo' };
       }
 
       return null;
@@ -79,29 +84,22 @@ export class CustomValidators {
    */
   static matchPassword(passwordField: string, confirmField: string): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const form = control.parent;
-      if (!form) {
-        return null;
-      }
-
-      const passwordControl = form.get(passwordField);
-      const confirmControl = form.get(confirmField);
+      // Get the form controls
+      const passwordControl = control.get(passwordField);
+      const confirmControl = control.get(confirmField);
 
       if (!passwordControl || !confirmControl) {
         return null;
       }
 
-      if (passwordControl.value !== confirmControl.value) {
-        confirmControl.setErrors({ ...confirmControl.errors, matchPassword: true });
+      // Only validate if both fields have values
+      if (!passwordControl.value || !confirmControl.value) {
         return null;
       }
 
-      // Remove the error if passwords match
-      if (confirmControl.errors) {
-        delete confirmControl.errors['matchPassword'];
-        if (Object.keys(confirmControl.errors).length === 0) {
-          confirmControl.setErrors(null);
-        }
+      // Check if passwords match
+      if (passwordControl.value !== confirmControl.value) {
+        return { matchPassword: true };
       }
 
       return null;
@@ -188,7 +186,8 @@ export class CustomValidators {
         debounceTime(500),
         switchMap(nif => {
           // TODO: Replace with actual HTTP POST to backend
-          const takenNifs = ['12345678Z', '87654321A'];
+          // Valid NIFs: 12345678M, 87654321G
+          const takenNifs = ['12345678M', '87654321G'];
           
           if (takenNifs.includes(nif.toUpperCase())) {
             return of({ nifTaken: true });

@@ -108,7 +108,10 @@ export class SignupFormComponent implements OnInit, OnDestroy {
           '',
           [Validators.required, CustomValidators.passwordStrength()]
         ],
-        confirmPassword: ['', Validators.required],
+        confirmPassword: [
+          '',
+          [Validators.required, CustomValidators.passwordStrength()]
+        ],
 
         // Optional: Terms acceptance
         acceptTerms: [false, Validators.requiredTrue],
@@ -137,10 +140,12 @@ export class SignupFormComponent implements OnInit, OnDestroy {
    * Creates a single phone control for FormArray.
    */
   private createPhoneControl() {
-    return this.fb.control('', [
-      Validators.required,
-      Validators.pattern(/^[0-9\s\-\+\(\)]{9,15}$/)
-    ]);
+    return this.fb.group({
+      phone: ['', [
+        Validators.required,
+        Validators.pattern(/^[+]?[0-9\s\-\(\)]{9,15}$/)
+      ]]
+    });
   }
 
   /**
