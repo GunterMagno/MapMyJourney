@@ -1,0 +1,178 @@
+<!-- Login/Landing Page - Mobile-First Responsive -->
+<section class="login-page">
+  <section class="login-page__container">
+    
+    <!-- Left Section: Branding & Intro (Hidden on mobile, visible on desktop) -->
+    <section class="login-page__branding">
+      <article class="login-page__logo-container">
+        <h1 class="login-page__logo-text">MapMyJourney</h1>
+        <p class="login-page__logo-subtitle">Tu compañero de viajes</p>
+      </article>
+
+      <article class="login-page__intro">
+        <h2 class="login-page__intro-title">Organiza tus viajes con facilidad</h2>
+        <p class="login-page__intro-description">
+          Planifica itinerarios, gestiona gastos y colabora con amigos en tiempo real.
+        </p>
+        
+        <ul class="login-page__features">
+          <li class="login-page__feature-item">
+            <span class="login-page__feature-icon">✓</span>
+            <span>Itinerarios personalizados</span>
+          </li>
+          <li class="login-page__feature-item">
+            <span class="login-page__feature-icon">✓</span>
+            <span>Control de gastos compartidos</span>
+          </li>
+          <li class="login-page__feature-item">
+            <span class="login-page__feature-icon">✓</span>
+            <span>Documentos y evidencias</span>
+          </li>
+          <li class="login-page__feature-item">
+            <span class="login-page__feature-icon">✓</span>
+            <span>Votaciones colaborativas</span>
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- Right Section: Form Container (Always visible, full width on mobile) -->
+    <section class="login-page__form-section">
+      <!-- Tab Navigation -->
+      <nav class="login-page__tabs" role="tablist">
+        <button 
+          role="tab"
+          [attr.aria-selected]="activeTab === 'login'"
+          class="login-page__tab" 
+          [class.login-page__tab--active]="activeTab === 'login'"
+          (click)="switchTab('login')">
+          Iniciar Sesión
+        </button>
+        <button 
+          role="tab"
+          [attr.aria-selected]="activeTab === 'register'"
+          class="login-page__tab" 
+          [class.login-page__tab--active]="activeTab === 'register'"
+          (click)="switchTab('register')">
+          Registrarse
+        </button>
+      </nav>
+
+      <!-- Login Form -->
+      <form 
+        *ngIf="activeTab === 'login'" 
+        class="login-page__form"
+        [formGroup]="loginForm"
+        (ngSubmit)="onLogin()"
+        novalidate>
+        
+        <h2 class="login-page__form-title">Bienvenido de vuelta</h2>
+        <p class="login-page__form-subtitle">Ingresa tus credenciales para acceder</p>
+
+        <app-form-input
+          label="Email"
+          placeholder="tu@email.com"
+          inputId="login-email"
+          type="email"
+          [control]="loginForm.get('email')">
+        </app-form-input>
+
+        <app-form-input
+          label="Contraseña"
+          placeholder="••••••••"
+          inputId="login-password"
+          type="password"
+          [control]="loginForm.get('password')">
+        </app-form-input>
+
+        <article class="login-page__form-options">
+          <label class="login-page__checkbox">
+            <input type="checkbox" formControlName="rememberMe">
+            <span>Recuérdame</span>
+          </label>
+          <a href="#" class="login-page__forgot-link">¿Olvidaste tu contraseña?</a>
+        </article>
+
+        <app-button
+          label="Iniciar Sesión"
+          variant="primary"
+          size="lg"
+          [disabled]="loginForm.invalid"
+          type="submit"
+          class="login-page__submit-btn">
+        </app-button>
+      </form>
+
+      <!-- Register Form -->
+      <form 
+        *ngIf="activeTab === 'register'" 
+        class="login-page__form"
+        [formGroup]="registerForm"
+        (ngSubmit)="onRegister()"
+        novalidate>
+        
+        <h2 class="login-page__form-title">Crea tu cuenta</h2>
+        <p class="login-page__form-subtitle">Únete a nuestra comunidad de viajeros</p>
+
+        <app-form-input
+          label="Nombre Completo"
+          placeholder="Juan Pérez"
+          inputId="register-name"
+          [control]="registerForm.get('fullName')">
+        </app-form-input>
+
+        <app-form-input
+          label="Email"
+          placeholder="tu@email.com"
+          inputId="register-email"
+          type="email"
+          [control]="registerForm.get('email')">
+        </app-form-input>
+
+        <app-form-input
+          label="Contraseña"
+          placeholder="••••••••"
+          inputId="register-password"
+          type="password"
+          [control]="registerForm.get('password')">
+        </app-form-input>
+
+        <app-form-input
+          label="Confirma tu Contraseña"
+          placeholder="••••••••"
+          inputId="register-confirm-password"
+          type="password"
+          [control]="registerForm.get('confirmPassword')">
+        </app-form-input>
+
+        <label class="login-page__checkbox">
+          <input type="checkbox" formControlName="agreeTerms">
+          <span>Acepto los términos y condiciones</span>
+        </label>
+
+        <app-button
+          label="Registrarse"
+          variant="primary"
+          size="lg"
+          [disabled]="registerForm.invalid"
+          type="submit"
+          class="login-page__submit-btn">
+        </app-button>
+      </form>
+
+      <!-- Social Login (Optional) -->
+      <article class="login-page__divider">
+        <span>O continúa con</span>
+      </article>
+
+      <article class="login-page__social-login">
+        <button type="button" class="login-page__social-btn login-page__social-btn--google" aria-label="Continuar con Google">
+          <span>Google</span>
+        </button>
+        <button type="button" class="login-page__social-btn login-page__social-btn--facebook" aria-label="Continuar con Facebook">
+          <span>Facebook</span>
+        </button>
+      </article>
+    </section>
+  </section>
+</section>

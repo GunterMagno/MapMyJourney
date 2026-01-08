@@ -1,0 +1,241 @@
+<!-- Trip Detail Page - Complex Layout with Sidebar -->
+<app-header></app-header>
+
+<section class="trip-detail">
+  <!-- Mobile Menu Toggle Button -->
+  <button 
+    class="trip-detail__mobile-menu-toggle"
+    (click)="toggleMobileMenu()"
+    [attr.aria-expanded]="mobileMenuOpen"
+    aria-label="Abrir menú de navegación">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Overlay para cerrar menú en móvil -->
+  <article 
+    *ngIf="mobileMenuOpen"
+    class="trip-detail__overlay"
+    (click)="toggleMobileMenu()"
+    role="presentation">
+  </article>
+
+  <!-- Sidebar Navigation -->
+  <aside 
+    class="trip-detail__sidebar"
+    [class.trip-detail__sidebar--open]="mobileMenuOpen"
+    role="navigation"
+    aria-label="Navegación principal">
+    
+    <header class="trip-detail__sidebar-header">
+      <h2 class="trip-detail__sidebar-title">{{ tripName }}</h2>
+      <button 
+        class="trip-detail__sidebar-close"
+        (click)="toggleMobileMenu()"
+        aria-label="Cerrar menú">
+        ✕
+      </button>
+    </header>
+
+    <nav class="trip-detail__nav" role="navigation" aria-label="Secciones del viaje">
+      <a 
+        href="#itinerary"
+        class="trip-detail__nav-link"
+        [class.trip-detail__nav-link--active]="activeSection === 'itinerary'"
+        (click)="switchSection('itinerary')"
+        role="menuitem">
+        📅 Itinerario
+      </a>
+      <a 
+        href="#voting"
+        class="trip-detail__nav-link"
+        [class.trip-detail__nav-link--active]="activeSection === 'voting'"
+        (click)="switchSection('voting')"
+        role="menuitem">
+        🗳️ Votaciones
+      </a>
+      <a 
+        href="#documents"
+        class="trip-detail__nav-link"
+        [class.trip-detail__nav-link--active]="activeSection === 'documents'"
+        (click)="switchSection('documents')"
+        role="menuitem">
+        📄 Documentos
+      </a>
+      <a 
+        href="#expenses"
+        class="trip-detail__nav-link"
+        [class.trip-detail__nav-link--active]="activeSection === 'expenses'"
+        (click)="switchSection('expenses')"
+        role="menuitem">
+        💰 Gastos
+      </a>
+    </nav>
+
+    <!-- Trip Info Card -->
+    <article class="trip-detail__info-card">
+      <h3>Información del Viaje</h3>
+      <dl class="trip-detail__info-list">
+        <dt>Fechas</dt>
+        <dd>{{ tripStartDate | date: 'medium' }} - {{ tripEndDate | date: 'medium' }}</dd>
+        
+        <dt>Ubicación</dt>
+        <dd>{{ tripLocation }}</dd>
+        
+        <dt>Participantes</dt>
+        <dd>{{ participantsCount }}</dd>
+      </dl>
+    </article>
+
+    <!-- Participants List -->
+    <article class="trip-detail__participants">
+      <h3>Participantes</h3>
+      <ul class="trip-detail__participants-list">
+        <li *ngFor="let participant of participants" class="trip-detail__participant">
+          <span class="trip-detail__participant-avatar">{{ getInitials(participant.name) }}</span>
+          <span class="trip-detail__participant-name">{{ participant.name }}</span>
+        </li>
+      </ul>
+    </article>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="trip-detail__main" role="main">
+    
+    <!-- Itinerary Section -->
+    <section 
+      id="itinerary"
+      class="trip-detail__section"
+      *ngIf="activeSection === 'itinerary'">
+      <h2 class="trip-detail__section-title">Itinerario</h2>
+      
+      <article class="trip-detail__timeline">
+        <article 
+          class="trip-detail__timeline-item"
+          *ngFor="let day of itineraryDays; let i = index">
+          <header class="trip-detail__timeline-date">
+            <span class="trip-detail__timeline-day">Día {{ i + 1 }}</span>
+            <span class="trip-detail__timeline-date-text">{{ day.date | date: 'short' }}</span>
+          </header>
+          
+          <article class="trip-detail__timeline-content">
+            <h3 class="trip-detail__timeline-title">{{ day.title }}</h3>
+            <p class="trip-detail__timeline-description">{{ day.description }}</p>
+            
+            <section class="trip-detail__activities">
+              <article 
+                class="trip-detail__activity"
+                *ngFor="let activity of day.activities">
+                <span class="trip-detail__activity-icon">{{ activity.icon }}</span>
+                <div>
+                  <h4 class="trip-detail__activity-title">{{ activity.title }}</h4>
+                  <p class="trip-detail__activity-details">{{ activity.time }} • {{ activity.location }}</p>
+                </div>
+              </article>
+            </section>
+          </article>
+        </article>
+      </article>
+    </section>
+
+    <!-- Voting Section -->
+    <section 
+      id="voting"
+      class="trip-detail__section"
+      *ngIf="activeSection === 'voting'">
+      <h2 class="trip-detail__section-title">Votaciones</h2>
+      
+      <section class="trip-detail__voting-grid">
+        <article 
+          class="trip-detail__voting-card"
+          *ngFor="let proposal of proposals">
+          <h3 class="trip-detail__voting-title">{{ proposal.title }}</h3>
+          <p class="trip-detail__voting-description">{{ proposal.description }}</p>
+          
+          <section class="trip-detail__voting-options">
+            <button 
+              *ngFor="let option of proposal.options"
+              class="trip-detail__voting-option"
+              [class.trip-detail__voting-option--selected]="option.userVoted"
+              [attr.aria-pressed]="option.userVoted">
+              <span class="trip-detail__voting-option-label">{{ option.label }}</span>
+              <span class="trip-detail__voting-option-count">{{ option.votes }} votos</span>
+              <div class="trip-detail__voting-option-bar">
+                <div 
+                  class="trip-detail__voting-option-fill"
+                  [style.width.%]="(option.votes / proposal.totalVotes) * 100">
+                </div>
+              </div>
+            </button>
+          </section>
+        </article>
+      </section>
+    </section>
+
+    <!-- Documents Section -->
+    <section 
+      id="documents"
+      class="trip-detail__section"
+      *ngIf="activeSection === 'documents'">
+      <h2 class="trip-detail__section-title">Documentos</h2>
+      
+      <section class="trip-detail__documents-list">
+        <article 
+          class="trip-detail__document-item"
+          *ngFor="let doc of documents">
+          <span class="trip-detail__document-icon" aria-hidden="true">{{ getDocumentIcon(doc.type) }}</span>
+          <article class="trip-detail__document-info">
+            <h3 class="trip-detail__document-name">{{ doc.name }}</h3>
+            <p class="trip-detail__document-meta">{{ doc.uploadedBy }} • {{ doc.date | date: 'short' }}</p>
+          </article>
+          <button 
+            class="trip-detail__document-download"
+            (click)="downloadDocument(doc.id)"
+            aria-label="Descargar {{ doc.name }}">
+            📥
+          </button>
+        </article>
+      </section>
+    </section>
+
+    <!-- Expenses Section -->
+    <section 
+      id="expenses"
+      class="trip-detail__section"
+      *ngIf="activeSection === 'expenses'">
+      <h2 class="trip-detail__section-title">Gastos</h2>
+      
+      <!-- Expense Summary -->
+      <header class="trip-detail__expense-summary">
+        <article class="trip-detail__expense-stat">
+          <span class="trip-detail__expense-stat-label">Gasto Total</span>
+          <span class="trip-detail__expense-stat-value">{{ totalExpenses | currency }}</span>
+        </article>
+        <article class="trip-detail__expense-stat">
+          <span class="trip-detail__expense-stat-label">Promedio por Persona</span>
+          <span class="trip-detail__expense-stat-value">{{ expensePerPerson | currency }}</span>
+        </article>
+      </header>
+
+      <!-- Expenses Table/Cards -->
+      <section class="trip-detail__expenses-list">
+        <article 
+          class="trip-detail__expense-card"
+          *ngFor="let expense of expenses">
+          <header class="trip-detail__expense-header">
+            <h3 class="trip-detail__expense-title">{{ expense.category }}</h3>
+            <span class="trip-detail__expense-amount">{{ expense.amount | currency }}</span>
+          </header>
+          <p class="trip-detail__expense-description">{{ expense.description }}</p>
+          <footer class="trip-detail__expense-meta">
+            <span>{{ expense.paidBy }}</span>
+            <span>{{ expense.date | date: 'short' }}</span>
+          </footer>
+        </article>
+      </section>
+    </section>
+  </main>
+</section>
+
+<app-footer></app-footer>

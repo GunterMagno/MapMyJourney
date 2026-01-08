@@ -210,6 +210,247 @@
       </app-button>
     </div>
   </article>
+
+  <!-- FASE 4: Sistema de Rutas y Navegación -->
+  <header class="demo__header" style="margin-top: 40px;">
+    <h1>FASE 4: Sistema de Rutas y Navegación</h1>
+    <p class="demo__subtitle">
+      Guards funcionales (authGuard, pendingChangesGuard), Resolvers para precarga de datos,
+      Breadcrumbs dinámicos, Rutas anidadas, Etiquetas semánticas, Accordion con expansión por día.
+    </p>
+  </header>
+
+  <!-- Guards Section -->
+  <article class="demo__section">
+    <h2>Guards - Protección de Rutas</h2>
+    <p>
+      <strong>authGuard:</strong> Protege rutas privadas. Si no estás autenticado, redirecciona a login.
+    </p>
+    <p>
+      <strong>pendingChangesGuard:</strong> Evita perder cambios en formularios. Pide confirmación si intentas navegar sin guardar.
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ir a Mi Perfil (Protegido)"
+        variant="primary"
+        size="lg"
+        (click)="goToProfile()">
+      </app-button>
+
+      <app-button
+        label="Ir a Mi Itinerario (Protegido)"
+        variant="primary"
+        size="lg"
+        (click)="goToItinerary()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Resolver Section -->
+  <article class="demo__section">
+    <h2>Resolvers - Precarga de Datos</h2>
+    <p>
+      El resolver precarga los datos del viaje ANTES de activar la ruta.
+      Así el componente nunca muestra "cargando..." porque ya tiene los datos.
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ver Viaje Barcelona (ID: 1)"
+        variant="secondary"
+        size="lg"
+        (click)="goToTrip(1)">
+      </app-button>
+
+      <app-button
+        label="Ver Viaje Machu Picchu (ID: 2)"
+        variant="secondary"
+        size="lg"
+        (click)="goToTrip(2)">
+      </app-button>
+
+      <app-button
+        label="Ver Viaje Safari (ID: 3)"
+        variant="secondary"
+        size="lg"
+        (click)="goToTrip(3)">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Breadcrumbs Section -->
+  <article class="demo__section">
+    <h2>Breadcrumbs Dinámicos</h2>
+    <p>
+      Los breadcrumbs se actualizan automáticamente en cada navegación.
+      El servicio recorre el árbol de rutas y extrae los metadatos.
+      Ves arriba en la página el componente en acción.
+    </p>
+    <p style="font-size: 0.9em; color: var(--text-secondary);">
+      Navega entre secciones y observa cómo cambian automáticamente.
+    </p>
+  </article>
+
+  <!-- Rutas Anidadas Section -->
+  <article class="demo__section">
+    <h2>Rutas Anidadas y Etiquetas Semánticas</h2>
+    <p>
+      La sección de usuario tiene un layout con sidebar que contiene router-outlet.
+      Las rutas hijas (/usuario/perfil, /usuario/itinerario) se renderizam dentro.
+    </p>
+    <p>
+      <strong>Etiquetas Semánticas:</strong> Se usan &lt;section&gt;, &lt;article&gt;, &lt;aside&gt;, &lt;main&gt;, &lt;nav&gt;
+      para mejor accesibilidad y SEO.
+    </p>
+  </article>
+
+  <!-- Accordion Section -->
+  <article class="demo__section">
+    <h2>Accordion - Itinerario sin Cambio de Página</h2>
+    <p>
+      En la página del itinerario, cada día es un accordion que se expande/colapsa.
+      Click en un día muestra las actividades sin navegar a otra ruta.
+      Solo 1 día expandido a la vez.
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ver Mi Itinerario (Con Accordion)"
+        variant="primary"
+        size="lg"
+        (click)="goToItinerary()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- FASE 5: Capa de Servicios y HTTP -->
+  <header class="demo__header" style="margin-top: 40px;">
+    <h1>FASE 5: Capa de Servicios y HTTP</h1>
+    <p class="demo__subtitle">
+      Servicios HTTP centralizados (ApiService, TripService, ExpenseService),
+      Interceptores funcionales (auth, error, loading), Modelos tipados,
+      Autenticación real con JWT, Gestión de errores global.
+    </p>
+  </header>
+
+  <!-- HTTP Services Section -->
+  <article class="demo__section">
+    <h2>Servicios HTTP - Comunicación con Backend</h2>
+    <p>
+      <strong>ApiService:</strong> Wrapper centralizado de HttpClient. Métodos GET, POST, PUT, DELETE genéricos con tipado.
+    </p>
+    <p>
+      <strong>TripService:</strong> Lógica de negocio para viajes. CRUD, gestión de participantes, precarga de datos.
+    </p>
+    <p>
+      <strong>ExpenseService:</strong> Lógica de negocio para gastos. CRUD, cálculo de liquidaciones, resumen de gastos.
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Simulación: Obtener Viajes"
+        variant="primary"
+        size="lg"
+        (click)="simulateGetTrips()">
+      </app-button>
+
+      <app-button
+        label="Simulación: Crear Viaje"
+        variant="secondary"
+        size="lg"
+        (click)="simulateCreateTrip()">
+      </app-button>
+
+      <app-button
+        label="Simulación: Obtener Gastos"
+        variant="secondary"
+        size="lg"
+        (click)="simulateGetExpenses()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Interceptores Section -->
+  <article class="demo__section">
+    <h2>Interceptores Funcionales - Manejo Automático</h2>
+    <p>
+      <strong>authInterceptor:</strong> Inyecta Bearer token en todas las peticiones. Agrega header X-App-Client.
+    </p>
+    <p>
+      <strong>errorInterceptor:</strong> Manejo global de errores. 401/403 → logout, 404/500 → toast automático.
+    </p>
+    <p>
+      <strong>loadingInterceptor:</strong> Muestra/oculta estado de carga global durante peticiones HTTP.
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Simulación: Error 401 (Unauthorized)"
+        variant="danger"
+        size="lg"
+        (click)="simulateError401()">
+      </app-button>
+
+      <app-button
+        label="Simulación: Error 404 (Not Found)"
+        variant="danger"
+        size="lg"
+        (click)="simulateError404()">
+      </app-button>
+
+      <app-button
+        label="Simulación: Error 500 (Server Error)"
+        variant="danger"
+        size="lg"
+        (click)="simulateError500()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Modelos Tipados Section -->
+  <article class="demo__section">
+    <h2>Modelos Tipados - TypeScript Strict</h2>
+    <p>
+      <strong>User:</strong> id, name, email, role, profilePicture, createdAt, updatedAt
+    </p>
+    <p>
+      <strong>Trip:</strong> id, destination, startDate, endDate, budget, participantIds, totalExpenses, status
+    </p>
+    <p>
+      <strong>Expense:</strong> id, tripId, amount, description, category, paidBy, date
+    </p>
+    <p>
+      <strong>ApiPaginatedResponse&lt;T&gt;:</strong> Respuesta paginada genérica con content, totalElements, totalPages, hasNext, hasPrevious
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ver Estructura de Modelos"
+        variant="primary"
+        size="lg"
+        (click)="showModelStructure()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Autenticación Real Section -->
+  <article class="demo__section">
+    <h2>Autenticación HTTP Real - JWT</h2>
+    <p>
+      AuthService usa ApiService para peticiones reales a <code>POST /auth/login</code> y <code>POST /auth/signup</code>.
+      Ya no usa mocks con setTimeout. Token JWT se guarda en localStorage.
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ir a Formulario de Login"
+        variant="primary"
+        size="lg"
+        (click)="goToLogin()">
+      </app-button>
+
+      <app-button
+        label="Ir a Formulario de Signup"
+        variant="secondary"
+        size="lg"
+        (click)="goToSignup()">
+      </app-button>
+    </div>
+  </article>
 </section>
 
 <app-footer></app-footer>

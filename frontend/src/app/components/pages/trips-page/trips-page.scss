@@ -1,6 +1,6 @@
 .trips-page {
   padding: var(--spacing-8);
-  max-width: 1200px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   min-height: calc(100vh - 80px - 200px);
   display: flex;
@@ -108,7 +108,7 @@ html.dark-mode {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--breakpoint-tablet-max)) {
   .trips-page {
     padding: var(--spacing-4);
   }

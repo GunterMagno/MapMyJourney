@@ -1,0 +1,110 @@
+<!-- Dashboard Page - Mis Viajes -->
+<app-header></app-header>
+
+<main class="dashboard-page">
+  <section class="dashboard-page__container">
+    
+    <!-- Header Section -->
+    <header class="dashboard-page__header">
+      <h1 class="dashboard-page__title">Mis Viajes</h1>
+      <p class="dashboard-page__subtitle">Organiza y colabora en tus aventuras</p>
+      
+      <section class="dashboard-page__actions">
+        <app-button
+          label="+ Nuevo Viaje"
+          variant="primary"
+          size="md"
+          (click)="onCreateTrip()">
+        </app-button>
+
+        <section class="dashboard-page__filters">
+          <app-form-select
+            label="Filtrar por estado"
+            selectId="status-filter"
+            [options]="statusFilterOptions"
+            placeholder="Todos"
+            [control]="statusFilterControl">
+          </app-form-select>
+
+          <app-form-input
+            label="Buscar viajes"
+            placeholder="Buscar por nombre..."
+            inputId="search-trips"
+            [control]="searchControl"
+            class="dashboard-page__search">
+          </app-form-input>
+        </section>
+      </section>
+    </header>
+
+    <!-- Trips Grid (Responsive) -->
+    <section class="dashboard-page__content">
+      <!-- Empty State -->
+      <article 
+        *ngIf="filteredTrips.length === 0"
+        class="dashboard-page__empty-state">
+        <h2>No hay viajes aún</h2>
+        <p>Comienza creando tu primer viaje para empezar a organizar tus aventuras.</p>
+        <app-button
+          label="Crear Primer Viaje"
+          variant="primary"
+          size="md"
+          (click)="onCreateTrip()">
+        </app-button>
+      </article>
+
+      <!-- Trips Grid with Container Queries -->
+      <section class="dashboard-page__trips-grid" *ngIf="filteredTrips.length > 0">
+        <article 
+          class="card-container"
+          *ngFor="let trip of filteredTrips; trackBy: trackByTripId"
+          (click)="onTripClick(trip.id)">
+          <app-card
+            class="trip-card"
+            [title]="trip.name"
+            [description]="trip.description"
+            [image]="trip.image">
+            <article class="trip-card__meta">
+              <span class="trip-card__duration">
+                📅 {{ trip.startDate | date: 'short' }} - {{ trip.endDate | date: 'short' }}
+              </span>
+              <span class="trip-card__participants">
+                👥 {{ trip.participants.length }} participantes
+              </span>
+            </article>
+            <app-button
+              label="Ver Detalles"
+              variant="primary"
+              size="sm">
+            </app-button>
+          </app-card>
+        </article>
+      </section>
+    </section>
+
+    <!-- Quick Stats (Desktop only) -->
+    <section class="dashboard-page__stats" *ngIf="filteredTrips.length > 0">
+      <article class="dashboard-page__stat-card">
+        <h3>Viajes Totales</h3>
+        <p class="dashboard-page__stat-number">{{ filteredTrips.length }}</p>
+      </article>
+
+      <article class="dashboard-page__stat-card">
+        <h3>Próximos Viajes</h3>
+        <p class="dashboard-page__stat-number">{{ upcomingTripsCount }}</p>
+      </article>
+
+      <article class="dashboard-page__stat-card">
+        <h3>Gasto Total</h3>
+        <p class="dashboard-page__stat-number">{{ totalSpent | currency }}</p>
+      </article>
+
+      <article class="dashboard-page__stat-card">
+        <h3>Participantes</h3>
+        <p class="dashboard-page__stat-number">{{ totalParticipants }}</p>
+      </article>
+    </section>
+  </section>
+</main>
+
+<app-footer></app-footer>

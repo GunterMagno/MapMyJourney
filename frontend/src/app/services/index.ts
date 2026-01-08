@@ -6,7 +6,7 @@
  */
 
 export { AuthService } from './auth.service';
-export type { User, AuthResponse } from './auth.service';
+export type { User, AuthResponse } from '../core/models';
 export { CommunicationService } from './communication.service';
 export { ToastService } from './toast.service';
 export type { Toast, ToastType } from './toast.service';

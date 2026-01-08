@@ -85,11 +85,21 @@
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.12);
     --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
 
-    /* Breakpoints */
+    /* Breakpoints - Min Width */
     --breakpoint-mobile: 640px;
     --breakpoint-tablet: 768px;
     --breakpoint-desktop: 1024px;
     --breakpoint-large-desktop: 1280px;
+
+    /* Breakpoints - Max Width (anteriores al siguiente) */
+    --breakpoint-mobile-max: 639px;
+    --breakpoint-tablet-max: 767px;
+    --breakpoint-desktop-max: 1023px;
+
+    /* Container Sizes */
+    --container-max-width: 1400px;
+    --container-tablet-max: 768px;
+    --container-desktop-max: 1024px;
 
     /* Transitions */
     --transition-slow: 0.6s ease-in-out;

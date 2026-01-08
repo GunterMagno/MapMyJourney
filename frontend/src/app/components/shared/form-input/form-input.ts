@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-form-input',
@@ -14,8 +14,15 @@ export class FormInputComponent {
   @Input() type: string = 'text';
   @Input() placeholder: string = '';
   @Input() inputId: string = '';
-  @Input() control: FormControl | null = null;
+  @Input() control: AbstractControl | null = null;
   @Input() parentForm: FormGroup | null = null;
+
+  /**
+   * Cast control to FormControl for template usage
+   */
+  get formControl(): FormControl {
+    return this.control as FormControl;
+  }
   
   /**
    * Gets all validation errors from FormControl.

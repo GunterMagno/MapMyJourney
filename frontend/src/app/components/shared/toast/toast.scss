@@ -105,7 +105,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: var(--breakpoint-mobile-max)) {
   .toast-container {
     bottom: var(--spacing-4);
     right: var(--spacing-4);

@@ -89,7 +89,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: var(--breakpoint-mobile-max)) {
   .tooltip {
     font-size: var(--font-size-small);
     white-space: normal;

@@ -1,25 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'ADMIN' | 'USER';
-  profilePicture?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  user: User;
-}
+import { tap, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { ApiService } from '../core/services/api.service';
+import { User, AuthResponse } from '../core/models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private api = inject(ApiService);
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'current_user';
 
@@ -43,56 +33,46 @@ export class AuthService {
   }
 
   /**
-   * Simulates login. Replace with actual HTTP call when backend is ready.
+   * Login con HTTP real al backend
+   * POST /auth/login
    */
   login(email: string, password: string): Observable<AuthResponse> {
-    return new Observable(observer => {
-      // TODO: Replace with actual HTTP POST to backend
-      // Example: this.http.post<AuthResponse>('/api/auth/login', { email, password })
-      setTimeout(() => {
-        const mockUser: User = {
-          id: '1',
-          name: 'Test User',
-          email,
-          role: 'USER'
-        };
-        const response: AuthResponse = {
-          token: 'mock_jwt_token_' + Date.now(),
-          user: mockUser
-        };
+    return this.api.post<AuthResponse>('auth/login', {
+      email,
+      password
+    }).pipe(
+      tap(response => {
         this.setAuthData(response);
-        observer.next(response);
-        observer.complete();
-      }, 500);
-    });
+      }),
+      catchError(error => {
+        console.error('Login error:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
-   * Simulates signup. Replace with actual HTTP call when backend is ready.
+   * Signup con HTTP real al backend
+   * POST /auth/signup
    */
   signup(name: string, email: string, password: string): Observable<AuthResponse> {
-    return new Observable(observer => {
-      // TODO: Replace with actual HTTP POST to backend
-      setTimeout(() => {
-        const mockUser: User = {
-          id: Math.random().toString(),
-          name,
-          email,
-          role: 'USER'
-        };
-        const response: AuthResponse = {
-          token: 'mock_jwt_token_' + Date.now(),
-          user: mockUser
-        };
+    return this.api.post<AuthResponse>('auth/signup', {
+      name,
+      email,
+      password
+    }).pipe(
+      tap(response => {
         this.setAuthData(response);
-        observer.next(response);
-        observer.complete();
-      }, 500);
-    });
+      }),
+      catchError(error => {
+        console.error('Signup error:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
-   * Clears authentication data and logs out user.
+   * Logout - limpia tokens y datos de usuario
    */
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
@@ -102,7 +82,7 @@ export class AuthService {
   }
 
   /**
-   * Sets authentication data after successful login/signup.
+   * Guarda datos de autenticación después de login exitoso
    */
   private setAuthData(response: AuthResponse): void {
     localStorage.setItem(this.TOKEN_KEY, response.token);
@@ -112,14 +92,16 @@ export class AuthService {
   }
 
   /**
-   * Retrieves JWT token from localStorage.
+   * Obtiene el JWT token del localStorage
    */
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return typeof window !== 'undefined'
+      ? localStorage.getItem(this.TOKEN_KEY)
+      : null;
   }
 
   /**
-   * Checks if user has a valid token.
+   * Verifica si existe un token válido
    */
   hasValidToken(): boolean {
     const token = this.getToken();
@@ -127,24 +109,32 @@ export class AuthService {
   }
 
   /**
-   * Gets current user from storage.
+   * Obtiene el usuario actual desde localStorage
    */
   private getUserFromStorage(): User | null {
+    if (typeof window === 'undefined') return null;
     const userJson = localStorage.getItem(this.USER_KEY);
     return userJson ? JSON.parse(userJson) : null;
   }
 
   /**
-   * Gets current user value synchronously.
+   * Obtiene el usuario actual de forma síncrona
    */
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
   /**
-   * Gets authentication status synchronously.
+   * Verifica si está autenticado (síncrono)
    */
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
+  }
+
+  /**
+   * Alias de isAuthenticated() - usado por guards
+   */
+  isLoggedIn(): boolean {
+    return this.isAuthenticated();
   }
 }

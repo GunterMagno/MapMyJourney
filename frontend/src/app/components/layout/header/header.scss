@@ -326,7 +326,7 @@
     animation: fadeIn var(--transition-medium);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: var(--breakpoint-tablet-max)) {
     padding: var(--spacing-4) var(--spacing-12);
     gap: var(--spacing-4);
 

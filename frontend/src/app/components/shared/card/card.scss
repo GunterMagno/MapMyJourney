@@ -4,9 +4,20 @@
 // Tarjeta reutilizable con imagen, título, descripción y acciones
 // Variantes: vertical (default), horizontal
 // Metodología BEM: .card .card__element .card--modifier
+// Container Queries: Adaptable según su propio ancho de contenedor
 
 // ============================================================================
-// ESTILOS BASE DE LA CARD
+// CONTENEDOR PADRE (Container Query)
+// ============================================================================
+.card-container {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// ============================================================================
+// ESTILOS BASE DE LA CARD (Mobile-First)
 // ============================================================================
 .card {
   // Layout
@@ -27,10 +38,9 @@
   // Transiciones suaves para hover
   transition: all var(--transition-fast);
 
-  // Altura fija para consistencia
+  // Altura adaptativa
   height: 100%;
   min-height: 500px;
-  max-height: 600px;
 
   // Estado hover - Elevar la card
   &:hover {
@@ -50,6 +60,72 @@
     outline: 2px solid var(--principal-color);
     outline-offset: 2px;
   }
+
+  // ========================================================================
+  // CONTAINER QUERIES: Adaptación según ancho del contenedor
+  // ========================================================================
+  
+  // PEQUEÑO: < 300px - Layout compacto vertical
+  @container (max-width: 300px) {
+    min-height: auto;
+
+    .card__image {
+      height: 150px;
+    }
+
+    .card__content {
+      padding: var(--spacing-3);
+      gap: var(--spacing-2);
+    }
+
+    .card__title {
+      font-size: var(--font-size-tittle-h4);
+    }
+
+    .card__description {
+      -webkit-line-clamp: 2;
+      font-size: var(--font-size-small);
+    }
+  }
+
+  // MEDIANO: 300px - 500px - Layout vertical normal
+  @container (min-width: 300px) and (max-width: 500px) {
+    min-height: 480px;
+
+    .card__image {
+      height: 200px;
+    }
+
+    .card__content {
+      padding: var(--spacing-4);
+    }
+
+    .card__title {
+      font-size: var(--font-size-tittle-h4);
+    }
+  }
+
+  // GRANDE: >= 500px - Layout horizontal con imagen lateral
+  @container (min-width: 500px) {
+    flex-direction: row;
+    min-height: 300px;
+
+    .card__image {
+      width: 280px;
+      height: auto;
+      min-height: 300px;
+      flex-shrink: 0;
+    }
+
+    .card__content {
+      flex: 1;
+      padding: var(--spacing-6);
+    }
+
+    .card__title {
+      font-size: var(--font-size-tittle-h3);
+    }
+  }
 }
 
 // ============================================================================
@@ -57,7 +133,7 @@
 // ============================================================================
 .card__image {
   width: 100%;
-  height: 300px;  // Aumentado de 240px para imagen más grande
+  height: 250px;  // Móvil: altura estándar
   overflow: hidden;
   background-color: var(--bg-surface);
   flex-shrink: 0;
@@ -73,18 +149,18 @@
 }
 
 // ============================================================================
-// ELEMENTO: CONTENIDO
+// ELEMENTO: CONTENIDO (Mobile-First)
 // ============================================================================
 .card__content {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
-  padding: var(--spacing-6);
+  padding: var(--spacing-4);
   flex: 1;
 }
 
 // ============================================================================
-// ELEMENTO: TÍTULO
+// ELEMENTO: TÍTULO (Mobile-First)
 // ============================================================================
 .card__title {
   margin: 0;
@@ -102,16 +178,16 @@
 }
 
 // ============================================================================
-// ELEMENTO: DESCRIPCIÓN
+// ELEMENTO: DESCRIPCIÓN (Mobile-First)
 // ============================================================================
 .card__description {
   margin: 0;
-  font-size: var(--font-size-medium);
+  font-size: var(--font-size-small);
   color: var(--text-secondary);
   line-height: var(--line-height-normal);
   flex: 1;
 
-  // Limitar a 3 líneas máximo
+  // Limitar a 3 líneas máximo en móvil
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -137,7 +213,7 @@
   flex-direction: row;
 
   .card__image {
-    width: 240px;
+    width: 200px;
     height: auto;
     min-height: 200px;
     flex-shrink: 0;
@@ -147,8 +223,8 @@
     flex: 1;
   }
 
-  // En móvil, volver a vertical
-  @media (max-width: var(--breakpoint-mobile)) {
+  // Mobile-First: En viewports pequeños, volver a vertical
+  @media (max-width: var(--breakpoint-tablet)) {
     flex-direction: column;
 
     .card__image {
@@ -162,8 +238,12 @@
 // MODIFICADOR: SIN IMAGEN
 // ============================================================================
 .card--no-image {
+  .card__image {
+    display: none;
+  }
+
   .card__content {
-    padding-top: var(--spacing-8);
+    padding-top: var(--spacing-6);
   }
 }
 
@@ -180,12 +260,11 @@
 }
 
 // ============================================================================
-// RESPONSIVE
+// RESPONSIVE: TABLET (768px+) - Media Queries
 // ============================================================================
-@media (max-width: var(--breakpoint-mobile)) {
+@media (min-width: var(--breakpoint-tablet)) {
   .card__content {
-    padding: var(--spacing-4);
-    gap: var(--spacing-2);
+    padding: var(--spacing-5);
   }
 
   .card__title {
@@ -193,10 +272,38 @@
   }
 
   .card__description {
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-medium);
+    -webkit-line-clamp: 4;
   }
 
   .card__image {
-    height: 180px;
+    height: 280px;
+  }
+}
+
+// ============================================================================
+// RESPONSIVE: DESKTOP (1024px+) - Media Queries
+// ============================================================================
+@media (min-width: var(--breakpoint-desktop)) {
+  .card {
+    min-height: 520px;
+  }
+
+  .card__content {
+    padding: var(--spacing-6);
+    gap: var(--spacing-4);
+  }
+
+  .card__title {
+    font-size: var(--font-size-tittle-h3);
+  }
+
+  .card__description {
+    font-size: var(--font-size-medium);
+    -webkit-line-clamp: 4;
+  }
+
+  .card__image {
+    height: 300px;
   }
 }

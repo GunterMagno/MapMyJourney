@@ -12,6 +12,7 @@ import { RouterModule, Router } from '@angular/router';
 import { ThemeService } from '../../../services/theme.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommunicationService } from '../../../services/communication.service';
+import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -27,7 +28,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, BreadcrumbComponent],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

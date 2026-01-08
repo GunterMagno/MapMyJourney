@@ -171,4 +171,117 @@ export class DemoPageComponent implements OnInit {
   goToSignup(): void {
     this.router.navigate(['/auth/signup']);
   }
+
+  /**
+   * Navigate to user profile (FASE 4)
+   */
+  goToProfile(): void {
+    // First, set user as logged in for demo
+    localStorage.setItem('auth_token', 'demo_token');
+    localStorage.setItem('current_user', JSON.stringify({
+      id: '1',
+      name: 'Usuario Demo',
+      email: 'demo@example.com',
+      role: 'USER'
+    }));
+    this.router.navigate(['/usuario/perfil']);
+  }
+
+  /**
+   * Navigate to user itinerary (FASE 4)
+   */
+  goToItinerary(): void {
+    // First, set user as logged in for demo
+    localStorage.setItem('auth_token', 'demo_token');
+    localStorage.setItem('current_user', JSON.stringify({
+      id: '1',
+      name: 'Usuario Demo',
+      email: 'demo@example.com',
+      role: 'USER'
+    }));
+    this.router.navigate(['/usuario/itinerario']);
+  }
+
+  /**
+   * Navigate to trip detail (FASE 4)
+   */
+  goToTrip(id: number): void {
+    this.router.navigate(['/trips', id]);
+  }
+
+  /**
+   * Simulate getting trips from API (FASE 5)
+   */
+  simulateGetTrips(): void {
+    this.loadingService.show();
+    setTimeout(() => {
+      this.loadingService.hide();
+      this.toastService.success('✅ Viajes obtenidos: Barcelona, Machu Picchu, Safari');
+    }, 1500);
+  }
+
+  /**
+   * Simulate creating a trip via API (FASE 5)
+   */
+  simulateCreateTrip(): void {
+    this.loadingService.show();
+    setTimeout(() => {
+      this.loadingService.hide();
+      this.toastService.success('✅ Viaje "Venecia" creado exitosamente');
+    }, 1500);
+  }
+
+  /**
+   * Simulate getting expenses from API (FASE 5)
+   */
+  simulateGetExpenses(): void {
+    this.loadingService.show();
+    setTimeout(() => {
+      this.loadingService.hide();
+      this.toastService.success('✅ Gastos obtenidos: $450 Hospedaje, $120 Comida, $80 Transporte');
+    }, 1500);
+  }
+
+  /**
+   * Simulate 401 Unauthorized error (FASE 5)
+   */
+  simulateError401(): void {
+    this.loadingService.show();
+    setTimeout(() => {
+      this.loadingService.hide();
+      this.toastService.error('❌ Error 401: Sesión expirada. Por favor, inicia sesión nuevamente.');
+    }, 1500);
+  }
+
+  /**
+   * Simulate 404 Not Found error (FASE 5)
+   */
+  simulateError404(): void {
+    this.loadingService.show();
+    setTimeout(() => {
+      this.loadingService.hide();
+      this.toastService.error('❌ Error 404: Recurso no encontrado.');
+    }, 1500);
+  }
+
+  /**
+   * Simulate 500 Server error (FASE 5)
+   */
+  simulateError500(): void {
+    this.loadingService.show();
+    setTimeout(() => {
+      this.loadingService.hide();
+      this.toastService.error('❌ Error 500: Problema en el servidor. Intenta más tarde.');
+    }, 1500);
+  }
+
+  /**
+   * Show model structure information (FASE 5)
+   */
+  showModelStructure(): void {
+    this.toastService.info(
+      'Modelos tipados: User, Trip, Expense, ApiPaginatedResponse<T>. ' +
+      'Ver /docs/frontend/fase5-http.md para detalles completos.'
+    );
+  }
 }

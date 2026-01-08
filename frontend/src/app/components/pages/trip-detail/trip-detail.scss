@@ -1,0 +1,770 @@
+// ============================================================================
+// PÁGINA: TRIP DETAIL - LAYOUT CON SIDEBAR
+// ============================================================================
+// Estrategia Mobile-First: Menú hamburguesa en móvil, sidebar fijo en desktop
+// Usa CSS Grid para layout principal y Flexbox para componentes internos
+
+// ============================================================================
+// CONTENEDOR PRINCIPAL (Mobile-First)
+// ============================================================================
+.trip-detail {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  background-color: var(--bg-body);
+  position: relative;
+}
+
+// ============================================================================
+// BOTÓN HAMBURGUESA (Mobile only)
+// ============================================================================
+.trip-detail__mobile-menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-3);
+  position: fixed;
+  top: 70px;
+  left: var(--spacing-4);
+  z-index: 99;
+  gap: 5px;
+
+  span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: var(--principal-color);
+    border-radius: 2px;
+    transition: all var(--transition-fast);
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// ============================================================================
+// OVERLAY (Mobile only)
+// ============================================================================
+.trip-detail__overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 49;
+  animation: fadeIn 0.3s ease-out;
+}
+
+// ============================================================================
+// SIDEBAR (Mobile-First: Drawer, Desktop: Fijo)
+// ============================================================================
+.trip-detail__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  padding: var(--spacing-6);
+  background-color: var(--bg-elevated);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  max-height: 100vh;
+  
+  // Mobile: Drawer deslizable
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  transform: translateX(-100%);
+  transition: transform var(--transition-medium), z-index 0s;
+  z-index: 50;
+  padding-top: var(--spacing-10); // Espacio para el botón hamburguesa
+
+  &.trip-detail__sidebar--open {
+    transform: translateX(0);
+
+    ~ .trip-detail__overlay {
+      display: block;
+    }
+  }
+}
+
+.trip-detail__sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+}
+
+.trip-detail__sidebar-title {
+  margin: 0;
+  font-size: var(--font-size-tittle-h4);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-main);
+  flex: 1;
+  word-break: break-word;
+}
+
+.trip-detail__sidebar-close {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+// ============================================================================
+// NAVEGACIÓN DEL SIDEBAR
+// ============================================================================
+.trip-detail__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--spacing-6);
+}
+
+.trip-detail__nav-link {
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-small);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-medium);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  text-align: left;
+  font-family: var(--font-tertiary);
+
+  &:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-main);
+  }
+
+  &.trip-detail__nav-link--active {
+    background-color: var(--principal-color);
+    color: white;
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+// ============================================================================
+// TARJETA DE INFO DEL VIAJE
+// ============================================================================
+.trip-detail__info-card {
+  padding: var(--spacing-4);
+  background-color: var(--bg-surface);
+  border-radius: var(--border-radius-small);
+  border: 1px solid var(--border-color);
+
+  h3 {
+    margin: 0 0 var(--spacing-4) 0;
+    font-size: var(--font-size-tittle-h4);
+    color: var(--text-main);
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+.trip-detail__info-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--spacing-3);
+  margin: 0;
+  padding: 0;
+
+  dt {
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+    font-size: var(--font-size-small);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text-main);
+  }
+}
+
+// ============================================================================
+// LISTA DE PARTICIPANTES
+// ============================================================================
+.trip-detail__participants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+
+  h3 {
+    margin: 0;
+    font-size: var(--font-size-tittle-h4);
+    color: var(--text-main);
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+.trip-detail__participants-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.trip-detail__participant {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2);
+  border-radius: var(--border-radius-small);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.trip-detail__participant-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--principal-color), var(--secondary-color));
+  color: white;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small);
+  flex-shrink: 0;
+}
+
+.trip-detail__participant-name {
+  font-size: var(--font-size-small);
+  color: var(--text-main);
+  font-weight: var(--font-weight-semibold);
+}
+
+// ============================================================================
+// CONTENIDO PRINCIPAL
+// ============================================================================
+.trip-detail__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-6);
+  max-width: 100%;
+  margin-top: var(--spacing-10); // Espacio para el botón hamburguesa
+}
+
+// ============================================================================
+// SECCIONES
+// ============================================================================
+.trip-detail__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.trip-detail__section-title {
+  margin: 0;
+  font-size: var(--font-size-tittle-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-main);
+  font-family: var(--font-primary);
+}
+
+// ============================================================================
+// TIMELINE (ITINERARY)
+// ============================================================================
+.trip-detail__timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 50px;
+    bottom: -50px;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--principal-color) 0%,
+      var(--secondary-color) 100%
+    );
+  }
+}
+
+.trip-detail__timeline-item {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: var(--spacing-4);
+  position: relative;
+}
+
+.trip-detail__timeline-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding-top: var(--spacing-2);
+}
+
+.trip-detail__timeline-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--principal-color);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small);
+  z-index: 1;
+}
+
+.trip-detail__timeline-date-text {
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.trip-detail__timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  background-color: var(--bg-surface);
+  border-radius: var(--border-radius-small);
+  border: 1px solid var(--border-color);
+}
+
+.trip-detail__timeline-title {
+  margin: 0;
+  font-size: var(--font-size-tittle-h4);
+  color: var(--text-main);
+  font-weight: var(--font-weight-bold);
+}
+
+.trip-detail__timeline-description {
+  margin: 0;
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+}
+
+.trip-detail__activities {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.trip-detail__activity {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  background-color: var(--bg-body);
+  border-radius: var(--border-radius-small);
+  border: 1px solid var(--border-color);
+}
+
+.trip-detail__activity-icon {
+  font-size: 24px;
+  text-align: center;
+}
+
+.trip-detail__activity-title {
+  margin: 0;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-main);
+}
+
+.trip-detail__activity-details {
+  margin: 0;
+  font-size: var(--font-size-extra-small);
+  color: var(--text-secondary);
+}
+
+// ============================================================================
+// VOTACIONES
+// ============================================================================
+.trip-detail__voting-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-6);
+}
+
+.trip-detail__voting-card {
+  padding: var(--spacing-6);
+  background-color: var(--bg-surface);
+  border-radius: var(--border-radius-small);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.trip-detail__voting-title {
+  margin: 0;
+  font-size: var(--font-size-tittle-h4);
+  color: var(--text-main);
+  font-weight: var(--font-weight-bold);
+}
+
+.trip-detail__voting-description {
+  margin: 0;
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+}
+
+.trip-detail__voting-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.trip-detail__voting-option {
+  padding: var(--spacing-4);
+  background-color: var(--bg-body);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  font-family: var(--font-tertiary);
+
+  &:hover {
+    border-color: var(--principal-color);
+    background-color: var(--hover-bg);
+  }
+
+  &.trip-detail__voting-option--selected {
+    border-color: var(--principal-color);
+    background-color: rgba(239, 71, 111, 0.1);
+  }
+}
+
+.trip-detail__voting-option-label {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-main);
+  margin-bottom: var(--spacing-2);
+}
+
+.trip-detail__voting-option-count {
+  display: block;
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-2);
+}
+
+.trip-detail__voting-option-bar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--border-color);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.trip-detail__voting-option-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--principal-color), var(--secondary-color));
+  border-radius: 3px;
+  transition: width var(--transition-fast);
+}
+
+// ============================================================================
+// DOCUMENTOS
+// ============================================================================
+.trip-detail__documents-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.trip-detail__document-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  gap: var(--spacing-4);
+  align-items: center;
+  padding: var(--spacing-4);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    border-color: var(--principal-color);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.trip-detail__document-icon {
+  font-size: 24px;
+  text-align: center;
+}
+
+.trip-detail__document-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  min-width: 0;
+}
+
+.trip-detail__document-name {
+  margin: 0;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trip-detail__document-meta {
+  margin: 0;
+  font-size: var(--font-size-extra-small);
+  color: var(--text-secondary);
+}
+
+.trip-detail__document-download {
+  padding: var(--spacing-2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform var(--transition-fast);
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+// ============================================================================
+// GASTOS
+// ============================================================================
+.trip-detail__expense-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+}
+
+.trip-detail__expense-stat {
+  padding: var(--spacing-6);
+  background: linear-gradient(135deg, var(--principal-color), var(--secondary-color));
+  border-radius: var(--border-radius-small);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.trip-detail__expense-stat-label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  opacity: 0.9;
+}
+
+.trip-detail__expense-stat-value {
+  font-size: var(--font-size-tittle-h3);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-primary);
+}
+
+.trip-detail__expenses-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-3);
+}
+
+.trip-detail__expense-card {
+  padding: var(--spacing-4);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    border-color: var(--principal-color);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.trip-detail__expense-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--spacing-3);
+  gap: var(--spacing-4);
+}
+
+.trip-detail__expense-title {
+  margin: 0;
+  font-size: var(--font-size-tittle-h4);
+  color: var(--text-main);
+  font-weight: var(--font-weight-bold);
+}
+
+.trip-detail__expense-amount {
+  font-size: var(--font-size-tittle-h4);
+  font-weight: var(--font-weight-bold);
+  color: var(--principal-color);
+}
+
+.trip-detail__expense-description {
+  margin: 0 0 var(--spacing-2) 0;
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+}
+
+.trip-detail__expense-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-extra-small);
+  color: var(--text-secondary);
+}
+
+// ============================================================================
+// ANIMACIONES
+// ============================================================================
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ============================================================================
+// RESPONSIVE: TABLET (768px+) - Sidebar visible
+// ============================================================================
+@media (min-width: var(--breakpoint-tablet)) {
+  .trip-detail__mobile-menu-toggle {
+    display: none;
+  }
+
+  .trip-detail__overlay {
+    display: none !important;
+  }
+
+  .trip-detail__sidebar {
+    position: static;
+    transform: translateX(0);
+    width: auto;
+    max-height: none;
+    padding-top: var(--spacing-6);
+  }
+
+  .trip-detail__sidebar-close {
+    display: none;
+  }
+
+  .trip-detail__main {
+    margin-top: 0;
+    padding: var(--spacing-8);
+  }
+
+  .trip-detail__voting-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .trip-detail__expenses-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+// ============================================================================
+// RESPONSIVE: DESKTOP (1024px+) - Layout 2 columnas
+// ============================================================================
+@media (min-width: var(--breakpoint-desktop)) {
+  .trip-detail {
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto;
+  }
+
+  .trip-detail__sidebar {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    padding: var(--spacing-8);
+    border-right: 2px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-surface) 100%);
+  }
+
+  .trip-detail__main {
+    grid-column: 2;
+    grid-row: 1;
+    padding: var(--spacing-10);
+    margin-top: 0;
+    max-width: var(--container-desktop-max);
+  }
+
+  .trip-detail__voting-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .trip-detail__expenses-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trip-detail__timeline {
+    max-width: 900px;
+  }
+}
+
+// ============================================================================
+// RESPONSIVE: LARGE DESKTOP (1280px+)
+// ============================================================================
+@media (min-width: var(--breakpoint-large-desktop)) {
+  .trip-detail__sidebar {
+    width: 320px;
+    padding: var(--spacing-10);
+  }
+
+  .trip-detail__main {
+    padding: var(--spacing-12);
+    max-width: var(--container-max-width);
+  }
+
+  .trip-detail__voting-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trip-detail__expenses-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// ============================================================================
+// DARK MODE
+// ============================================================================
+.dark-mode {
+  .trip-detail__sidebar {
+    background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-surface) 100%);
+    border-right-color: var(--border-color);
+  }
+
+  .trip-detail__timeline {
+    &::before {
+      background: linear-gradient(
+        180deg,
+        var(--principal-color) 0%,
+        var(--secondary-color) 100%
+      );
+    }
+  }
+}
