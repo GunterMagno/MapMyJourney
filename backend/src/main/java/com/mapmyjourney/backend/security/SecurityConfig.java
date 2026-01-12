@@ -44,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Habilitar CORS
+                // Habilitar CORS - DEBE IR PRIMERO
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // Deshabilitar CSRF (usando JWT)
                 .csrf(csrf -> csrf.disable())
@@ -52,21 +52,17 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Configurar autorización de endpoints
                 .authorizeHttpRequests(authorize -> authorize
-                        // Rutas públicas
-                        .requestMatchers(
-                                "/api/users/register",
-                                "/api/users/login",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**",
-                                "/v3/api-docs.yaml",
-                                "/webjars/**"
-                        ).permitAll()
-                        // Todas las demás rutas requieren autenticación
+                        // Rutas públicas - permitir sin autenticación
+                        .requestMatchers("/users/login", "/users/register").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+                        // Todos los demás endpoints requieren autenticación
                         .anyRequest().authenticated()
                 )
                 // Agregar JWT filter antes de UsernamePasswordAuthenticationFilter
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // Permitir acceso a H2 Console
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
         return http.build();
     }

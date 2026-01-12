@@ -25,15 +25,6 @@
         [control]="$any(signupForm.get('email'))">
       </app-form-input>
 
-      <!-- NIF field with custom sync validation and async check -->
-      <app-form-input
-        label="NIF (Número de Identificación Fiscal)"
-        type="text"
-        placeholder="Ej: 12345678M (o 12345678-M)"
-        inputId="nif"
-        [control]="$any(signupForm.get('nif'))">
-      </app-form-input>
-
       <!-- Password field with strength validation -->
       <app-form-input
         label="Contraseña"
@@ -53,18 +44,9 @@
         [parentForm]="signupForm">
       </app-form-input>
 
-      <!-- Optional bio field -->
-      <app-form-textarea
-        label="Cuéntanos sobre ti (Opcional)"
-        placeholder="Soy un viajero apasionado..."
-        textareaId="bio"
-        [rows]="4"
-        [control]="$any(signupForm.get('bio'))">
-      </app-form-textarea>
-
       <!-- Dynamic phone numbers FormArray -->
       <div class="signup__phones-section" formArrayName="phoneNumbers">
-        <label class="signup__phones-label">Números de Teléfono</label>
+        <label class="signup__phones-label">Números de Teléfono (Opcional)</label>
         @for (phone of phoneNumbers.controls; let i = $index; track i) {
           <div class="signup__phone-item" [formGroupName]="i">
             <div class="signup__phone-input-wrapper">
@@ -87,7 +69,6 @@
             <button
               type="button"
               (click)="removePhoneNumber(i)"
-              [disabled]="phoneNumbers.length === 1"
               class="signup__phone-remove"
               title="Eliminar teléfono">
               ✕ Eliminar

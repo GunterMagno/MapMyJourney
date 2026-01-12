@@ -78,6 +78,9 @@ export class LoginFormComponent implements OnInit {
     this.loadingService.show();
 
     const { email, password, rememberMe } = this.loginForm.value;
+    
+    // Debug: verificar que los valores no sean nulos
+    console.log('Login attempt - Email:', email, 'Password:', password);
 
     this.authService.login(email, password).subscribe({
       next: (response) => {

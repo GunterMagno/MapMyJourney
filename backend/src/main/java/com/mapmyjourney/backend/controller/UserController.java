@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.Parameter;
  * Controlador REST para gestionar usuarios.
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 @Tag(name = "Users", description = "API de gestión de usuarios - Registro, login, perfil")
 public class UserController {
@@ -35,12 +35,12 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "Registrar nuevo usuario", 
                description = "Crea una nueva cuenta de usuario con nombre, email y contraseña")
-    @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente")
+    @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente - retorna token JWT")
     @ApiResponse(responseCode = "400", description = "Datos inválidos (email/contraseña débil)")
     @ApiResponse(responseCode = "409", description = "El email ya está registrado")
-    public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody(description = "Datos del usuario a registrar") UserCreateRequestDTO request) {
-        UserDTO createdUser = userService.registerUser(request);
-        return ResponseEntity.status(201).body(createdUser);
+    public ResponseEntity<LoginResponseDTO> registerUser(@Valid @RequestBody(description = "Datos del usuario a registrar") UserCreateRequestDTO request) {
+        LoginResponseDTO response = userService.registerUserAndAuthenticate(request);
+        return ResponseEntity.status(201).body(response);
     }
 
     /**
@@ -51,11 +51,19 @@ public class UserController {
     @Operation(summary = "Iniciar sesión", 
                description = "Autentica un usuario y retorna un token JWT válido por 24 horas")
     @ApiResponse(responseCode = "200", description = "Autenticación exitosa - token JWT retornado")
-    @ApiResponse(responseCode = "400", description = "Email o contraseña inválidos")
+    @ApiResponse(responseCode = "401", description = "Email o contraseña inválidos")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     public ResponseEntity<LoginResponseDTO> login(
-            @Valid @RequestBody(description = "Email y contraseña del usuario") LoginRequestDTO request) {
-        LoginResponseDTO response = userService.authenticate(request.getEmail(), request.getPassword());
+            @RequestBody LoginRequestDTO request) {
+        // Validar que email y password no sean nulos o vacíos
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            throw new ValidationException("El email es requerido");
+        }
+        if (request.getPassword() == null || request.getPassword().isEmpty()) {
+            throw new ValidationException("La contraseña es requerida");
+        }
+        
+        LoginResponseDTO response = userService.authenticate(request.getEmail().trim(), request.getPassword());
         return ResponseEntity.ok(response);
     }
 

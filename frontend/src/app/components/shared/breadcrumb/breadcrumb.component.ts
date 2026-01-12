@@ -49,10 +49,10 @@ import { BreadcrumbService, BreadcrumbItem } from '../../../services/breadcrumb.
   `,
   styles: [`
     .breadcrumb {
-      background-color: var(--bg-surface);
-      padding: var(--spacing-2) var(--spacing-6);
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 0;
+      background-color: transparent;
+      padding: var(--spacing-2) 0;
+      border-bottom: none;
+      margin-bottom: var(--spacing-4);
     }
 
     .breadcrumb__list {
@@ -63,9 +63,10 @@ import { BreadcrumbService, BreadcrumbItem } from '../../../services/breadcrumb.
       list-style: none;
       margin: 0;
       padding: 0;
-      max-width: 1024px;
-      margin-left: auto;
+      max-width: 100%;
+      margin-left: 0;
       margin-right: auto;
+      justify-content: flex-start;
     }
 
     .breadcrumb__item {

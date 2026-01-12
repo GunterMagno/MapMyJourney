@@ -29,7 +29,7 @@
     aria-label="Navegación principal">
     
     <header class="trip-detail__sidebar-header">
-      <h2 class="trip-detail__sidebar-title">{{ tripName }}</h2>
+      <h2 class="trip-detail__sidebar-title">{{ tripName() }}</h2>
       <button 
         class="trip-detail__sidebar-close"
         (click)="toggleMobileMenu()"
@@ -78,13 +78,13 @@
       <h3>Información del Viaje</h3>
       <dl class="trip-detail__info-list">
         <dt>Fechas</dt>
-        <dd>{{ tripStartDate | date: 'medium' }} - {{ tripEndDate | date: 'medium' }}</dd>
+        <dd>{{ tripStartDate() | date: 'medium' }} - {{ tripEndDate() | date: 'medium' }}</dd>
         
         <dt>Ubicación</dt>
-        <dd>{{ tripLocation }}</dd>
+        <dd>{{ tripLocation() }}</dd>
         
         <dt>Participantes</dt>
-        <dd>{{ participantsCount }}</dd>
+        <dd>{{ participantsCount() }}</dd>
       </dl>
     </article>
 
@@ -92,10 +92,12 @@
     <article class="trip-detail__participants">
       <h3>Participantes</h3>
       <ul class="trip-detail__participants-list">
-        <li *ngFor="let participant of participants" class="trip-detail__participant">
-          <span class="trip-detail__participant-avatar">{{ getInitials(participant.name) }}</span>
-          <span class="trip-detail__participant-name">{{ participant.name }}</span>
-        </li>
+        @for (participant of participants(); track participant.id) {
+          <li class="trip-detail__participant">
+            <span class="trip-detail__participant-avatar">{{ getInitials(participant.name) }}</span>
+            <span class="trip-detail__participant-name">{{ participant.name }}</span>
+          </li>
+        }
       </ul>
     </article>
   </aside>
@@ -206,34 +208,114 @@
       *ngIf="activeSection === 'expenses'">
       <h2 class="trip-detail__section-title">Gastos</h2>
       
-      <!-- Expense Summary -->
+      <!-- ERROR STATE -->
+      @if (expenseError()) {
+        <article class="trip-detail__error" role="alert">
+          <p>{{ expenseError() }}</p>
+          <button (click)="expenseStore.loadExpensesByTrip(tripId)">
+            Reintentar
+          </button>
+        </article>
+      }
+
+      <!-- EXPENSE SUMMARY (con computed signals automáticos) -->
       <header class="trip-detail__expense-summary">
+        <!-- ✅ totalBudgetUsed es un computed signal que se actualiza automáticamente -->
         <article class="trip-detail__expense-stat">
           <span class="trip-detail__expense-stat-label">Gasto Total</span>
-          <span class="trip-detail__expense-stat-value">{{ totalExpenses | currency }}</span>
+          <span class="trip-detail__expense-stat-value">€{{ totalBudgetUsed() | number: '1.2-2' }}</span>
         </article>
+        
+        <!-- ✅ averageExpense se recalcula cuando cambian expenses -->
         <article class="trip-detail__expense-stat">
           <span class="trip-detail__expense-stat-label">Promedio por Persona</span>
-          <span class="trip-detail__expense-stat-value">{{ expensePerPerson | currency }}</span>
+          <span class="trip-detail__expense-stat-value">€{{ averageExpense() | number: '1.2-2' }}</span>
+        </article>
+
+        <!-- ✅ Gasto más alto -->
+        <article class="trip-detail__expense-stat">
+          <span class="trip-detail__expense-stat-label">Gasto Máximo</span>
+          <span class="trip-detail__expense-stat-value">€{{ maxExpense() | number: '1.2-2' }}</span>
         </article>
       </header>
 
-      <!-- Expenses Table/Cards -->
-      <section class="trip-detail__expenses-list">
-        <article 
-          class="trip-detail__expense-card"
-          *ngFor="let expense of expenses">
-          <header class="trip-detail__expense-header">
-            <h3 class="trip-detail__expense-title">{{ expense.category }}</h3>
-            <span class="trip-detail__expense-amount">{{ expense.amount | currency }}</span>
-          </header>
-          <p class="trip-detail__expense-description">{{ expense.description }}</p>
-          <footer class="trip-detail__expense-meta">
-            <span>{{ expense.paidBy }}</span>
-            <span>{{ expense.date | date: 'short' }}</span>
-          </footer>
+      <!-- DESGLOSE POR CATEGORÍA (computed signal) -->
+      @if (expensesByCategory() && (expensesByCategory() | keyvalue).length > 0) {
+        <section class="trip-detail__expense-breakdown">
+          <h3>Gastos por Categoría</h3>
+          <ul class="trip-detail__breakdown-list">
+            @for (item of (expensesByCategory() | keyvalue); track item.key) {
+              <li class="trip-detail__breakdown-item">
+                <span class="trip-detail__breakdown-category">{{ item.key }}</span>
+                <output class="trip-detail__breakdown-amount">€{{ item.value | number: '1.2-2' }}</output>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      <!-- LOADING STATE -->
+      @if (expenseLoading()) {
+        <section class="trip-detail__loading" role="status" aria-label="Cargando gastos">
+          <progress value="50" max="100"></progress>
+          <p>Cargando gastos...</p>
+        </section>
+      }
+
+      <!-- EMPTY STATE -->
+      @if (expenses().length === 0 && !expenseLoading()) {
+        <article class="trip-detail__empty">
+          <p>Sin gastos registrados aún</p>
         </article>
-      </section>
+      }
+
+      <!-- EXPENSES LIST (CON INFINITE SCROLL) -->
+      @if (expenses().length > 0) {
+        <section class="trip-detail__expenses-list">
+          <!-- ✅ @for con track para preservar DOM -->
+          @for (expense of expenses(); track trackExpenseById(expense)) {
+            <article class="trip-detail__expense-card">
+              <header class="trip-detail__expense-header">
+                <h3 class="trip-detail__expense-title">{{ expense.category }}</h3>
+                <span class="trip-detail__expense-amount">€{{ expense.amount | number: '1.2-2' }}</span>
+              </header>
+              
+              <p class="trip-detail__expense-description">{{ expense.description }}</p>
+              
+              <footer class="trip-detail__expense-meta">
+                <span class="trip-detail__expense-payer">{{ expense.payer?.name }}</span>
+                <span class="trip-detail__expense-date">{{ expense.date | date: 'short' }}</span>
+                <button 
+                  class="trip-detail__expense-delete"
+                  (click)="deleteExpense(expense.id)"
+                  aria-label="Eliminar gasto">
+                  🗑️
+                </button>
+              </footer>
+            </article>
+          }
+        </section>
+
+        <!-- ✅ INFINITE SCROLL SENTINEL -->
+        <span 
+          #expenseScrollAnchor
+          role="status"
+          aria-live="polite"
+          aria-label="Cargando más gastos">
+        </span>
+
+        <!-- FIN DE DATOS -->
+        @if (!expenseStore.hasMore() && !expenseLoading()) {
+          <output class="trip-detail__end-message">
+            Has visto todos los gastos de este viaje
+          </output>
+        }
+
+        <!-- CONTADOR DE GASTOS -->
+        <output class="trip-detail__expense-counter">
+          Total: {{ expenseTotalTrips() }} gasto<span *ngIf="expenseTotalTrips() !== 1">s</span>
+        </output>
+      }
     </section>
   </main>
 </section>

@@ -451,6 +451,289 @@
       </app-button>
     </div>
   </article>
+
+  <!-- FASE 6: Gestión de Estado y Actualización Dinámica -->
+  <header class="demo__header" style="margin-top: 40px;">
+    <h1>FASE 6: Gestión de Estado y Actualización Dinámica</h1>
+    <p class="demo__subtitle">
+      Signals de Angular 17+ para gestión reactiva, Computed signals para cálculos automáticos,
+      Infinite Scroll con IntersectionObserver, Búsqueda con debounce, Optimistic UI.
+      <strong>Sin recargas, sin parpadeos, rendimiento óptimo.</strong>
+    </p>
+  </header>
+
+  <!-- Signals y Stores Section -->
+  <article class="demo__section">
+    <h2>Signals - Reactividad Moderna</h2>
+    <p>
+      <strong>¿Qué son Signals?</strong>
+    </p>
+    <ul>
+      <li>✅ Variables reactivas de Angular 17+</li>
+      <li>✅ Lectura: <code>signal()</code> devuelve el valor</li>
+      <li>✅ Actualización: <code>signal.set()</code> o <code>signal.update()</code></li>
+      <li>✅ Computed Signals: se recalculan automáticamente cuando dependencias cambian</li>
+      <li>✅ No requieren unsubscribe (automático)</li>
+      <li>✅ Mejor rendimiento que BehaviorSubject</li>
+    </ul>
+    <p>
+      <strong>TripStore:</strong> Gestiona lista de viajes con paginación e infinite scroll.
+    </p>
+    <p>
+      <strong>ExpenseStore:</strong> Gestiona gastos con computed signals que recalculan automático (total, promedio, por categoría).
+    </p>
+    <p>
+      <strong>SearchStore:</strong> Búsqueda reactiva con debounce 300ms + distinctUntilChanged.
+    </p>
+  </article>
+
+  <!-- Computed Signals Demo -->
+  <article class="demo__section">
+    <h2>Computed Signals - Cálculos Automáticos</h2>
+    <p>
+      <strong>Ejemplo: Presupuesto Dinámico</strong>
+    </p>
+    <p style="color: var(--principal-color); font-weight: bold;">
+      totalBudgetUsed = computed(() =&gt; expenses().reduce((sum, e) =&gt; sum + e.amount, 0))
+    </p>
+    <p>
+      Cuando agregas un gasto → <code>expenses()</code> cambia → <code>totalBudgetUsed()</code> se recalcula automático.
+      <br/>
+      <strong>SIN intervención manual, SIN eventos emitidos, CERO boilerplate.</strong>
+    </p>
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 15px 0;">
+      <p><strong>Computed Signals en ExpenseStore:</strong></p>
+      <ul>
+        <li>totalBudgetUsed() - Suma total de gastos</li>
+        <li>averageExpense() - Promedio por persona</li>
+        <li>expensesByCategory() - Desglose: Comida €200, Hotel €500, etc</li>
+        <li>expensesByPayer() - Desglose: Juan pagó €500, María pagó €300</li>
+        <li>maxExpense() - Gasto más alto</li>
+        <li>minExpense() - Gasto más bajo</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- Infinite Scroll Demo -->
+  <article class="demo__section">
+    <h2>Infinite Scroll - Carga Progresiva</h2>
+    <p>
+      <strong>Implementación:</strong>
+    </p>
+    <ul>
+      <li>IntersectionObserver API: Observa elemento sentinel al final de la lista</li>
+      <li>Cuando sentinel entra en viewport → carga siguiente página</li>
+      <li>Acumula datos: <code>update(list =&gt; [...list, ...newPage])</code></li>
+      <li>&#64;for con track preserva DOM anterior (cero parpadeos)</li>
+      <li>Loading state solo al pie (no bloquea lista anterior)</li>
+    </ul>
+    <p style="color: var(--principal-color); font-weight: bold;">
+      Resultado: Experiencia móvil fluida, sin lag, sin "cargando..." molesto.
+    </p>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ver Mis Viajes (Infinite Scroll)"
+        variant="primary"
+        size="lg"
+        (click)="goToTrips()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Optimistic UI Demo -->
+  <article class="demo__section">
+    <h2>Optimistic UI - Sensación de Instantaneidad</h2>
+    <p>
+      <strong>Patrón:</strong>
+    </p>
+    <ol>
+      <li>Usuario click "Eliminar" → confirm()</li>
+      <li>🚀 INMEDIATO: UI se actualiza (sin esperar API)</li>
+      <li>🔄 En paralelo: petición HTTP DELETE</li>
+      <li>✅ Éxito: mantener cambio, toast "Eliminado"</li>
+      <li>❌ Error: revertir cambio, toast "Error"</li>
+    </ol>
+    <p style="background: #fffacd; padding: 10px; border-radius: 8px; margin: 10px 0;">
+      <strong>Beneficio:</strong> Usuario siente instantaneidad (ej: 10ms vs esperar API 2s).
+    </p>
+  </article>
+
+  <!-- Búsqueda con Debounce Demo -->
+  <article class="demo__section">
+    <h2>Búsqueda en Tiempo Real - Debounce</h2>
+    <p>
+      <strong>¿Por qué debounce?</strong> No queremos 100 peticiones cuando el user tipea "París".
+    </p>
+    <p>
+      <strong>Pipeline RxJS:</strong>
+    </p>
+    <ul>
+      <li>🔤 User tipea "París"</li>
+      <li>⏳ debounceTime(300): espera 300ms sin más cambios</li>
+      <li>✓ distinctUntilChanged: solo si cambió (no "París" dos veces)</li>
+      <li>🔀 switchMap: cancela búsqueda anterior, inicia nueva</li>
+      <li>🔎 API: devuelve resultados</li>
+      <li>📝 searchStore.results(): se actualiza</li>
+    </ul>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ir a Buscar Viajes (Debounce Demo)"
+        variant="secondary"
+        size="lg"
+        (click)="goToTrips()">
+      </app-button>
+    </div>
+  </article>
+
+  <!-- Performance Optimization Demo -->
+  <article class="demo__section">
+    <h2>Optimizaciones de Rendimiento</h2>
+    <p>
+      <strong>1. OnPush ChangeDetectionStrategy</strong>
+    </p>
+    <p style="margin-left: 20px;">
+      Angular SOLO revisa componente si: signal cambió, evento disparado, Observable emitió.
+      <br/>
+      <strong>Resultado:</strong> 80% menos revisiones innecesarias.
+    </p>
+    <p>
+      <strong>2. TrackBy en &#64;for</strong>
+    </p>
+    <p style="margin-left: 20px;">
+      <code>&#64;for (trip of trips(); track trip.id)</code> preserva DOM cuando lista cambia.
+      <br/>
+      <strong>Resultado:</strong> Cero parpadeos, mejor UX móvil.
+    </p>
+    <p>
+      <strong>3. Computed Signals Memoizados</strong>
+    </p>
+    <p style="margin-left: 20px;">
+      Se recalculan SOLO si dependencias cambiaron.
+      <br/>
+      <strong>Resultado:</strong> Cero cálculos redundantes.
+    </p>
+  </article>
+
+  <!-- Semántica HTML Demo -->
+  <article class="demo__section">
+    <h2>Semántica HTML - Accesibilidad</h2>
+    <p>
+      <strong>✅ Correcta (FASE 6):</strong>
+    </p>
+    <ul>
+      <li>&lt;section&gt;, &lt;article&gt;: para listas de viajes/gastos</li>
+      <li>&lt;output&gt;: para contadores (€500, 3 viajes)</li>
+      <li>&lt;progress&gt;: para barras de presupuesto e infinite scroll</li>
+      <li>&lt;span role="status" aria-live="polite"&gt;: para sentinels</li>
+      <li>&#64;for con track: mejor que *ngFor</li>
+    </ul>
+    <p>
+      <strong>❌ Incorrecto (FASE 5 y antes):</strong>
+    </p>
+    <ul style="opacity: 0.6;">
+      <li>&lt;div&gt; para listas (no semántico)</li>
+      <li>&lt;div&gt; para contadores (no semántico)</li>
+      <li>*ngFor sin track (crea/destruye DOM innecesariamente)</li>
+    </ul>
+  </article>
+
+  <!-- Documentación Demo -->
+  <article class="demo__section">
+    <h2>Documentación Completa</h2>
+    <p>
+      <strong>Oficial (Público):</strong>
+    </p>
+    <p style="margin-left: 20px; font-family: monospace; color: #0066cc;">
+      /docs/frontend/state_management.md
+    </p>
+    <p>
+      Incluye: Justificación de Signals vs BehaviorSubject vs NgRx, diagramas de flujo,
+      casos de uso, optimizaciones, búsqueda con debounce, infinite scroll.
+    </p>
+    <p style="margin-top: 15px;">
+      <strong>Bitácora Técnica (Privada):</strong>
+    </p>
+    <p style="margin-left: 20px; font-family: monospace; color: #0066cc;">
+      /.oculto/resumen_fase6.md
+    </p>
+    <p>
+      Para desarrolladores: cómo depurar signals, trampas comunes, testing, ubicación exacta
+      del IntersectionObserver, memoria, profiling.
+    </p>
+  </article>
+
+  <!-- Comparativa Signals vs BehaviorSubject -->
+  <article class="demo__section">
+    <h2>Comparativa: Signals vs BehaviorSubject</h2>
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.95em;">
+      <thead>
+        <tr style="background: var(--principal-color); color: white;">
+          <th style="padding: 10px; text-align: left;">Aspecto</th>
+          <th style="padding: 10px; text-align: left;">Signals ✅</th>
+          <th style="padding: 10px; text-align: left;">BehaviorSubject ❌</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 10px;"><strong>Integración Angular</strong></td>
+          <td style="padding: 10px;">Nativa</td>
+          <td style="padding: 10px;">RxJS externo</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 10px;"><strong>Boilerplate</strong></td>
+          <td style="padding: 10px;">Mínimo</td>
+          <td style="padding: 10px;">Medio</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 10px;"><strong>Unsubscribe</strong></td>
+          <td style="padding: 10px;">Automático</td>
+          <td style="padding: 10px;">Manual (takeUntil)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 10px;"><strong>Async Pipe</strong></td>
+          <td style="padding: 10px;">No necesario</td>
+          <td style="padding: 10px;">Requerido</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 10px;"><strong>Performance</strong></td>
+          <td style="padding: 10px;">Excelente</td>
+          <td style="padding: 10px;">Bueno</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px;"><strong>Escalabilidad</strong></td>
+          <td style="padding: 10px;">Pequeño/Medio</td>
+          <td style="padding: 10px;">Pequeño</td>
+        </tr>
+      </tbody>
+    </table>
+  </article>
+
+  <!-- Action Buttons -->
+  <article class="demo__section">
+    <h2>Próximas Secciones - Ir a Funcionalidades</h2>
+    <div class="demo__toast-buttons">
+      <app-button
+        label="Ver Mis Viajes (Signals + Infinite Scroll)"
+        variant="primary"
+        size="lg"
+        (click)="goToTrips()">
+      </app-button>
+
+      <app-button
+        label="Ver Detalles del Viaje (Computed Signals)"
+        variant="secondary"
+        size="lg"
+        (click)="goToTrip(1)">
+      </app-button>
+
+      <app-button
+        label="Ver Estado de Documentación"
+        variant="primary"
+        size="lg"
+        (click)="showPhase6Docs()">
+      </app-button>
+    </div>
+  </article>
 </section>
 
 <app-footer></app-footer>

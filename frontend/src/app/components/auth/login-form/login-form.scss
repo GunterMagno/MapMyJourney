@@ -35,8 +35,10 @@
 }
 
 .login-form__submit {
-  width: 100%;
-  margin-top: var(--spacing-4);
+  width: auto;
+  margin: var(--spacing-4) auto 0;
+  padding: var(--spacing-4) var(--spacing-8);
+  display: block;
 }
 
 .login-form__footer {

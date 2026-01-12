@@ -24,7 +24,7 @@ import java.util.List;
  * Controlador REST para gestionar viajes.
  */
 @RestController
-@RequestMapping("/api/trips")
+@RequestMapping("/trips")
 @RequiredArgsConstructor
 @Tag(name = "Trips", description = "API de gestión de viajes - Crear, editar, unirse a viajes")
 public class TripController {

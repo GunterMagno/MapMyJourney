@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
@@ -34,10 +35,10 @@ export class AuthService {
 
   /**
    * Login con HTTP real al backend
-   * POST /auth/login
+   * POST /api/users/login
    */
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.api.post<AuthResponse>('auth/login', {
+    return this.api.post<AuthResponse>('users/login', {
       email,
       password
     }).pipe(
@@ -53,10 +54,10 @@ export class AuthService {
 
   /**
    * Signup con HTTP real al backend
-   * POST /auth/signup
+   * POST /api/users/register
    */
   signup(name: string, email: string, password: string): Observable<AuthResponse> {
-    return this.api.post<AuthResponse>('auth/signup', {
+    return this.api.post<AuthResponse>('users/register', {
       name,
       email,
       password

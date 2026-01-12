@@ -21,7 +21,7 @@ import java.util.List;
  * Controlador REST para gestionar divisiones de gastos.
  */
 @RestController
-@RequestMapping("/api/expenses")
+@RequestMapping("/expenses")
 @RequiredArgsConstructor
 @Tag(name = "ExpenseSplits", description = "API de gestión de divisiones de gastos - Dividir, pagar, ver deudas")
 public class ExpenseSplitController {

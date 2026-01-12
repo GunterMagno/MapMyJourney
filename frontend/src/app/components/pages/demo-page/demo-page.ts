@@ -14,8 +14,13 @@ import { LoadingService } from '../../../services/loading.service';
 import { Router } from '@angular/router';
 
 /**
- * Demo component showcasing FASE 1: DOM and Events
- * Features interactive components: Modal, Tabs, Tooltips, Accordion, Dynamic Content
+ * Demo component showcasing all phases of MapMyJourney development
+ * - FASE 1: DOM and Events (Modal, Tabs, Tooltips, Accordion, Dynamic Content)
+ * - FASE 2: Services (Toast, Loading, Communication)
+ * - FASE 3: Reactive Forms (Login, Signup with validation)
+ * - FASE 4: Routing and Navigation (Guards, Resolvers, Breadcrumbs)
+ * - FASE 5: HTTP Services (Real API integration with JWT)
+ * - FASE 6: State Management and Dynamic Updates (Signals, Computed Signals, Infinite Scroll)
  */
 @Component({
   selector: 'app-demo-page',
@@ -203,20 +208,13 @@ export class DemoPageComponent implements OnInit {
   }
 
   /**
-   * Navigate to trip detail (FASE 4)
-   */
-  goToTrip(id: number): void {
-    this.router.navigate(['/trips', id]);
-  }
-
-  /**
    * Simulate getting trips from API (FASE 5)
    */
   simulateGetTrips(): void {
     this.loadingService.show();
     setTimeout(() => {
       this.loadingService.hide();
-      this.toastService.success('✅ Viajes obtenidos: Barcelona, Machu Picchu, Safari');
+      this.toastService.success('Viajes obtenidos: Barcelona, Machu Picchu, Safari');
     }, 1500);
   }
 
@@ -227,7 +225,7 @@ export class DemoPageComponent implements OnInit {
     this.loadingService.show();
     setTimeout(() => {
       this.loadingService.hide();
-      this.toastService.success('✅ Viaje "Venecia" creado exitosamente');
+      this.toastService.success('Viaje "Venecia" creado exitosamente');
     }, 1500);
   }
 
@@ -238,7 +236,7 @@ export class DemoPageComponent implements OnInit {
     this.loadingService.show();
     setTimeout(() => {
       this.loadingService.hide();
-      this.toastService.success('✅ Gastos obtenidos: $450 Hospedaje, $120 Comida, $80 Transporte');
+      this.toastService.success('Gastos obtenidos: $450 Hospedaje, $120 Comida, $80 Transporte');
     }, 1500);
   }
 
@@ -249,7 +247,7 @@ export class DemoPageComponent implements OnInit {
     this.loadingService.show();
     setTimeout(() => {
       this.loadingService.hide();
-      this.toastService.error('❌ Error 401: Sesión expirada. Por favor, inicia sesión nuevamente.');
+      this.toastService.error('Error 401: Sesión expirada. Por favor, inicia sesión nuevamente.');
     }, 1500);
   }
 
@@ -260,7 +258,7 @@ export class DemoPageComponent implements OnInit {
     this.loadingService.show();
     setTimeout(() => {
       this.loadingService.hide();
-      this.toastService.error('❌ Error 404: Recurso no encontrado.');
+      this.toastService.error('Error 404: Recurso no encontrado.');
     }, 1500);
   }
 
@@ -271,7 +269,7 @@ export class DemoPageComponent implements OnInit {
     this.loadingService.show();
     setTimeout(() => {
       this.loadingService.hide();
-      this.toastService.error('❌ Error 500: Problema en el servidor. Intenta más tarde.');
+      this.toastService.error('Error 500: Problema en el servidor. Intenta más tarde.');
     }, 1500);
   }
 
@@ -282,6 +280,33 @@ export class DemoPageComponent implements OnInit {
     this.toastService.info(
       'Modelos tipados: User, Trip, Expense, ApiPaginatedResponse<T>. ' +
       'Ver /docs/frontend/fase5-http.md para detalles completos.'
+    );
+  }
+
+  /**
+   * Navigate to Trips page - demonstrates Signals, Infinite Scroll (FASE 6)
+   */
+  goToTrips(): void {
+    this.router.navigate(['/trips']);
+    this.toastService.success('Abriendo Mis Viajes - Demostración de Signals + Infinite Scroll');
+  }
+
+  /**
+   * Navigate to Trip detail - demonstrates Computed Signals (FASE 6)
+   */
+  goToTrip(tripId: number): void {
+    this.router.navigate(['/trip', tripId]);
+    this.toastService.success('Abriendo Detalles del Viaje - Demostración de Computed Signals (totalBudgetUsed, expensesByCategory, etc)');
+  }
+
+  /**
+   * Show Phase 6 documentation (FASE 6)
+   */
+  showPhase6Docs(): void {
+    this.toastService.info(
+      'FASE 6 Documentación: /docs/frontend/state_management.md (oficial) + ' +
+      '/.oculto/resumen_fase6.md (técnica). ' +
+      'Stores: TripStore (signal-based), ExpenseStore (computed signals), SearchStore (debounce).'
     );
   }
 }

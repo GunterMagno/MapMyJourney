@@ -23,7 +23,7 @@ import java.util.List;
  * Controlador REST para gestionar miembros de viajes.
  */
 @RestController
-@RequestMapping("/api/trips/{tripId}/members")
+@RequestMapping("/trips/{tripId}/members")
 @RequiredArgsConstructor
 @Tag(name = "TripMembers", description = "API de gestión de miembros - Agregar, remover, cambiar roles")
 public class TripMemberController {

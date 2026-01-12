@@ -22,7 +22,7 @@ import java.util.List;
  * Controlador REST para gestionar gastos en viajes.
  */
 @RestController
-@RequestMapping("/api/trips/{tripId}/expenses")
+@RequestMapping("/trips/{tripId}/expenses")
 @RequiredArgsConstructor
 @Tag(name = "Expenses", description = "API de gestión de gastos - Registrar, actualizar, dividir gastos")
 public class ExpenseController {

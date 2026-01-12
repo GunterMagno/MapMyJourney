@@ -21,6 +21,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError(error => {
       const statusCode = error.status;
       const errorMessage = error.error?.message || 'Error desconocido';
+      const isAuthRoute = req.url.includes('/users/login') || req.url.includes('/users/register');
 
       switch (statusCode) {
         // Autenticación requerida
@@ -34,7 +35,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         // Acceso prohibido
         case 403:
           toastService.error('No tienes permisos para realizar esta acción.');
-          router.navigate(['/demo']);
+          // No redirigir si estamos en una ruta de autenticación
+          if (!isAuthRoute) {
+            router.navigate(['/demo']);
+          }
           break;
 
         // No encontrado

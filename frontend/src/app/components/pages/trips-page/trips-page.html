@@ -1,6 +1,7 @@
 <app-header></app-header>
 
 <section class="trips-page">
+  <!-- HEADER -->
   <section class="trips-page__header">
     <h1>Mis Viajes</h1>
     <app-button
@@ -11,7 +12,20 @@
     </app-button>
   </section>
 
-  @if (trips.length === 0) {
+  <!-- ERROR STATE -->
+  @if (error()) {
+    <article class="trips-page__error" role="alert">
+      <p>{{ error() }}</p>
+      <app-button
+        label="Reintentar"
+        variant="secondary"
+        (click)="tripStore.loadTrips()">
+      </app-button>
+    </article>
+  }
+
+  <!-- EMPTY STATE -->
+  @if (trips().length === 0 && !loading()) {
     <article class="trips-page__empty">
       <p>No tienes viajes registrados aún.</p>
       <app-button
@@ -20,20 +34,49 @@
         (click)="createTrip()">
       </app-button>
     </article>
-  } @else {
+  }
+
+  <!-- TRIPS GRID CON INFINITE SCROLL -->
+  @if (trips().length > 0) {
     <section class="trips-page__grid">
-      @for (trip of trips; track trip.id) {
+      <!-- ✅ @for con track para preservar DOM y rendimiento -->
+      @for (trip of trips(); track trackById(trip)) {
         <app-card
-          [title]="trip.name"
-          [description]="trip.destination + ' - ' + (trip.startDate | date: 'dd/MM/yyyy') + ' a ' + (trip.endDate | date: 'dd/MM/yyyy')"
-          [image]="trip.image"
+          [title]="trip.destination"
+          [description]="'Presupuesto: €' + trip.budget + ' | Gastos: €' + trip.totalExpenses"
+          [image]="trip.imageUrl"
           variant="vertical"
           class="card--primary">
           <article class="trip-card__content">
+            <!-- Fechas del viaje -->
+            <section class="trip-card__dates">
+              <span class="trip-card__label">Fechas:</span>
+              <span class="trip-card__value">
+                {{ trip.startDate | date: 'dd/MM/yyyy' }} - {{ trip.endDate | date: 'dd/MM/yyyy' }}
+              </span>
+            </section>
+
+            <!-- Estado presupuesto -->
+            <section class="trip-card__budget">
+              <span class="trip-card__label">Presupuesto:</span>
+              <span class="trip-card__value">€{{ trip.budget }}</span>
+            </section>
+
+            <!-- Gastos actuales -->
             <section class="trip-card__expense">
               <span class="trip-card__label">Gastos totales:</span>
-              <span class="trip-card__value">{{ trip.totalExpenses }}€</span>
+              <span class="trip-card__value">€{{ trip.totalExpenses }}</span>
             </section>
+
+            <!-- Barra de presupuesto -->
+            <progress
+              class="trip-card__progress"
+              [value]="trip.totalExpenses"
+              [max]="trip.budget"
+              [attr.aria-label]="'Presupuesto: ' + trip.totalExpenses + ' de ' + trip.budget">
+            </progress>
+
+            <!-- Acciones -->
             <section class="trip-card__actions">
               <app-button
                 label="Ver Detalles"
@@ -52,6 +95,42 @@
         </app-card>
       }
     </section>
+
+    <!-- ✅ INFINITE SCROLL SENTINEL -->
+    <!-- Este elemento se observa con IntersectionObserver -->
+    <!-- Cuando se vuelve visible, carga más viajes -->
+    <span 
+      #scrollAnchor
+      role="status"
+      aria-live="polite"
+      aria-label="Cargando más viajes">
+    </span>
+
+    <!-- LOADING STATE DURANTE INFINITE SCROLL -->
+    @if (loading()) {
+      <section class="trips-page__loading" role="status" aria-label="Cargando viajes">
+        <progress
+          [value]="50"
+          max="100"
+          aria-label="Cargando">
+        </progress>
+        <p>Cargando más viajes...</p>
+      </section>
+    }
+
+    <!-- FIN DE DATOS -->
+    @if (!hasMore() && trips().length > 0 && !loading()) {
+      <output class="trips-page__end-message">
+        Has alcanzado el final de tus viajes
+      </output>
+    }
+  }
+
+  <!-- CONTADOR DE VIAJES -->
+  @if (trips().length > 0) {
+    <output class="trips-page__counter">
+      Total: {{ totalTrips() }} viaje<span *ngIf="totalTrips() !== 1">s</span>
+    </output>
   }
 </section>
 

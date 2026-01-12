@@ -94,14 +94,6 @@ export class SignupFormComponent implements OnInit, OnDestroy {
             updateOn: 'blur'
           }
         ],
-        nif: [
-          '',
-          {
-            validators: [Validators.required, CustomValidators.nif()],
-            asyncValidators: [CustomValidators.uniqueNif()],
-            updateOn: 'blur'
-          }
-        ],
 
         // Passwords - with custom validator and cross-field validator
         password: [
@@ -142,7 +134,6 @@ export class SignupFormComponent implements OnInit, OnDestroy {
   private createPhoneControl() {
     return this.fb.group({
       phone: ['', [
-        Validators.required,
         Validators.pattern(/^[+]?[0-9\s\-\(\)]{9,15}$/)
       ]]
     });
@@ -166,10 +157,8 @@ export class SignupFormComponent implements OnInit, OnDestroy {
    * Removes a phone number field from the FormArray.
    */
   removePhoneNumber(index: number): void {
-    if (this.phoneNumbers.length > 1) {
+    if (this.phoneNumbers.length > 0) {
       this.phoneNumbers.removeAt(index);
-    } else {
-      this.toastService.warning('Debes tener al menos un número de teléfono');
     }
   }
 

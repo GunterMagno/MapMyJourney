@@ -3,11 +3,19 @@
  * 
  * Agrega el header Authorization: Bearer {token} a todas las peticiones
  * si existe un token en localStorage
+ * Excluye las rutas de autenticación (/api/users/login, /api/users/register)
  */
 
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  // No agregar tokens a las rutas de autenticación
+  const isAuthRoute = req.url.includes('/users/login') || req.url.includes('/users/register');
+  
+  if (isAuthRoute) {
+    return next(req);
+  }
+
   // Obtener token del localStorage
   const token = typeof window !== 'undefined' 
     ? localStorage.getItem('auth_token')

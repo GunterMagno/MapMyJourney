@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS trip_members (
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE,
-    UNIQUE KEY uk_user_trip (user_id, trip_id)
+    UNIQUE (user_id, trip_id)
 );
 CREATE INDEX IF NOT EXISTS idx_trip_id_members ON trip_members(trip_id);
 CREATE INDEX IF NOT EXISTS idx_user_id_members ON trip_members(user_id);
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS expense_splits (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE,
     FOREIGN KEY (participant_user_id) REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE KEY uk_expense_participant (expense_id, participant_user_id)
+    UNIQUE (expense_id, participant_user_id)
 );
 CREATE INDEX IF NOT EXISTS idx_expense_id ON expense_splits(expense_id);
 CREATE INDEX IF NOT EXISTS idx_participant_user_id ON expense_splits(participant_user_id);
