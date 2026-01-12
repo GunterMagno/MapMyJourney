@@ -22,14 +22,26 @@
 
   &__logo-section {
     grid-column: 1;
+    align-items: center;
+    text-align: center;
   }
 
   &__links-section {
     grid-column: 2;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
 
   &__legal-section {
     grid-column: 3;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
 
   &__logo {
@@ -55,6 +67,7 @@
   &__social {
     display: flex;
     gap: var(--spacing-4);
+    justify-content: center;
   }
 
   &__social-link {
@@ -101,23 +114,21 @@
     display: inline-flex;
     align-items: center;
     position: relative;
-    padding-left: 0;
 
     &::before {
       content: '→';
-      position: absolute;
-      left: -20px;
+      margin-right: 8px;
       opacity: 0;
+      transform: translateX(-10px);
       transition: all var(--transition-fast);
     }
 
     &:hover {
       color: #FFFFFF;
-      padding-left: 20px;
 
       &::before {
         opacity: 1;
-        left: 0;
+        transform: translateX(0);
       }
     }
   }

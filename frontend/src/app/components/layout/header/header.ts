@@ -149,10 +149,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Navigate to create trip page
+   * Open create trip modal
    */
   createTrip(): void {
-    this.router.navigate(['/trips/create']);
+    this.communicationService.openModal('create-trip');
     this.closeMobileMenu();
   }
 

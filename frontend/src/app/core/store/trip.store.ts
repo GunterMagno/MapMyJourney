@@ -16,8 +16,9 @@
  * - Automático: no requiere unsubscribe en componentes
  */
 
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 import { TripService } from '../services/trip.service';
+import { ToastService } from '../../services/toast.service';
 import { Trip, ApiPaginatedResponse } from '../models';
 
 interface TripStoreState {
@@ -120,6 +121,8 @@ export class TripStore {
   // CONSTRUCTOR
   // ============================================================================
 
+  private toastService = inject(ToastService);
+
   constructor(private tripService: TripService) {
     // Carga inicial de la primera página
     this.loadTrips();
@@ -149,8 +152,10 @@ export class TripStore {
         }));
       },
       error: (err) => {
-        this._setError('No se pudieron cargar los viajes');
+        const errorMsg = 'No se pudieron cargar los viajes';
+        this._setError(errorMsg);
         this._setLoading(false);
+        this.toastService.error(errorMsg);
         console.error('TripStore.loadTrips error:', err);
       }
     });
@@ -268,6 +273,21 @@ export class TripStore {
    */
   reset(): void {
     this._state.set(this.initialState);
+  }
+
+  /**
+   * Limpia el mensaje de error
+   */
+  clearError(): void {
+    this._setError(null);
+  }
+
+  /**
+   * Recarga los viajes desde la primera página
+   */
+  reloadTrips(): void {
+    this.reset();
+    this.loadTrips();
   }
 
   // ============================================================================

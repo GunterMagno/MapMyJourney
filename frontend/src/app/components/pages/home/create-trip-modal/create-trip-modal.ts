@@ -1,8 +1,11 @@
-import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../../../shared/modal/modal';
+import { CommunicationService } from '../../../../services/communication.service';
 import { TripFormData } from '../../../../services/trip.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 interface TripFormDataLocal {
   name: string;
@@ -22,9 +25,11 @@ interface TripFormDataLocal {
   templateUrl: './create-trip-modal.html',
   styleUrl: './create-trip-modal.scss'
 })
-export class CreateTripModalComponent {
+export class CreateTripModalComponent implements OnInit, OnDestroy {
   @Output() tripCreated = new EventEmitter<TripFormData>();
   @ViewChild('modal') modal!: ModalComponent;
+
+  private destroy$ = new Subject<void>();
 
   tripForm: TripFormDataLocal = {
     name: '',
@@ -35,6 +40,24 @@ export class CreateTripModalComponent {
 
   isSubmitting = false;
   dateError: string = '';
+
+  constructor(private communicationService: CommunicationService) {}
+
+  ngOnInit(): void {
+    // Listen to modal open events
+    this.communicationService.modal$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        if (event.type === 'create-trip') {
+          this.openModal();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   onClose(): void {
     this.resetForm();
@@ -107,6 +130,14 @@ export class CreateTripModalComponent {
   closeModal(): void {
     if (this.modal) {
       this.modal.closeModal();
+    }
+  }
+
+  preventNegative(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (parseFloat(input.value) < 0) {
+      input.value = '0';
+      this.tripForm.budget = '';
     }
   }
 }

@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ViewportScroller } from '@angular/common';
 import { ModalComponent } from '../../shared/modal/modal';
 import { TabsComponent, TabItem } from '../../shared/tabs/tabs';
 import { TooltipComponent } from '../../shared/tooltip/tooltip';
@@ -8,6 +9,7 @@ import { AccordionComponent, AccordionItem } from '../../shared/accordion/accord
 import { DynamicContentComponent } from '../../shared/dynamic-content/dynamic-content';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
+import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
 import { CommunicationService } from '../../../services/communication.service';
 import { ToastService } from '../../../services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
@@ -34,13 +36,14 @@ import { Router } from '@angular/router';
     AccordionComponent,
     DynamicContentComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    BreadcrumbComponent
   ],
   templateUrl: './demo-page.html',
   styleUrl: './demo-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoPageComponent implements OnInit {
+export class DemoPageComponent implements OnInit, AfterViewInit, OnDestroy {
   tabItems: TabItem[] = [];
   accordionItems: AccordionItem[] = [];
   
@@ -49,17 +52,66 @@ export class DemoPageComponent implements OnInit {
   isCreating = false;
   isDeleting = false;
 
+  // Active section tracking
+  activeSection = signal<string>('fase1');
+  private observer?: IntersectionObserver;
+
   constructor(
+    private viewportScroller: ViewportScroller,
+    private cdr: ChangeDetectorRef,
     private communicationService: CommunicationService,
     private toastService: ToastService,
     private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
+
+  scrollToSection(sectionId: string): void {
+    this.activeSection.set(sectionId);
+    this.viewportScroller.scrollToAnchor(sectionId);
+  }
 
   ngOnInit(): void {
     this.initializeTabs();
     this.initializeAccordion();
+  }
+
+  ngAfterViewInit(): void {
+    this.setupIntersectionObserver();
+  }
+
+  ngOnDestroy(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  private setupIntersectionObserver(): void {
+    const options = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: 0
+    };
+
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          if (id && id.startsWith('fase')) {
+            this.activeSection.set(id);
+            this.cdr.markForCheck();
+          }
+        }
+      });
+    }, options);
+
+    // Observe all phase headers
+    const phases = ['fase1', 'fase2', 'fase3', 'fase4', 'fase5', 'fase6'];
+    phases.forEach(phaseId => {
+      const element = document.getElementById(phaseId);
+      if (element) {
+        this.observer!.observe(element);
+      }
+    });
   }
 
   private initializeTabs(): void {

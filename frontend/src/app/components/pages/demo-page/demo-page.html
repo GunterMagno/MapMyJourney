@@ -1,7 +1,22 @@
 <app-header></app-header>
+<app-breadcrumb></app-breadcrumb>
+
+<aside class="demo__sidebar">
+  <nav class="demo__nav">
+    <h3 class="demo__nav-title">Fases</h3>
+    <ul class="demo__nav-list">
+      <li><a (click)="scrollToSection('fase1')" class="demo__nav-link" [class.demo__nav-link--active]="activeSection() === 'fase1'">Fase 1</a></li>
+      <li><a (click)="scrollToSection('fase2')" class="demo__nav-link" [class.demo__nav-link--active]="activeSection() === 'fase2'">Fase 2</a></li>
+      <li><a (click)="scrollToSection('fase3')" class="demo__nav-link" [class.demo__nav-link--active]="activeSection() === 'fase3'">Fase 3</a></li>
+      <li><a (click)="scrollToSection('fase4')" class="demo__nav-link" [class.demo__nav-link--active]="activeSection() === 'fase4'">Fase 4</a></li>
+      <li><a (click)="scrollToSection('fase5')" class="demo__nav-link" [class.demo__nav-link--active]="activeSection() === 'fase5'">Fase 5</a></li>
+      <li><a (click)="scrollToSection('fase6')" class="demo__nav-link" [class.demo__nav-link--active]="activeSection() === 'fase6'">Fase 6</a></li>
+    </ul>
+  </nav>
+</aside>
 
 <section class="demo">
-  <header class="demo__header">
+  <header id="fase1" class="demo__header">
     <h1>FASE 1: DOM y Eventos - Demostración Interactiva</h1>
     <p class="demo__subtitle">
       Interactúa con los componentes para ver cómo funcionan:
@@ -61,8 +76,10 @@
     </div>
   </article>
 
+  <hr class="demo__phase-divider">
+
   <!-- FASE 2: Servicios y Comunicación -->
-  <header class="demo__header" style="margin-top: 40px;">
+  <header id="fase2" class="demo__header">
     <h1>FASE 2: Servicios y Comunicación</h1>
     <p class="demo__subtitle">
       Los servicios (CommunicationService, ToastService, LoadingService) gestionan estado y lógica.
@@ -176,8 +193,10 @@
     </div>
   </app-modal>
 
+  <hr class="demo__phase-divider">
+
   <!-- FASE 3: Formularios Reactivos -->
-  <header class="demo__header" style="margin-top: 40px;">
+  <header id="fase3" class="demo__header">
     <h1>FASE 3: Formularios Reactivos y Validación</h1>
     <p class="demo__subtitle">
       Formularios reactivos con FormBuilder, validadores síncronos y asincronos, 
@@ -211,8 +230,10 @@
     </div>
   </article>
 
+  <hr class="demo__phase-divider">
+
   <!-- FASE 4: Sistema de Rutas y Navegación -->
-  <header class="demo__header" style="margin-top: 40px;">
+  <header id="fase4" class="demo__header">
     <h1>FASE 4: Sistema de Rutas y Navegación</h1>
     <p class="demo__subtitle">
       Guards funcionales (authGuard, pendingChangesGuard), Resolvers para precarga de datos,
@@ -321,8 +342,10 @@
     </div>
   </article>
 
+  <hr class="demo__phase-divider">
+
   <!-- FASE 5: Capa de Servicios y HTTP -->
-  <header class="demo__header" style="margin-top: 40px;">
+  <header id="fase5" class="demo__header">
     <h1>FASE 5: Capa de Servicios y HTTP</h1>
     <p class="demo__subtitle">
       Servicios HTTP centralizados (ApiService, TripService, ExpenseService),
@@ -451,9 +474,10 @@
       </app-button>
     </div>
   </article>
+  <hr class="demo__phase-divider">
 
   <!-- FASE 6: Gestión de Estado y Actualización Dinámica -->
-  <header class="demo__header" style="margin-top: 40px;">
+  <header id="fase6" class="demo__header" style="margin-top: 40px;">
     <h1>FASE 6: Gestión de Estado y Actualización Dinámica</h1>
     <p class="demo__subtitle">
       Signals de Angular 17+ para gestión reactiva, Computed signals para cálculos automáticos,

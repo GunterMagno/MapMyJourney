@@ -1,4 +1,19 @@
 <app-header></app-header>
+<app-breadcrumb></app-breadcrumb>
+
+<aside class="style-guide__sidebar">
+  <nav class="style-guide__nav">
+    <h3 class="style-guide__nav-title">Secciones</h3>
+    <ul class="style-guide__nav-list">
+      <li><a (click)="scrollToSection('botones')" class="style-guide__nav-link" [class.style-guide__nav-link--active]="activeSection() === 'botones'">Botones</a></li>
+      <li><a (click)="scrollToSection('cards')" class="style-guide__nav-link" [class.style-guide__nav-link--active]="activeSection() === 'cards'">Cards</a></li>
+      <li><a (click)="scrollToSection('formularios')" class="style-guide__nav-link" [class.style-guide__nav-link--active]="activeSection() === 'formularios'">Formularios</a></li>
+      <li><a (click)="scrollToSection('alertas')" class="style-guide__nav-link" [class.style-guide__nav-link--active]="activeSection() === 'alertas'">Alertas</a></li>
+      <li><a (click)="scrollToSection('colores')" class="style-guide__nav-link" [class.style-guide__nav-link--active]="activeSection() === 'colores'">Colores</a></li>
+      <li><a (click)="scrollToSection('tamanos')" class="style-guide__nav-link" [class.style-guide__nav-link--active]="activeSection() === 'tamanos'">Tamaños</a></li>
+    </ul>
+  </nav>
+</aside>
 
 <article class="style-guide">
   <header class="style-guide__header">
@@ -9,7 +24,7 @@
   </header>
 
   <!-- Botones Section -->
-  <section class="style-guide__section">
+  <section id="botones" class="style-guide__section">
     <h2 class="style-guide__section-title">Botones</h2>
     <p class="style-guide__section-description">Componente reutilizable con múltiples variantes y tamaños</p>
 
@@ -59,7 +74,7 @@
   </section>
 
   <!-- Cards Section -->
-  <section class="style-guide__section">
+  <section id="cards" class="style-guide__section">
     <h2 class="style-guide__section-title">Cards</h2>
     <p class="style-guide__section-description">Componentes contenedores con bordes de color</p>
 
@@ -79,7 +94,7 @@
   </section>
 
   <!-- Formularios Section -->
-  <section class="style-guide__section">
+  <section id="formularios" class="style-guide__section">
     <h2 class="style-guide__section-title">Formularios</h2>
     <p class="style-guide__section-description">Componentes de entrada de datos</p>
 
@@ -159,7 +174,7 @@
   </section>
 
   <!-- Alertas Section -->
-  <section class="style-guide__section">
+  <section id="alertas" class="style-guide__section">
     <h2 class="style-guide__section-title">Alertas</h2>
     <p class="style-guide__section-description">Componentes para mostrar mensajes de estado</p>
 
@@ -199,7 +214,7 @@
   </section>
 
   <!-- Color Palette Section -->
-  <section class="style-guide__section">
+  <section id="colores" class="style-guide__section">
     <h2 class="style-guide__section-title">Paleta de Colores</h2>
     <p class="style-guide__section-description">Sistema de colores completo con variantes</p>
 
@@ -344,7 +359,7 @@
     </article>
   </section>
   <!-- Escalas de Tamaños Section -->
-  <section class="style-guide__section">
+  <section id="tamanos" class="style-guide__section">
     <h2 class="style-guide__section-title">Escalas de Tamaños</h2>
     
     <!-- Font Sizes -->
@@ -419,6 +434,7 @@
         </article>
       </article>
     </article>
-  </section></article>
+  </section>
+</article>
 
 <app-footer></app-footer>

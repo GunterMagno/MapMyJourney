@@ -15,11 +15,22 @@
   <!-- ERROR STATE -->
   @if (error()) {
     <article class="trips-page__error" role="alert">
-      <p>{{ error() }}</p>
+      <button 
+        class="trips-page__error-close" 
+        (click)="dismissError()"
+        aria-label="Cerrar mensaje de error">
+        ✕
+      </button>
+      
+      <div class="trips-page__error-icon">❌</div>
+      
+      <h2 class="trips-page__error-title">Error al cargar viajes</h2>
+      <p class="trips-page__error-message">{{ error() }}</p>
+      
       <app-button
         label="Reintentar"
-        variant="secondary"
-        (click)="tripStore.loadTrips()">
+        variant="primary"
+        (click)="retryLoadTrips()">
       </app-button>
     </article>
   }
@@ -135,3 +146,9 @@
 </section>
 
 <app-footer></app-footer>
+
+<!-- Modal para crear viaje -->
+<app-create-trip-modal
+  #createTripModal
+  (tripCreated)="onTripCreated($event)">
+</app-create-trip-modal>

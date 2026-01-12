@@ -7,9 +7,12 @@ import { ButtonComponent } from '../../shared/button/button';
 import { CardComponent } from '../../shared/card/card';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
+import { CreateTripModalComponent } from '../home/create-trip-modal/create-trip-modal';
 import { AuthService } from '../../../services/auth.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ToastService } from '../../../services/toast.service';
+import { CommunicationService } from '../../../services/communication.service';
+import { TripFormData } from '../../../services/trip.service';
 import { TripService } from '../../../core/services/trip.service';
 import { TripStore } from '../../../core/store';
 import { Trip } from '../../../core/models';
@@ -33,7 +36,7 @@ import { Trip } from '../../../core/models';
 @Component({
   selector: 'app-trips-page',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, CardComponent, HeaderComponent, FooterComponent],
+  imports: [CommonModule, ButtonComponent, CardComponent, HeaderComponent, FooterComponent, CreateTripModalComponent],
   templateUrl: './trips-page.html',
   styleUrl: './trips-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush // ✅ Cambio detección solo cuando cambien señales o inputs
@@ -46,6 +49,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private tripService = inject(TripService);
   private toastService = inject(ToastService);
+  private communicationService = inject(CommunicationService);
   private router = inject(Router);
   tripStore = inject(TripStore); // ✅ Inyectar store
 
@@ -54,6 +58,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
   // ============================================================================
 
   @ViewChild('scrollAnchor', { static: false }) scrollAnchor?: ElementRef<HTMLElement>;
+  @ViewChild('createTripModal') createTripModal?: CreateTripModalComponent;
 
   // ============================================================================
   // OBSERVABLES PARA LIMPIEZA (para BehaviorSubjects si se usan)
@@ -106,10 +111,10 @@ export class TripsPageComponent implements OnInit, OnDestroy {
 
   /**
    * Crear nuevo viaje
-   * Navega a la página de creación
+   * Abre el modal de creación
    */
   createTrip(): void {
-    this.router.navigate(['/trips/create']);
+    this.communicationService.openModal('create-trip');
   }
 
   /**
@@ -150,6 +155,45 @@ export class TripsPageComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  /**
+   * Maneja la creación de un nuevo viaje desde el modal
+   */
+  onTripCreated(tripData: TripFormData): void {
+    // Mapear TripFormData a CreateTripDto
+    const createTripDto = {
+      destination: tripData.name, // name -> destination
+      startDate: tripData.startDate,
+      endDate: tripData.endDate,
+      budget: tripData.budget || 0
+    };
+
+    this.tripService.createTrip(createTripDto).subscribe({
+      next: (newTrip) => {
+        this.tripStore.addTrip(newTrip);
+        this.toastService.success('Viaje creado con éxito');
+        this.createTripModal?.closeModal();
+      },
+      error: (err) => {
+        console.error('Error al crear viaje:', err);
+        this.toastService.error('No se pudo crear el viaje');
+      }
+    });
+  }
+
+  /**
+   * Cierra el mensaje de error
+   */
+  dismissError(): void {
+    this.tripStore.clearError();
+  }
+
+  /**
+   * Reintenta la carga de viajes
+   */
+  retryLoadTrips(): void {
+    this.tripStore.reloadTrips();
   }
 
   // ============================================================================

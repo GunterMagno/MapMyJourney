@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, AfterViewInit, OnDestroy, signal } from '@angular/core';
+import { CommonModule, ViewportScroller } from '@angular/common';
 import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/button/button';
 import { CardComponent } from '../../shared/card/card';
@@ -9,6 +9,7 @@ import { FormSelectComponent, SelectOption } from '../../shared/form-select/form
 import { AlertComponent } from '../../shared/alert/alert';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
+import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-style-guide',
@@ -24,11 +25,62 @@ import { FooterComponent } from '../../layout/footer/footer';
     AlertComponent,
     HeaderComponent,
     FooterComponent,
+    BreadcrumbComponent,
   ],
   templateUrl: './style-guide.html',
   styleUrl: './style-guide.scss',
 })
-export class StyleGuideComponent implements OnInit {  // Form controls
+export class StyleGuideComponent implements OnInit, AfterViewInit, OnDestroy {
+  // Active section tracking
+  activeSection = signal<string>('botones');
+  private observer?: IntersectionObserver;
+
+  constructor(private viewportScroller: ViewportScroller) {}
+
+  scrollToSection(sectionId: string): void {
+    this.activeSection.set(sectionId);
+    this.viewportScroller.scrollToAnchor(sectionId);
+  }
+
+  ngAfterViewInit(): void {
+    this.setupIntersectionObserver();
+  }
+
+  ngOnDestroy(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  private setupIntersectionObserver(): void {
+    const options = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: 0
+    };
+
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          if (id) {
+            this.activeSection.set(id);
+          }
+        }
+      });
+    }, options);
+
+    // Observe all sections
+    const sections = ['botones', 'cards', 'formularios', 'alertas', 'colores', 'tamanos'];
+    sections.forEach(sectionId => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        this.observer!.observe(element);
+      }
+    });
+  }
+
+  // Form controls
   tripNameControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   emailErrorControl = new FormControl('invalidemail', [Validators.required, Validators.email]);
   emailValidControl = new FormControl('user@example.com', [Validators.required, Validators.email]);
