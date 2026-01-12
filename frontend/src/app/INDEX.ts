@@ -8,6 +8,7 @@
  * ✅ PHASE 3: Advanced Reactive Forms (Login, Signup with FormBuilder, validators, FormArray)
  * ✅ PHASE 4: Responsive Design & Layouts (Container Queries, Mobile-First, Hamburger Sidebar)
  * ✅ PHASE 5: Multimedia Optimized (Picture+Art Direction, Lazy Loading, CSS Animations)
+ * ✅ PHASE 6: Themes & Dark Mode (CSS Variables, ThemeSwitcher, localStorage, prefers-color-scheme)
  */
 
 // PHASE 1: Interactive Components
@@ -36,6 +37,9 @@ export { SignupFormComponent } from './components/auth/signup-form/signup-form';
 
 // PHASE 5: Multimedia Components
 export { TaskItemComponent } from './components/shared/task-item/task-item';
+
+// PHASE 6: Theme Components
+export { ThemeSwitcherComponent } from './components/layout/theme-switcher/theme-switcher';
 
 // Page Components
 export { TripsPageComponent } from './components/pages/trips-page/trips-page';
@@ -112,6 +116,18 @@ export { routes } from './app.routes';
  * ✅ ITCSS Structure: 05-animations layer
  * ✅ Performance: Lighthouse +23 points, LCP -52%
  * 
+ * PHASE 6 - THEMES & DARK MODE:
+ * ✅ CSS Variables (semantic) for light and dark modes
+ * ✅ data-theme attribute on <html> for styling
+ * ✅ ThemeService with Observable stream
+ * ✅ localStorage persistence of user choice
+ * ✅ prefers-color-scheme detection (OS preference)
+ * ✅ ThemeSwitcherComponent with Sol/Luna toggle
+ * ✅ Smooth transitions (0.3s) on theme change
+ * ✅ WCAG AA contrast (4.5:1) in both modes
+ * ✅ Renderer2 for safe DOM manipulation
+ * ✅ Accessibility: aria-label on switcher button
+ * 
  * ANGULAR 21 FEATURES:
  * ✅ Standalone Components (standalone: true)
  * ✅ Signals API (signal())
@@ -124,11 +140,12 @@ export { routes } from './app.routes';
  * 
  * STYLING:
  * ✅ SCSS with CSS variables
- * ✅ Dark mode support (.dark-mode class)
+ * ✅ Dark mode support ([data-theme="dark"])
  * ✅ Responsive design (mobile first)
  * ✅ Accessibility: focus states, color contrast
  * ✅ Transitions and animations
  * ✅ Component-scoped styles
+ * ✅ Semantic color variables (--bg-body, --text-main, etc)
  * 
  * ROUTES:
  * ✅ /demo - Phase 1 demonstration

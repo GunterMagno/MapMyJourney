@@ -4,44 +4,72 @@ import { BehaviorSubject, Observable } from 'rxjs';
 type Theme = 'light' | 'dark';
 
 /**
- * Theme management service.
- * Handles dark mode / light mode switching with persistent storage and system preference detection.
+ * ThemeService - Fase 6: Temas y Modo Oscuro
+ * 
+ * Responsabilidades:
+ * 1. Detectar preferencia del usuario (localStorage)
+ * 2. Detectar preferencia del SO (prefers-color-scheme)
+ * 3. Aplicar tema a <html data-theme>
+ * 4. Persistir selección del usuario
+ * 5. Emit cambios vía Observable para UI
+ * 
+ * Prioridad:
+ * 1. localStorage (selección del usuario)
+ * 2. prefers-color-scheme (SO)
+ * 3. light (default)
  */
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
-  private readonly THEME_KEY = 'app_theme';
-  private themeSubject = new BehaviorSubject<Theme>(this.getCurrentTheme());
-  public theme$ = this.themeSubject.asObservable();
+  private readonly THEME_KEY = 'mapmyjourney_theme';
+  
+  // BehaviorSubject para emitir cambios
+  private themeSubject = new BehaviorSubject<Theme>('light');
+  public theme$: Observable<Theme> = this.themeSubject.asObservable();
+  
+  // Observable para isDarkMode (más semántico)
+  private isDarkModeSubject = new BehaviorSubject<boolean>(false);
+  public isDarkMode$: Observable<boolean> = this.isDarkModeSubject.asObservable();
 
-  constructor() {
-    this.initializeTheme();
-  }
+  constructor() {}
 
   /**
-   * Initializes theme from localStorage or defaults to 'light' mode.
+   * Inicializa el tema siguiendo prioridad:
+   * 1. localStorage → selección anterior del usuario
+   * 2. prefers-color-scheme → preferencia del SO
+   * 3. 'light' → default
    */
-  private initializeTheme(): void {
-    const savedTheme = this.getThemeFromStorage();
-    if (savedTheme) {
-      this.applyTheme(savedTheme);
-    } else {
-      // Default to light mode instead of system preference
-      this.applyTheme('light');
-    }
+  initializeTheme(): void {
+    const theme = this.detectTheme();
+    this.applyTheme(theme);
   }
 
   /**
-   * Detects system preference using matchMedia.
+   * Detecta el tema con prioridad
+   */
+  private detectTheme(): Theme {
+    // 1. ¿Hay algo en localStorage?
+    const saved = this.getThemeFromStorage();
+    if (saved) {
+      return saved;
+    }
+
+    // 2. ¿Qué dice la preferencia del SO?
+    const prefersDark = this.detectSystemPreference();
+    return prefersDark ? 'dark' : 'light';
+  }
+
+  /**
+   * Detecta preferencia del SO usando window.matchMedia
    */
   private detectSystemPreference(): boolean {
     if (typeof window === 'undefined') return false;
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 
   /**
-   * Gets theme from localStorage.
+   * Obtiene tema de localStorage
    */
   private getThemeFromStorage(): Theme | null {
     if (typeof window === 'undefined') return null;
@@ -50,53 +78,68 @@ export class ThemeService {
   }
 
   /**
-   * Gets current theme synchronously.
+   * Obtiene el tema actual (síncrono)
    */
   getCurrentTheme(): Theme {
-    const saved = this.getThemeFromStorage();
-    if (saved) return saved;
-    return this.detectSystemPreference() ? 'dark' : 'light';
+    return this.themeSubject.value;
   }
 
   /**
-   * Toggles between light and dark theme.
+   * Obtiene si está en modo oscuro
+   */
+  isDarkModeActive(): boolean {
+    return this.isDarkModeSubject.value;
+  }
+
+  /**
+   * Alterna entre claro y oscuro
    */
   toggleTheme(): void {
-    const currentTheme = this.themeSubject.value;
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    const current = this.themeSubject.value;
+    const newTheme = current === 'light' ? 'dark' : 'light';
     this.applyTheme(newTheme);
   }
 
   /**
-   * Sets theme explicitly.
+   * Establece tema explícitamente
    */
   setTheme(theme: Theme): void {
     this.applyTheme(theme);
   }
 
   /**
-   * Applies theme to DOM and persists to localStorage.
+   * Aplica tema al DOM y persiste en localStorage
+   * 
+   * 1. Actualiza data-theme en <html>
+   * 2. Guarda en localStorage
+   * 3. Emite cambios vía Observable
    */
   private applyTheme(theme: Theme): void {
     if (typeof window === 'undefined') return;
     
     const htmlElement = document.documentElement;
+    const isDark = theme === 'dark';
     
-    if (theme === 'dark') {
+    // Actualizar atributo data-theme en <html>
+    if (isDark) {
+      htmlElement.setAttribute('data-theme', 'dark');
+    } else {
+      htmlElement.removeAttribute('data-theme');
+    }
+    
+    // Mantener compatibilidad con clase .dark-mode (si existe código anterior)
+    if (isDark) {
       htmlElement.classList.add('dark-mode');
     } else {
       htmlElement.classList.remove('dark-mode');
     }
     
+    // Guardar en localStorage
     localStorage.setItem(this.THEME_KEY, theme);
+    
+    // Emitir cambios
     this.themeSubject.next(theme);
-  }
-
-  /**
-   * Checks if dark mode is currently active.
-   */
-  isDarkMode(): boolean {
-    return this.themeSubject.value === 'dark';
+    this.isDarkModeSubject.next(isDark);
   }
 
   /**

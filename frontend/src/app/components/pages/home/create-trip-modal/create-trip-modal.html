@@ -1,0 +1,99 @@
+<app-modal 
+  #modal
+  title="Crea un Viaje"
+  [isDismissible]="true"
+  (closed)="onClose()"
+>
+  <article class="create-trip-form">
+    <header class="create-trip-form__header">
+      <svg class="create-trip-form__icon" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Pin de Google Maps -->
+        <path d="M32 10 C22 10 14 18 14 28 C14 42 32 70 32 70 C32 70 50 42 50 28 C50 18 42 10 32 10 Z" fill="#EF476F"/>
+        <circle cx="32" cy="28" r="10" fill="white"/>
+        <circle cx="32" cy="28" r="6" fill="#EF476F"/>
+      </svg>
+    </header>
+
+    <form class="create-trip-form__form" (ngSubmit)="onSubmit()">
+      <!-- Nombre del viaje -->
+      <label class="create-trip-form__field">
+        <span class="create-trip-form__label">Nombre del viaje :</span>
+        <input 
+          type="text" 
+          class="create-trip-form__input"
+          [(ngModel)]="tripForm.name"
+          name="tripName"
+          placeholder="Ej: Aventura en Europa"
+          required
+        />
+      </label>
+
+      <!-- Fecha Inicio y Fecha Fin -->
+      <div class="create-trip-form__dates">
+        <label class="create-trip-form__field create-trip-form__field--half">
+          <span class="create-trip-form__label">Fecha Inicio :</span>
+          <input 
+            type="date" 
+            class="create-trip-form__input"
+            [(ngModel)]="tripForm.startDate"
+            name="startDate"
+            required
+          />
+          <span *ngIf="dateError" class="create-trip-form__error">{{ dateError }}</span>
+        </label>
+
+        <label class="create-trip-form__field create-trip-form__field--half">
+          <span class="create-trip-form__label">Fecha Fin :</span>
+          <input 
+            type="date" 
+            class="create-trip-form__input"
+            [(ngModel)]="tripForm.endDate"
+            name="endDate"
+            (change)="validateDates()"
+            required
+          />
+        </label>
+      </div>
+
+      <!-- Presupuesto viaje (opcional) -->
+      <label class="create-trip-form__field">
+        <span class="create-trip-form__label">Presupuesto viaje (opcional) :</span>
+        <span class="create-trip-form__budget-input">
+          <span class="create-trip-form__euro">€</span>
+          <input 
+            type="number" 
+            class="create-trip-form__input create-trip-form__input--budget"
+            [(ngModel)]="tripForm.budget"
+            name="budget"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+          />
+        </span>
+      </label>
+
+      <!-- Botón de submit -->
+      <footer class="create-trip-form__actions">
+        <button 
+          type="submit" 
+          class="create-trip-form__submit-btn"
+          [disabled]="!isValidForm() || isSubmitting"
+        >
+          <span class="create-trip-form__submit-text">
+            {{ isSubmitting ? 'Creando...' : 'Crear un viaje' }}
+          </span>
+          <svg 
+            *ngIf="!isSubmitting"
+            class="create-trip-form__submit-icon" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+            <path d="M12 8V16M8 12H16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </footer>
+    </form>
+  </article>
+</app-modal>

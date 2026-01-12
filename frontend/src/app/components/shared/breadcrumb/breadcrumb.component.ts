@@ -18,10 +18,10 @@ import { BreadcrumbService, BreadcrumbItem } from '../../../services/breadcrumb.
   imports: [CommonModule, RouterModule],
   template: `
     <nav class="breadcrumb" *ngIf="(breadcrumbs$ | async) as items">
-      <ol class="breadcrumb__list">
-        <!-- Inicio (siempre presente) -->
+      <ol class="breadcrumb__list" *ngIf="items.length > 0">
+        <!-- Inicio (siempre presente excepto cuando items está vacío) -->
         <li class="breadcrumb__item">
-          <a routerLink="/demo" class="breadcrumb__link">Inicio</a>
+          <a routerLink="/home" class="breadcrumb__link">Inicio</a>
         </li>
 
         <!-- Items dinámicos -->

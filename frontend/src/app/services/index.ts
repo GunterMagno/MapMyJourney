@@ -12,4 +12,6 @@ export { ToastService } from './toast.service';
 export type { Toast, ToastType } from './toast.service';
 export { LoadingService } from './loading.service';
 export { ThemeService } from './theme.service';
+export { TripService } from './trip.service';
+export type { Trip, TripFormData } from './trip.service';
 export { CustomValidators } from './custom-validators';

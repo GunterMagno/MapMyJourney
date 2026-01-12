@@ -5,9 +5,9 @@
   justify-content: space-between;
   gap: var(--spacing-4);
   padding: 0 var(--spacing-8);
-  min-height: 70px;
+  min-height: 80px;
   background-color: var(--quaternary-color);
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 4px solid var(--quaternary-color-hover);
   width: 100%;
   position: relative;
   box-sizing: border-box;
@@ -20,7 +20,7 @@
   }
 
   &__logo-img {
-    height: 80px;
+    height: 62px;
     width: auto;
     object-fit: contain;
   }

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { StyleGuideComponent } from './components/pages/style-guide/style-guide';
 import { DemoPageComponent } from './components/pages/demo-page/demo-page';
+import { HomeComponent } from './components/pages/home/home';
 import { LoginFormComponent } from './components/auth/login-form/login-form';
 import { SignupFormComponent } from './components/auth/signup-form/signup-form';
 import { TripsPageComponent } from './components/pages/trips-page/trips-page';
@@ -29,14 +30,21 @@ import { ItineraryComponent } from './components/pages/user/itinerary.component'
  * - Wildcard: ** (404)
  */
 export const routes: Routes = [
-  // Redirección raíz
+  // Redirección raíz - Home
   {
     path: '',
-    redirectTo: 'demo',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
 
-  // Página de inicio
+  // Página de inicio (Home)
+  {
+    path: 'home',
+    component: HomeComponent,
+    data: { breadcrumb: null }
+  },
+
+  // Página de demo (desarrollo)
   {
     path: 'demo',
     component: DemoPageComponent,

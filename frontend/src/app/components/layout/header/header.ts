@@ -56,13 +56,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Initialize theme from ThemeService (replaces localStorage manual check)
-    this.isDarkTheme = this.themeService.isDarkMode();
+    this.isDarkTheme = this.themeService.isDarkModeActive();
 
     // Subscribe to theme changes
-    this.themeService.theme$
+    this.themeService.isDarkMode$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(theme => {
-        this.isDarkTheme = theme === 'dark';
+      .subscribe(isDark => {
+        this.isDarkTheme = isDark;
       });
 
     // Subscribe to authentication status

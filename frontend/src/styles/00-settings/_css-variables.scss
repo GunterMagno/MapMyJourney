@@ -1,28 +1,109 @@
 :root {
-  /* Colores de fondo - Light Mode */
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F1F3F5;
+  // ========================================================================
+  // FONDOS - TEMA CLARO
+  // ========================================================================
+  --bg-body: #FFFFFF;           // Fondo principal de la página
+  --bg-elevated: #F8F9FA;       // Fondos elevados (cards secundarias)
+  --bg-card: #FFFFFF;           // Fondos de tarjetas principales
+  --bg-surface: #F1F3F5;        // Superficies neutrales (inputs, tablas)
+  --bg-input: #FFFFFF;          // Fondos de campos input
+  --bg-light: #F8F9FA;          // Fondos muy claros (hover)
   
-  /* Colores de texto - Light Mode */
-  --text-primary: #0F7CA0;
-  --text-secondary: #6C757D;
+  // ========================================================================
+  // TEXTOS - TEMA CLARO
+  // ========================================================================
+  --text-main: #118AB2;         // Texto principal (Azul Quinario)
+  --text-secondary: #6C757D;    // Texto secundario (Gris)
+  --text-inverse: #FFFFFF;      // Texto inverso (sobre fondos oscuros)
+  --text-muted: #9CA3AF;        // Texto deshabilitado
+  --text-danger: #DC3545;       // Texto de error
+  --text-success: #28A745;      // Texto de éxito
   
-  /* Colores de borde - Light Mode */
-  --border-primary: #DEE2E6;
+  // ========================================================================
+  // BORDES - TEMA CLARO
+  // ========================================================================
+  --border-color: #DEE2E6;      // Borde estándar
+  --border-light: #E9ECEF;      // Bordes claros
+  --border-dark: #ADB5BD;       // Bordes oscuros
+  
+  // ========================================================================
+  // SOMBRAS - TEMA CLARO
+  // ========================================================================
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.2);
+  
+  // ========================================================================
+  // COLORES DE MARCA (No cambian con tema)
+  // ========================================================================
+  --principal-color: #EF476F;   // Rosa (Brand Primary)
+  --secondary-color: #F37748;   // Naranja (Brand Secondary)
+  
+  // ========================================================================
+  // TRANSICIÓN SUAVE AL CAMBIAR TEMA
+  // ========================================================================
+  --theme-transition: background-color 0.3s ease, 
+                      color 0.3s ease, 
+                      border-color 0.3s ease,
+                      box-shadow 0.3s ease;
 }
 
-/* Tema oscuro */
+// ============================================================================
+// TEMA OSCURO - SELECTOR [data-theme="dark"]
+// ============================================================================
+// Sobrescribe todas las variables semánticas (excepto colores de marca)
+// HTML: <html data-theme="dark">
+// ============================================================================
+
+[data-theme="dark"] {
+  // ========================================================================
+  // FONDOS - TEMA OSCURO
+  // ========================================================================
+  --bg-body: #141414;           // Fondo principal (Gris muy oscuro - Marca)
+  --bg-elevated: #1F1F1F;       // Fondos elevados (ligeramente más claro)
+  --bg-card: #1A1A1A;           // Fondos de tarjetas
+  --bg-surface: #2A2A2A;        // Superficies neutrales
+  --bg-input: #2A2A2A;          // Fondos de campos input
+  --bg-light: #242424;          // Fondos claros en dark mode
+  
+  // ========================================================================
+  // TEXTOS - TEMA OSCURO
+  // ========================================================================
+  // Contraste mínimo 4.5:1 (AA) o 7:1 (AAA)
+  --text-main: #E0E0E0;         // Texto principal (Gris claro)
+  --text-secondary: #A0A0A0;    // Texto secundario (Gris medio)
+  --text-inverse: #141414;      // Texto inverso (fondo oscuro)
+  --text-muted: #6B7280;        // Texto deshabilitado
+  --text-danger: #F87171;       // Texto de error (rojo más claro)
+  --text-success: #4ADE80;      // Texto de éxito (verde más claro)
+  
+  // ========================================================================
+  // BORDES - TEMA OSCURO
+  // ========================================================================
+  --border-color: #404040;      // Borde estándar
+  --border-light: #2D2D2D;      // Bordes claros en dark mode
+  --border-dark: #555555;       // Bordes oscuros
+  
+  // ========================================================================
+  // SOMBRAS - TEMA OSCURO
+  // (Más suaves para mantener legibilidad)
+  // ========================================================================
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+}
+
+// ============================================================================
+// VARIABLES HEREDADAS (Para compatibilidad con código anterior)
+// ============================================================================
+// Si tienes código que aún usa .dark-mode, mantén compatibilidad
+// ============================================================================
+
 .dark-mode {
-  /* Colores de fondo - Dark Mode */
-  --bg-primary: #1A1A1A;
-  --bg-secondary: #2D2D2D;
-  
-  /* Colores de texto - Dark Mode */
-  --text-primary: #E0E0E0;
-  --text-secondary: #A0A0A0;
-  
-  /* Colores de borde - Dark Mode */
-  --border-primary: #404040;
+  // Redirige a [data-theme="dark"]
+  @extend [data-theme="dark"];
 }
 
 
