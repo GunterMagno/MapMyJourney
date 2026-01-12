@@ -6,6 +6,21 @@ body {
   background-color: var(--tertiary-color-disabled);
 }
 
+/**
+ * CUMPLE CE6.d: Animación para el tooltip creado dinámicamente
+ * Usa @keyframes para fade-in del tooltip generado con Renderer2
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 h1 { 
   font-family: var(--font-primary); 
   font-weight: var(--font-weight-bold); 

@@ -176,4 +176,25 @@
       transform: rotate(360deg);
     }
   }
+
+  // Mobile responsive - reduce padding and font size
+  @media (max-width: var(--breakpoint-mobile-max)) {
+    &--sm {
+      padding: var(--spacing-1) var(--spacing-3);
+      font-size: 12px;
+      min-height: 28px;
+    }
+
+    &--md {
+      padding: var(--spacing-2) var(--spacing-4);
+      font-size: 13px;
+      min-height: 36px;
+    }
+
+    &--lg {
+      padding: var(--spacing-3) var(--spacing-6);
+      font-size: 14px;
+      min-height: 40px;
+    }
+  }
 }

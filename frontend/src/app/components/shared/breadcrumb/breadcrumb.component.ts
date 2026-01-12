@@ -50,16 +50,17 @@ import { BreadcrumbService, BreadcrumbItem } from '../../../services/breadcrumb.
   styles: [`
     .breadcrumb {
       background-color: transparent;
-      padding: var(--spacing-2) 0;
+      padding: 4px 0;
       border-bottom: none;
-      margin-bottom: var(--spacing-4);
+      margin-bottom: 8px;
+      min-height: 20px;
     }
 
     .breadcrumb__list {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--spacing-1);
+      gap: 4px;
       list-style: none;
       margin: 0;
       padding: 0;
@@ -75,18 +76,18 @@ import { BreadcrumbService, BreadcrumbItem } from '../../../services/breadcrumb.
 
       &:not(:last-child)::after {
         content: '/';
-        margin-left: var(--spacing-1);
+        margin-left: 4px;
         color: var(--text-secondary);
-        font-size: var(--font-size-extra-small);
+        font-size: 11px;
       }
     }
 
     .breadcrumb__link {
       color: var(--quinary-color-hover);
       text-decoration: none;
-      font-size: var(--font-size-extra-small);
+      font-size: 11px;
       font-weight: var(--font-weight-medium);
-      padding: var(--spacing-1) var(--spacing-2);
+      padding: 2px 4px;
       border-radius: var(--border-radius-small);
       transition: all var(--transition-fast);
 
@@ -109,17 +110,17 @@ import { BreadcrumbService, BreadcrumbItem } from '../../../services/breadcrumb.
     /* Responsive */
     @media (max-width: 768px) {
       .breadcrumb {
-        padding: var(--spacing-2) var(--spacing-4);
-        margin-bottom: 0;
+        padding: 4px 0;
+        margin-bottom: 8px;
       }
 
       .breadcrumb__list {
-        gap: var(--spacing-1);
+        gap: 4px;
       }
 
       .breadcrumb__link {
-        font-size: var(--font-size-extra-small);
-        padding: var(--spacing-1);
+        font-size: 11px;
+        padding: 2px 4px;
       }
     }
   `]

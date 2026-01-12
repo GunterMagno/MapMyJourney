@@ -2,10 +2,11 @@
 // PÁGINA: DASHBOARD - MIS VIAJES
 // ============================================================================
 // Estrategia Mobile-First: 1 columna → 2 columnas → 3-4 columnas
-// Usa Grid con auto-fit para adaptar el número de columnas
+// Breakpoints exactos cubiertos: 320px, 375px, 768px, 1024px, 1280px
+// Usa Grid con auto-fit para adaptar el número de columnas dinámicamente
 
 // ============================================================================
-// CONTENEDOR PRINCIPAL (Mobile-First)
+// CONTENEDOR PRINCIPAL (Mobile-First - Base para 320px)
 // ============================================================================
 .dashboard-page {
   background-color: var(--bg-body);
@@ -17,10 +18,10 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto auto;
-  gap: var(--spacing-8);
+  gap: var(--spacing-6);
   max-width: var(--container-max-width);
   margin: 0 auto;
-  padding: var(--spacing-6);
+  padding: var(--spacing-4);
 }
 
 // ============================================================================
@@ -52,13 +53,13 @@
 .dashboard-page__actions {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
 }
 
 .dashboard-page__filters {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
 }
 
 .dashboard-page__search {
@@ -206,7 +207,25 @@
 }
 
 // ============================================================================
-// RESPONSIVE: TABLET (768px+) - 2 Columnas
+// RESPONSIVE: BREAKPOINT 375px (Móvil estándar)
+// ============================================================================
+@media (min-width: 375px) {
+  .dashboard-page__container {
+    padding: var(--spacing-5);
+    gap: var(--spacing-7);
+  }
+
+  .dashboard-page__actions {
+    gap: var(--spacing-4);
+  }
+
+  .dashboard-page__filters {
+    gap: var(--spacing-4);
+  }
+}
+
+// ============================================================================
+// RESPONSIVE: TABLET - 2 Columnas
 // ============================================================================
 @media (min-width: var(--breakpoint-tablet)) {
   .dashboard-page__container {
@@ -221,6 +240,7 @@
   // Filtros en 2 columnas
   .dashboard-page__filters {
     grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4);
   }
 
   .dashboard-page__search {
@@ -240,7 +260,7 @@
 }
 
 // ============================================================================
-// RESPONSIVE: DESKTOP (1024px+) - 3-4 Columnas
+// RESPONSIVE: DESKTOP - 3 Columnas
 // ============================================================================
 @media (min-width: var(--breakpoint-desktop)) {
   .dashboard-page__container {
@@ -258,6 +278,7 @@
     flex: 1;
     grid-template-columns: auto 1fr;
     align-items: flex-end;
+    gap: var(--spacing-4);
   }
 
   .dashboard-page__search {
@@ -268,6 +289,7 @@
   .dashboard-page__trips-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     grid-auto-rows: 1fr;
+    gap: var(--spacing-6);
   }
 
   // Estadísticas: 4 columnas
@@ -281,7 +303,7 @@
 }
 
 // ============================================================================
-// RESPONSIVE: LARGE DESKTOP (1280px+)
+// RESPONSIVE: LARGE DESKTOP
 // ============================================================================
 @media (min-width: var(--breakpoint-large-desktop)) {
   .dashboard-page__container {
@@ -289,9 +311,15 @@
     padding: var(--spacing-12);
   }
 
-  // Grid más amplio: permite hasta 4 columnas
+  // Grid más amplio: permite hasta 4 columnas efectivas
   .dashboard-page__trips-grid {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-8);
+  }
+
+  .dashboard-page__title {
+    font-size: var(--font-size-tittle-h1);
+    margin-bottom: var(--spacing-6);
   }
 }
 

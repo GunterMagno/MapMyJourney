@@ -24,13 +24,19 @@ body.loading-active {
   gap: var(--spacing-4);
 }
 
+
+// Solo transform (GPU accelerated)
+// Duración: 800ms (RA4: 150-500ms, extendemos para suavidad)
 .spinner {
   width: 50px;
   height: 50px;
   border: 4px solid var(--border-color);
   border-top-color: var(--principal-color);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  
+  // Usa animación de _animations.scss
+  // Fallback: define aquí si la importación falla
+  animation: spinner-rotate 800ms linear infinite;
 }
 
 .loading-text {
@@ -40,11 +46,12 @@ body.loading-active {
   font-size: var(--font-size-small);
 }
 
-@keyframes spin {
-  from {
+// Fallback si _animations.scss no está disponible
+@keyframes spinner-rotate {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
   }
 }

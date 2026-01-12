@@ -1,4 +1,4 @@
-/* ITCSS: Settings -> Tools -> Generic -> Elements -> Layout */
+/* ITCSS: Settings -> Tools -> Generic -> Elements -> Layout -> Animations */
 
 @use "./styles/00-settings/variables";
 @use "./styles/00-settings/css-variables";
@@ -6,3 +6,4 @@
 @use "./styles/02-generic/reset";
 @use "./styles/03-elements/base";
 @use "./styles/04-layout/layout";
+@use "./styles/05-animations/animations";

@@ -16,7 +16,6 @@ import {
   FormArray
 } from '@angular/forms';
 import { FormInputComponent } from '../../shared/form-input/form-input';
-import { FormTextareaComponent } from '../../shared/form-textarea/form-textarea';
 import { ButtonComponent } from '../../shared/button/button';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
@@ -44,7 +43,6 @@ import { takeUntil } from 'rxjs/operators';
     RouterModule,
     ReactiveFormsModule,
     FormInputComponent,
-    FormTextareaComponent,
     ButtonComponent,
     HeaderComponent,
     FooterComponent

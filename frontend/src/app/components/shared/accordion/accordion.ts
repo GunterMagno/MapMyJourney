@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostListener, ViewChildren, QueryList, ElementRef, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
@@ -9,6 +9,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
  * - Multiple items can be expanded simultaneously
  * - Accessible with ARIA attributes
  * - Event binding for toggle functionality
+ * - Keyboard navigation (Arrow Keys, Home, End, Enter)
  */
 
 export interface AccordionItem {
@@ -23,12 +24,14 @@ export interface AccordionItem {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="accordion" role="region">
-      <div *ngFor="let item of items" class="accordion__item">
+    <div class="accordion" role="region" (keydown)="handleKeyboardEvent($event)">
+      <div *ngFor="let item of items; let i = index" class="accordion__item">
         <button
+          #headerButton
           class="accordion__header"
           [attr.aria-expanded]="isOpen(item.id)"
           [attr.aria-controls]="'accordion-content-' + item.id"
+          [attr.tabindex]="i === currentFocusIndex ? 0 : -1"
           (click)="toggleItem(item.id)"
           [disabled]="item.disabled"
           type="button"
@@ -158,11 +161,87 @@ export interface AccordionItem {
 export class AccordionComponent {
   @Input() items: AccordionItem[] = [];
   @Input() allowMultiple: boolean = true;
+  @ViewChildren('headerButton') headerButtons!: QueryList<ElementRef>;
 
   /**
    * Track which items are open
    */
   private openItems = new Set<string>();
+
+  /**
+   * CUMPLE CE6.e: Índice del elemento con foco para navegación por teclado
+   */
+  currentFocusIndex: number = 0;
+
+  constructor(private renderer: Renderer2) {}
+
+  /**
+   * Permite:
+   * - ArrowDown: siguiente item
+   * - ArrowUp: item anterior
+   * - Home: primer item
+   * - End: último item
+   * - Enter/Espacio: abrir/cerrar item
+   */
+  @HostListener('keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (this.items.length === 0) {
+      return;
+    }
+
+    switch (event.key) {
+      // CUMPLE CE6.e: Flecha hacia abajo: siguiente item
+      case 'ArrowDown':
+        event.preventDefault();
+        this.currentFocusIndex = (this.currentFocusIndex + 1) % this.items.length;
+        this.focusItem(this.currentFocusIndex);
+        break;
+
+      // CUMPLE CE6.e: Flecha hacia arriba: item anterior
+      case 'ArrowUp':
+        event.preventDefault();
+        this.currentFocusIndex =
+          (this.currentFocusIndex - 1 + this.items.length) % this.items.length;
+        this.focusItem(this.currentFocusIndex);
+        break;
+
+      // CUMPLE CE6.e: Home: primer item
+      case 'Home':
+        event.preventDefault();
+        this.currentFocusIndex = 0;
+        this.focusItem(0);
+        break;
+
+      // CUMPLE CE6.e: End: último item
+      case 'End':
+        event.preventDefault();
+        this.currentFocusIndex = this.items.length - 1;
+        this.focusItem(this.currentFocusIndex);
+        break;
+
+      // CUMPLE CE6.e: Enter o Espacio: abrir/cerrar item
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        this.toggleItem(this.items[this.currentFocusIndex].id);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  /**
+   * CUMPLE CE6.d: Establece el foco en un item específico usando Renderer2
+   */
+  private focusItem(index: number): void {
+    if (this.headerButtons && this.headerButtons.length > index) {
+      const buttonElement = this.headerButtons.toArray()[index].nativeElement;
+      // CUMPLE CE6.d: Usa Renderer2 para manipular atributos de forma segura
+      this.renderer.setAttribute(buttonElement, 'tabindex', '0');
+      buttonElement.focus();
+    }
+  }
 
   /**
    * FASE 1: Event Binding - Toggle accordion item

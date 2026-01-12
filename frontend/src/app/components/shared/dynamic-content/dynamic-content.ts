@@ -6,7 +6,6 @@ import {
   AfterViewInit
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from '../../shared/button/button';
 
 /**
  * Dynamic DOM Component - FASE 1: DOM Manipulation
@@ -21,7 +20,7 @@ interface DynamicElement {
 @Component({
   selector: 'app-dynamic-content',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule],
   template: `
     <div class="dynamic-content">
       <div class="dynamic-content__controls">

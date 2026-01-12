@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../../layout/header/header';
+import { FooterComponent } from '../../layout/footer/footer';
 
 /**
  * UserLayoutComponent - Layout para sección de usuario
@@ -15,8 +17,9 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-user-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent],
   template: `
+    <app-header></app-header>
     <section class="user-layout">
       <aside class="user-layout__sidebar">
         <nav class="user-layout__nav">
@@ -48,6 +51,7 @@ import { RouterModule } from '@angular/router';
         <router-outlet></router-outlet>
       </main>
     </section>
+    <app-footer></app-footer>
   `,
   styles: [`
     .user-layout {

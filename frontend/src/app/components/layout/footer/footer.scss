@@ -1,8 +1,9 @@
 .footer {
-  padding: var(--spacing-12) var(--spacing-16);
+  padding: var(--spacing-8) var(--spacing-6);
   background: var(--quinary-color);
   width: 100%;
   margin-top: auto;
+  box-sizing: border-box;
 
   &__container {
     display: grid;
@@ -140,13 +141,13 @@
     margin-right: auto;
   }
 
-  @media (max-width: var(--breakpoint-tablet)) {
-    padding: var(--spacing-8) var(--spacing-12);
+  @media (max-width: var(--breakpoint-tablet-max)) {
+    padding: var(--spacing-6) var(--spacing-8);
 
     &__container {
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-12);
-      margin-bottom: var(--spacing-6);
+      gap: var(--spacing-10);
+      margin-bottom: var(--spacing-4);
     }
 
     &__logo-section {
@@ -158,7 +159,7 @@
     }
 
     &__logo-img {
-      height: 50px;
+      height: 45px;
     }
 
     &__description {
@@ -176,13 +177,13 @@
     }
   }
 
-  @media (max-width: var(--breakpoint-mobile)) {
-    padding: var(--spacing-8) var(--spacing-6);
+  @media (max-width: var(--breakpoint-mobile-max)) {
+    padding: var(--spacing-6) var(--spacing-4);
 
     &__container {
       grid-template-columns: 1fr;
       gap: var(--spacing-8);
-      margin-bottom: var(--spacing-6);
+      margin-bottom: var(--spacing-4);
     }
 
     &__logo-section,
@@ -190,22 +191,36 @@
     &__legal-section {
       grid-column: auto;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     &__logo {
       justify-content: center;
+      margin-bottom: var(--spacing-4);
     }
 
     &__social {
       justify-content: center;
+      margin-bottom: var(--spacing-6);
+    }
+
+    &__social-link {
+      width: 36px;
+      height: 36px;
+      font-size: var(--font-size-medium);
     }
 
     &__nav {
       align-items: center;
+      gap: var(--spacing-2);
     }
 
     &__link {
       padding-left: 0;
+      font-size: var(--font-size-small);
+      color: rgba(255, 255, 255, 0.85);
 
       &::before {
         display: none;
@@ -213,16 +228,34 @@
 
       &:hover {
         padding-left: 0;
+        color: #FFFFFF;
       }
+    }
+
+    &__section-title {
+      font-size: var(--font-size-small);
+      margin: var(--spacing-4) 0 var(--spacing-3) 0;
+      text-transform: uppercase;
+    }
+
+    &__description {
+      font-size: var(--font-size-small);
+      margin-bottom: var(--spacing-3);
     }
 
     &__divider {
       margin: var(--spacing-6) 0;
+      opacity: 0.5;
     }
 
     &__copyright {
       font-size: var(--font-size-extra-small);
       line-height: 1.4;
+      padding: 0 var(--spacing-2);
+    }
+
+    &__logo-img {
+      height: 40px;
     }
   }
 }

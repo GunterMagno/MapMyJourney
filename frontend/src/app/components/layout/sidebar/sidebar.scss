@@ -1,3 +1,13 @@
+// ============================================================================
+// COMPONENTE: SIDEBAR
+// ============================================================================
+// Desktop: Sidebar fijo a la izquierda
+// Móvil: Menú off-canvas con hamburguesa
+// Tablets: Transición gradual
+
+// ============================================================================
+// ESTADO BASE (Desktop - 1024px+)
+// ============================================================================
 .sidebar {
   width: 20%;
   min-width: 200px;
@@ -9,7 +19,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: width var(--transition-medium);
+  transition: width var(--transition-medium), transform var(--transition-medium);
 
   &__toggle {
     position: absolute;
@@ -169,12 +179,22 @@
       padding: var(--spacing-4);
     }
   }
+}
 
-  @media (max-width: var(--breakpoint-large-desktop)) {
+// ============================================================================
+// RESPONSIVE: LARGE DESKTOP
+// ============================================================================
+@media (max-width: var(--breakpoint-large-desktop)) {
+  .sidebar {
     width: 25%;
   }
+}
 
-  @media (max-width: var(--breakpoint-tablet)) {
+// ============================================================================
+// RESPONSIVE: TABLET - Sidebar fijo con navegación horizontal
+// ============================================================================
+@media (max-width: 1023px) and (min-width: var(--breakpoint-tablet)) {
+  .sidebar {
     width: 100%;
     height: auto;
     border-right: none;
@@ -182,6 +202,7 @@
     padding: var(--spacing-8) var(--spacing-12);
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
 
     &__toggle {
       display: none;
@@ -189,7 +210,7 @@
 
     &__header {
       width: 100%;
-      margin-bottom: var(--spacing-8);
+      margin-bottom: var(--spacing-6);
       margin-top: 0;
     }
 
@@ -201,11 +222,11 @@
     &__list {
       flex-direction: row;
       flex-wrap: wrap;
-      gap: var(--spacing-6);
+      gap: var(--spacing-4);
     }
 
     &__item {
-      flex: 1 1 30%;
+      flex: 0 1 auto;
     }
 
     &__chat-btn {
@@ -215,21 +236,58 @@
       margin: 0;
     }
   }
+}
 
-  @media (max-width: var(--breakpoint-mobile)) {
-    padding: var(--spacing-8) var(--spacing-8);
+// ============================================================================
+// RESPONSIVE: MÓVIL (< 768px) - Hamburguesa (Off-Canvas Modal)
+// ============================================================================
+@media (max-width: 767px) {
+  // Sidebar: Hidden por defecto, aparece como modal off-canvas
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    padding: var(--spacing-8) var(--spacing-6);
+    border-right: var(--border-thin) solid var(--border-color);
+    z-index: 1000;
+    
+    // Inicialmente oculto, se muestra con clase .sidebar--open
+    transform: translateX(-100%);
+    transition: transform var(--transition-medium) ease-in-out;
+
+    // Cuando está abierto
+    &--open {
+      transform: translateX(0);
+    }
+
+    &__toggle {
+      display: flex;
+      position: fixed;
+      top: var(--spacing-4);
+      left: var(--spacing-4);
+      z-index: 1001;
+      background-color: var(--principal-color);
+      color: white;
+
+      &:hover {
+        background-color: var(--principal-color-hover);
+      }
+    }
 
     &__header {
-      text-align: center;
-      margin-bottom: var(--spacing-6);
+      margin-top: var(--spacing-12);
+      margin-bottom: var(--spacing-8);
     }
 
     &__trip-title {
-      font-size: var(--font-size-small);
+      font-size: var(--font-size-tittle-h4);
     }
 
-    &__nav-title {
-      font-size: var(--font-size-extra-small);
+    &__nav {
+      flex-grow: 1;
     }
 
     &__list {
@@ -242,7 +300,39 @@
     }
 
     &__link {
-      padding: var(--spacing-3) var(--spacing-2);
+      padding: var(--spacing-3) var(--spacing-3);
+      font-size: var(--font-size-medium);
     }
+
+    &__chat-btn {
+      position: fixed;
+      bottom: var(--spacing-4);
+      right: var(--spacing-4);
+      margin: 0;
+    }
+  }
+
+  // Overlay backdrop cuando sidebar está abierto
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-medium), visibility var(--transition-medium);
+
+    &--active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  // Ícono hamburguesa debe estar visible en móvil
+  .hamburger-icon {
+    display: flex;
   }
 }
