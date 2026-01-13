@@ -259,8 +259,7 @@ graph TD
 
 ## Estado de los tests
 
-### ✅ - Test Correctos- [pom.xml](/backend/pom.xml) - Dependencias Maven
-- [Insomnia Collection](/backend/MapMyJourney_Insomnia.json) - Requests de API para testing
+### ✅ - Test Correctos- [Insomnia Collection](/backend/MapMyJourney_Insomnia.json) - Requests de API para testing
 
 ---
 
