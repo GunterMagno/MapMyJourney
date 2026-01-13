@@ -4,6 +4,7 @@ import com.mapmyjourney.backend.dto.AddMemberRequestDTO;
 import com.mapmyjourney.backend.dto.ChangeMemberRoleRequestDTO;
 import com.mapmyjourney.backend.dto.TripMemberDTO;
 import com.mapmyjourney.backend.service.TripMemberService;
+import com.mapmyjourney.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ import java.util.List;
 public class TripMemberController {
 
     private final TripMemberService tripMemberService;
+    private final UserService userService;
 
     /**
      * 1. Agrega un nuevo miembro al viaje.
@@ -45,7 +47,9 @@ public class TripMemberController {
     public ResponseEntity<TripMemberDTO> addMember(
             @Parameter(description = "ID del viaje", example = "1")
             @PathVariable Long tripId, 
-            @Valid @RequestBody(description = "Datos del miembro a agregar") AddMemberRequestDTO request) {
+            @Valid @org.springframework.web.bind.annotation.RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del miembro a agregar") 
+            AddMemberRequestDTO request) {
         TripMemberDTO newMember = tripMemberService.addMemberToTrip(tripId, request.getUserId(), request.getRole());
         return ResponseEntity.status(201).body(newMember);
     }
@@ -154,8 +158,7 @@ public class TripMemberController {
     private Long extractUserIdFromContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        // TODO: Obtener userId a partir del email desde UserService
-        return 1L;
+        return userService.getUserIdByEmail(email);
     }
 
 }

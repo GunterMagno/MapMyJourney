@@ -8,7 +8,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 interface TripFormDataLocal {
-  name: string;
+  title: string;
+  destination: string;
+  description: string;
   startDate: string;
   endDate: string;
   budget: string;
@@ -32,7 +34,9 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   tripForm: TripFormDataLocal = {
-    name: '',
+    title: '',
+    destination: '',
+    description: '',
     startDate: '',
     endDate: '',
     budget: ''
@@ -87,7 +91,9 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
       
       // Convertir datos del formulario al tipo correcto (budget como número)
       const tripData: TripFormData = {
-        name: this.tripForm.name,
+        title: this.tripForm.title,
+        destination: this.tripForm.destination,
+        description: this.tripForm.description || undefined,
         startDate: this.tripForm.startDate,
         endDate: this.tripForm.endDate,
         budget: this.tripForm.budget ? parseFloat(this.tripForm.budget) : undefined
@@ -104,7 +110,8 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
 
   isValidForm(): boolean {
     return (
-      this.tripForm.name.trim() !== '' &&
+      this.tripForm.title.trim() !== '' &&
+      this.tripForm.destination.trim() !== '' &&
       this.tripForm.startDate !== '' &&
       this.tripForm.endDate !== '' &&
       !this.dateError
@@ -113,7 +120,9 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
 
   resetForm(): void {
     this.tripForm = {
-      name: '',
+      title: '',
+      destination: '',
+      description: '',
       startDate: '',
       endDate: '',
       budget: ''

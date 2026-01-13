@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 
@@ -8,6 +8,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, AbstractControl } from '@a
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form-input.html',
   styleUrl: './form-input.scss',
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class FormInputComponent {
   @Input() label: string = '';

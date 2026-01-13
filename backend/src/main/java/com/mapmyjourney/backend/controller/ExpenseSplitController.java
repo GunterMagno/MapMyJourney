@@ -41,8 +41,10 @@ public class ExpenseSplitController {
     @ApiResponse(responseCode = "404", description = "Gasto no encontrado")
     public ResponseEntity<ExpenseSplitDTO> createSplit(
             @Parameter(description = "ID del gasto", example = "1")
-            @PathVariable Long expenseId, 
-            @Valid @RequestBody(description = "Datos de la división") CreateSplitRequestDTO request) {
+            @PathVariable Long expenseId,
+            @Valid @org.springframework.web.bind.annotation.RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos de la división") 
+            CreateSplitRequestDTO request) {
         ExpenseSplitDTO createdSplit = expenseSplitService.createSplit(expenseId, request.getParticipantUserId(),
                 request.getAmount(), request.getPercentage());
         return ResponseEntity.status(201).body(createdSplit);

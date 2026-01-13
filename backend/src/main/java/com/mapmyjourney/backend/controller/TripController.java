@@ -3,12 +3,11 @@ package com.mapmyjourney.backend.controller;
 import com.mapmyjourney.backend.dto.TripCreateRequestDTO;
 import com.mapmyjourney.backend.dto.TripDTO;
 import com.mapmyjourney.backend.service.TripService;
+import com.mapmyjourney.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,6 +29,7 @@ import java.util.List;
 public class TripController {
 
     private final TripService tripService;
+    private final UserService userService;
 
     /**
      * 1. Crea un nuevo viaje.
@@ -42,7 +42,10 @@ public class TripController {
     @ApiResponse(responseCode = "201", description = "Viaje creado exitosamente")
     @ApiResponse(responseCode = "400", description = "Datos inválidos (fechas, presupuesto, etc)")
     @ApiResponse(responseCode = "401", description = "No autenticado")
-    public ResponseEntity<TripDTO> createTrip(@Valid @RequestBody(description = "Datos del viaje a crear") TripCreateRequestDTO request) {
+    public ResponseEntity<TripDTO> createTrip(
+            @Valid @org.springframework.web.bind.annotation.RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del viaje a crear") 
+            TripCreateRequestDTO request) {
         Long userId = extractUserIdFromContext();
         TripDTO createdTrip = tripService.createTrip(request, userId);
         return ResponseEntity.status(201).body(createdTrip);
@@ -150,10 +153,7 @@ public class TripController {
      */
     private Long extractUserIdFromContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // El nombre de usuario es el email, necesitas obtener el ID desde el servicio
         String email = authentication.getName();
-        // TODO: Implementar método que obtenga userId a partir del email
-        // Por ahora retorna 1L como placeholder, esto debe venir del UserService
-        return 1L;
+        return userService.getUserIdByEmail(email);
     }
 }

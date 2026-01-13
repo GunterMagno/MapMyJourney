@@ -38,11 +38,13 @@ export class AuthService {
    * POST /api/users/login
    */
   login(email: string, password: string): Observable<AuthResponse> {
+    console.log('AuthService.login called with:', email);
     return this.api.post<AuthResponse>('users/login', {
       email,
       password
     }).pipe(
       tap(response => {
+        console.log('Login response:', response);
         this.setAuthData(response);
       }),
       catchError(error => {

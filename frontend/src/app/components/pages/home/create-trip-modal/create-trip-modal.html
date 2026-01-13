@@ -15,24 +15,51 @@
     </header>
 
     <form class="create-trip-form__form" (ngSubmit)="onSubmit()">
-      <!-- Nombre del viaje -->
+      <!-- Título del viaje -->
       <label class="create-trip-form__field">
-        <span class="create-trip-form__label">Nombre del viaje :</span>
+        <span class="create-trip-form__label">Título del viaje *:</span>
         <input 
           type="text" 
           class="create-trip-form__input"
-          [(ngModel)]="tripForm.name"
-          name="tripName"
+          [(ngModel)]="tripForm.title"
+          name="tripTitle"
           placeholder="Ej: Aventura en Europa"
-          maxlength="30"
+          maxlength="20"
           required
         />
+      </label>
+
+      <!-- Destino -->
+      <label class="create-trip-form__field">
+        <span class="create-trip-form__label">Destino *:</span>
+        <input 
+          type="text" 
+          class="create-trip-form__input"
+          [(ngModel)]="tripForm.destination"
+          name="destination"
+          placeholder="Ej: París, Francia"
+          maxlength="20"
+          required
+        />
+      </label>
+
+      <!-- Descripción (opcional) -->
+      <label class="create-trip-form__field">
+        <span class="create-trip-form__label">Descripción (opcional):</span>
+        <textarea 
+          class="create-trip-form__input create-trip-form__textarea"
+          [(ngModel)]="tripForm.description"
+          name="description"
+          placeholder="Describe tu viaje..."
+          maxlength="500"
+          rows="3"
+        ></textarea>
       </label>
 
       <!-- Fecha Inicio y Fecha Fin -->
       <div class="create-trip-form__dates">
         <label class="create-trip-form__field create-trip-form__field--half">
-          <span class="create-trip-form__label">Fecha Inicio :</span>
+          <span class="create-trip-form__label">Fecha Inicio *:</span>
           <input 
             type="date" 
             class="create-trip-form__input"
@@ -44,7 +71,7 @@
         </label>
 
         <label class="create-trip-form__field create-trip-form__field--half">
-          <span class="create-trip-form__label">Fecha Fin :</span>
+          <span class="create-trip-form__label">Fecha Fin *:</span>
           <input 
             type="date" 
             class="create-trip-form__input"
@@ -60,7 +87,7 @@
 
       <!-- Presupuesto viaje (opcional) -->
       <label class="create-trip-form__field">
-        <span class="create-trip-form__label">Presupuesto viaje (opcional) :</span>
+        <span class="create-trip-form__label">Presupuesto viaje (opcional):</span>
         <span class="create-trip-form__budget-input">
           <input 
             type="number" 

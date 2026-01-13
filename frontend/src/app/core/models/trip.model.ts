@@ -10,26 +10,31 @@ export interface Participant {
 }
 
 export interface Trip {
-  id: string;
+  id: number;
+  title: string;
   destination: string;
   startDate: string;
   endDate: string;
-  budget: number;
+  budget?: number;
   description?: string;
+  tripCode?: string;
   imageUrl?: string;
-  participantIds: string[]; // IDs de usuarios
-  ownerId: string;
-  status: 'PLANNING' | 'ONGOING' | 'COMPLETED' | 'CANCELLED';
-  totalExpenses: number;
-  createdAt: string;
-  updatedAt: string;
+  participantIds?: string[]; // IDs de usuarios
+  ownerId?: string;
+  status?: 'PLANNING' | 'ONGOING' | 'COMPLETED' | 'CANCELLED';
+  totalExpenses?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  currentUserRole?: string;
+  members?: any[];
 }
 
 export interface CreateTripDto {
+  title: string;
   destination: string;
   startDate: string;
   endDate: string;
-  budget: number;
+  budget?: number;
   description?: string;
 }
 

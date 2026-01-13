@@ -119,6 +119,23 @@ public class UserService {
     }
 
     /**
+     * Obtiene el ID del usuario a partir del email.
+     * 
+     * @param email Email del usuario
+     * @return ID del usuario
+     * @throws ResourceNotFoundException si el usuario no existe
+     */
+    @Transactional(readOnly = true)
+    public Long getUserIdByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (!userOptional.isPresent()) {
+            throw new ResourceNotFoundException("Usuario no encontrado");
+        }
+        
+        return userOptional.get().getId();
+    }
+
+    /**
      * 4. Actualiza un usuario existente.
      * Verifica que el nuevo email no esté en uso por otro usuario.
      * 

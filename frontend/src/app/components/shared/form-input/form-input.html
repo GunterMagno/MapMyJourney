@@ -1,18 +1,12 @@
-<div class="form-input">
+<div class="form-input" style="opacity: 1; visibility: visible;">
   <div class="form-input__label-container">
     <label [for]="inputId" class="form-input__label">
       {{ label }}
-      @if (control?.hasError('required') && !control?.value) {
-        <span class="form-input__required">*</span>
-      }
+      <span class="form-input__required" *ngIf="control?.hasError('required') && !control?.value">*</span>
     </label>
     <div class="form-input__status">
-      @if (isValid && control?.value) {
-        <span class="form-input__success" title="Válido">✓</span>
-      }
-      @if (isInvalid && control?.value) {
-        <span class="form-input__error-icon" title="Error">✕</span>
-      }
+      <span class="form-input__success" title="Válido" *ngIf="isValid && control?.value">✓</span>
+      <span class="form-input__error-icon" title="Error" *ngIf="isInvalid && control?.value">✕</span>
     </div>
   </div>
   
@@ -23,11 +17,10 @@
     [formControl]="formControl"
     class="form-input__field"
     [class.form-input__field--error]="isInvalid && control?.value"
-    [class.form-input__field--valid]="isValid && control?.value">
+    [class.form-input__field--valid]="isValid && control?.value"
+    style="opacity: 1; visibility: visible;">
   
-  @if (isInvalid && control?.value) {
-    <span class="form-input__error-message" role="alert">
-      {{ errorMessage }}
-    </span>
-  }
+  <span class="form-input__error-message" role="alert" *ngIf="isInvalid && control?.value">
+    {{ errorMessage }}
+  </span>
 </div>

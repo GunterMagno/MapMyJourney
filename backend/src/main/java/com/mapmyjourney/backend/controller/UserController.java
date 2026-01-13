@@ -5,11 +5,11 @@ import com.mapmyjourney.backend.dto.UserDTO;
 import com.mapmyjourney.backend.dto.LoginRequestDTO;
 import com.mapmyjourney.backend.dto.LoginResponseDTO;
 import com.mapmyjourney.backend.service.UserService;
+import com.mapmyjourney.backend.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +38,10 @@ public class UserController {
     @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente - retorna token JWT")
     @ApiResponse(responseCode = "400", description = "Datos inválidos (email/contraseña débil)")
     @ApiResponse(responseCode = "409", description = "El email ya está registrado")
-    public ResponseEntity<LoginResponseDTO> registerUser(@Valid @RequestBody(description = "Datos del usuario a registrar") UserCreateRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> registerUser(
+            @Valid @org.springframework.web.bind.annotation.RequestBody 
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del usuario a registrar") 
+            UserCreateRequestDTO request) {
         LoginResponseDTO response = userService.registerUserAndAuthenticate(request);
         return ResponseEntity.status(201).body(response);
     }
@@ -54,7 +57,8 @@ public class UserController {
     @ApiResponse(responseCode = "401", description = "Email o contraseña inválidos")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     public ResponseEntity<LoginResponseDTO> login(
-            @RequestBody LoginRequestDTO request) {
+            @org.springframework.web.bind.annotation.RequestBody LoginRequestDTO request) {
+        
         // Validar que email y password no sean nulos o vacíos
         if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
             throw new ValidationException("El email es requerido");
@@ -116,7 +120,9 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(
             @Parameter(description = "ID del usuario a actualizar", example = "1")
             @PathVariable Long userId, 
-            @Valid @RequestBody(description = "Nuevos datos del usuario") UserCreateRequestDTO request) {
+            @Valid @org.springframework.web.bind.annotation.RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Nuevos datos del usuario") 
+            UserCreateRequestDTO request) {
         UserDTO updatedUser = userService.updateUser(userId, request);
         return ResponseEntity.ok(updatedUser);
     }

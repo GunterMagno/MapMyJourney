@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, inject, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 // Importar componentes compartidos
 import { ButtonComponent } from '../../shared/button/button';
 import { FormInputComponent } from '../../shared/form-input/form-input';
+import { AuthService } from '../../../services/auth.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -19,10 +21,15 @@ import { FormInputComponent } from '../../shared/form-input/form-input';
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   loginForm!: FormGroup;
   registerForm!: FormGroup;
   activeTab: 'login' | 'register' = 'login';
+  isLoading = false;
+
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,6 +38,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForms();
+  }
+
+  ngAfterViewInit(): void {
+    this.cdr.detectChanges();
   }
 
   /**
@@ -67,15 +78,25 @@ export class LoginComponent implements OnInit {
    * Maneja el envío del formulario de login
    */
   onLogin(): void {
-    if (this.loginForm.valid) {
-      const credentials = this.loginForm.value;
-      console.log('Login attempt with:', credentials);
+    console.log('Login form valid:', this.loginForm.valid);
+    console.log('Login form value:', this.loginForm.value);
+    if (this.loginForm.valid && !this.isLoading) {
+      this.isLoading = true;
+      const { email, password } = this.loginForm.value;
+      console.log('Attempting login with:', email);
       
-      // TODO: Llamar al servicio de autenticación
-      // this.authService.login(credentials).subscribe(...)
-      
-      // Redireccionar al dashboard
-      this.router.navigate(['/dashboard']);
+      this.authService.login(email, password).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.toastService.success('¡Bienvenido de vuelta!');
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          const message = error.error?.message || 'Error al iniciar sesión. Verifica tus credenciales.';
+          this.toastService.error(message);
+        }
+      });
     }
   }
 
@@ -83,15 +104,25 @@ export class LoginComponent implements OnInit {
    * Maneja el envío del formulario de registro
    */
   onRegister(): void {
-    if (this.registerForm.valid) {
-      const userData = this.registerForm.value;
-      console.log('Register attempt with:', userData);
+    console.log('Register form valid:', this.registerForm.valid);
+    console.log('Register form value:', this.registerForm.value);
+    if (this.registerForm.valid && !this.isLoading) {
+      this.isLoading = true;
+      const { fullName, email, password } = this.registerForm.value;
+      console.log('Attempting registration with:', email);
       
-      // TODO: Llamar al servicio de autenticación
-      // this.authService.register(userData).subscribe(...)
-      
-      // Redirecccionar al dashboard
-      this.router.navigate(['/dashboard']);
+      this.authService.signup(fullName, email, password).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.toastService.success('¡Cuenta creada exitosamente!');
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          const message = error.error?.message || 'Error en el registro. Intenta de nuevo.';
+          this.toastService.error(message);
+        }
+      });
     }
   }
 

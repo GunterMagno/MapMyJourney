@@ -3,6 +3,7 @@ package com.mapmyjourney.backend.controller;
 import com.mapmyjourney.backend.dto.ExpenseCreateRequestDTO;
 import com.mapmyjourney.backend.dto.ExpenseDTO;
 import com.mapmyjourney.backend.service.ExpenseService;
+import com.mapmyjourney.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,7 @@ import java.util.List;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final UserService userService;
 
     /**
      * 1. Crea un nuevo gasto en el viaje.
@@ -43,8 +45,10 @@ public class ExpenseController {
     @ApiResponse(responseCode = "401", description = "No autenticado")
     public ResponseEntity<ExpenseDTO> createExpense(
             @Parameter(description = "ID del viaje", example = "1")
-            @PathVariable Long tripId, 
-            @Valid @RequestBody(description = "Datos del gasto a registrar") ExpenseCreateRequestDTO request) {
+            @PathVariable Long tripId,
+            @Valid @org.springframework.web.bind.annotation.RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del gasto a registrar") 
+            ExpenseCreateRequestDTO request) {
         Long userId = extractUserIdFromContext();
         ExpenseDTO createdExpense = expenseService.createExpense(tripId, request, userId);
         return ResponseEntity.status(201).body(createdExpense);
@@ -108,7 +112,9 @@ public class ExpenseController {
             @PathVariable Long tripId, 
             @Parameter(description = "ID del gasto a actualizar", example = "5")
             @PathVariable Long expenseId, 
-            @Valid @RequestBody(description = "Nuevos datos del gasto") ExpenseCreateRequestDTO request) {
+            @Valid @org.springframework.web.bind.annotation.RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Nuevos datos del gasto") 
+            ExpenseCreateRequestDTO request) {
         Long userId = extractUserIdFromContext();
         ExpenseDTO updatedExpense = expenseService.updateExpense(expenseId, request, userId);
         return ResponseEntity.ok(updatedExpense);
@@ -142,8 +148,7 @@ public class ExpenseController {
     private Long extractUserIdFromContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        // TODO: Obtener userId a partir del email desde UserService
-        return 1L;
+        return userService.getUserIdByEmail(email);
     }
 
 }

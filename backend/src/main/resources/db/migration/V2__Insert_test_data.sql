@@ -70,3 +70,10 @@ INSERT INTO expense_splits (id, expense_id, participant_user_id, amount, percent
 (14, 6, 1, 400.00, 33.33, TRUE),
 (15, 6, 2, 400.00, 33.33, FALSE),
 (16, 6, 3, 400.00, 33.34, FALSE);
+
+-- Resetear secuencias AUTO_INCREMENT para evitar conflictos de PRIMARY KEY
+ALTER TABLE users ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE trips ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE trip_members ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE expenses ALTER COLUMN id RESTART WITH 100;
+ALTER TABLE expense_splits ALTER COLUMN id RESTART WITH 100;

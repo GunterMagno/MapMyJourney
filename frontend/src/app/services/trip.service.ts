@@ -3,14 +3,17 @@ import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 
 export interface TripFormData {
-  name: string;
+  title: string;
+  destination: string;
+  description?: string;
   startDate: string;
   endDate: string;
   budget?: number;
 }
 
 export interface Trip extends TripFormData {
-  id: string;
+  id: number;
+  tripCode: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,22 +38,23 @@ export class TripService {
    * POST /api/trips
    */
   createTrip(tripData: TripFormData): Observable<Trip> {
+    console.log('TripService.createTrip called with:', tripData);
     return this.api.post<Trip>('trips', tripData);
   }
 
   /**
    * Obtener todos los viajes del usuario autenticado
-   * GET /api/trips
+   * GET /api/trips/my-trips
    */
   getUserTrips(): Observable<Trip[]> {
-    return this.api.get<Trip[]>('trips');
+    return this.api.get<Trip[]>('trips/my-trips');
   }
 
   /**
    * Obtener un viaje específico por ID
    * GET /api/trips/:id
    */
-  getTripById(id: string): Observable<Trip> {
+  getTripById(id: number): Observable<Trip> {
     return this.api.get<Trip>(`trips/${id}`);
   }
 
@@ -58,7 +62,7 @@ export class TripService {
    * Actualizar un viaje
    * PUT /api/trips/:id
    */
-  updateTrip(id: string, tripData: Partial<TripFormData>): Observable<Trip> {
+  updateTrip(id: number, tripData: Partial<TripFormData>): Observable<Trip> {
     return this.api.put<Trip>(`trips/${id}`, tripData);
   }
 
@@ -66,7 +70,7 @@ export class TripService {
    * Eliminar un viaje
    * DELETE /api/trips/:id
    */
-  deleteTrip(id: string): Observable<void> {
+  deleteTrip(id: number): Observable<void> {
     return this.api.delete<void>(`trips/${id}`);
   }
 }

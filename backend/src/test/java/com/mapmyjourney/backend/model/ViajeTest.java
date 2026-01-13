@@ -1,13 +1,7 @@
 package com.mapmyjourney.backend.model;
 
 // import com.mapmyjourney.backend.fileUtils.Markdown;
-import org.junit.jupiter.api.Test;
 // import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Clase de prueba para la clase {@link Viaje}.

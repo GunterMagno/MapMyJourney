@@ -41,16 +41,18 @@ export class HomeComponent {
   }
 
   onTripCreated(tripData: TripFormData): void {
+    console.log('Creating trip with data:', tripData);
     // Mostrar loading
     const stopLoading = this.loadingService.start();
 
     // Crear el viaje en el backend
     this.tripService.createTrip(tripData).subscribe({
       next: (createdTrip: Trip) => {
+        console.log('Trip created successfully:', createdTrip);
         stopLoading();
 
         // Mostrar toast de éxito
-        this.toastService.success(`¡Viaje "${createdTrip.name}" creado exitosamente!`);
+        this.toastService.success(`¡Viaje "${createdTrip.title}" creado exitosamente!`);
 
         // Cerrar el modal
         if (this.createTripModal) {
@@ -66,6 +68,8 @@ export class HomeComponent {
       error: (error: any) => {
         stopLoading();
         console.error('Error al crear viaje:', error);
+        console.error('Error details:', error.error);
+        console.error('Error status:', error.status);
         this.toastService.error('Error al crear el viaje. Intenta de nuevo.');
       }
     });

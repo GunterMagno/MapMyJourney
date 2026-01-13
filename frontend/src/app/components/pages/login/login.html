@@ -94,10 +94,10 @@
         </article>
 
         <app-button
-          label="Iniciar Sesión"
+          [label]="isLoading ? 'Iniciando...' : 'Iniciar Sesión'"
           variant="primary"
           size="lg"
-          [disabled]="loginForm.invalid"
+          [disabled]="loginForm.invalid || isLoading"
           type="submit"
           class="login-page__submit-btn">
         </app-button>
@@ -151,10 +151,10 @@
         </label>
 
         <app-button
-          label="Registrarse"
+          [label]="isLoading ? 'Registrando...' : 'Registrarse'"
           variant="primary"
           size="lg"
-          [disabled]="registerForm.invalid"
+          [disabled]="registerForm.invalid || isLoading"
           type="submit"
           class="login-page__submit-btn">
         </app-button>
