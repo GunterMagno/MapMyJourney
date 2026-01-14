@@ -1,0 +1,42 @@
+<div class="trip-dashboard">
+  <!-- Loading State -->
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+  <!-- Error State -->
+  <div class="trip-dashboard__error" *ngIf="error && !isLoading">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="trip-dashboard__grid" *ngIf="dashboardData && !isLoading">
+    <!-- Fila Superior: Itinerario + Documentos -->
+    <div class="trip-dashboard__row">
+      <div class="trip-dashboard__widget">
+        <app-dashboard-itinerary-widget
+          [days]="dashboardData.itinerary"
+        ></app-dashboard-itinerary-widget>
+      </div>
+
+      <div class="trip-dashboard__widget">
+        <app-dashboard-documents-widget
+          [documents]="dashboardData.documents"
+        ></app-dashboard-documents-widget>
+      </div>
+    </div>
+
+    <!-- Fila Inferior: Gastos + Votaciones -->
+    <div class="trip-dashboard__row">
+      <div class="trip-dashboard__widget">
+        <app-dashboard-expenses-widget
+          [expenses]="dashboardData.expenses"
+        ></app-dashboard-expenses-widget>
+      </div>
+
+      <div class="trip-dashboard__widget">
+        <app-dashboard-polls-widget
+          [polls]="dashboardData.polls"
+        ></app-dashboard-polls-widget>
+      </div>
+    </div>
+  </div>
+</div>

@@ -283,7 +283,7 @@
               <p class="trip-detail__expense-description">{{ expense.description }}</p>
               
               <footer class="trip-detail__expense-meta">
-                <span class="trip-detail__expense-payer">{{ expense.payer?.name }}</span>
+                <span class="trip-detail__expense-payer">{{ expense.payer.name }}</span>
                 <span class="trip-detail__expense-date">{{ expense.date | date: 'short' }}</span>
                 <button 
                   class="trip-detail__expense-delete"

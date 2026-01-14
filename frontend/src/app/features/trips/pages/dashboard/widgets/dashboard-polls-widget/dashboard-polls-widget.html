@@ -1,0 +1,30 @@
+<div class="polls-widget">
+  <h3 class="polls-widget__title">
+    <img src="/assets/icons/sidebar/votes.svg" alt="Votaciones" class="polls-widget__icon">
+    Votaciones
+  </h3>
+
+  <div
+    *ngFor="let poll of polls"
+    class="polls-widget__poll"
+  >
+    <h4 class="polls-widget__question">{{ poll.question }}</h4>
+
+    <div
+      *ngFor="let option of poll.options"
+      class="polls-widget__option"
+    >
+      <div class="polls-widget__option-header">
+        <span class="polls-widget__option-name">{{ option.name }}</span>
+        <span class="polls-widget__option-votes">{{ option.votes }} votos</span>
+      </div>
+
+      <div class="polls-widget__progress-bar">
+        <div
+          class="polls-widget__progress-fill"
+          [style.width.%]="getPercentage(option.votes, poll.options)"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

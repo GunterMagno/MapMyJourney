@@ -9,9 +9,16 @@
 
 .trips-page__header {
   display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-12);
+}
+
+.trips-page__header-top {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-12);
+  gap: var(--spacing-6);
 }
 
 .trips-page__header h1 {

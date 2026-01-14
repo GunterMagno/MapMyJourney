@@ -6,7 +6,7 @@
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(20) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(20) DEFAULT 'USER',
@@ -19,8 +19,8 @@ CREATE INDEX IF NOT EXISTS idx_email ON users(email);
 -- Tabla de viajes
 CREATE TABLE IF NOT EXISTS trips (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(20) NOT NULL,
-    destination VARCHAR(20) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    destination VARCHAR(255) NOT NULL,
     description TEXT,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,

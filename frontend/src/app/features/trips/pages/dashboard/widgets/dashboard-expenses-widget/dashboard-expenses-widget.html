@@ -1,0 +1,36 @@
+<div class="expenses-widget">
+  <h3 class="expenses-widget__title">
+    <img src="/assets/icons/sidebar/expenses.svg" alt="Gastos" class="expenses-widget__icon">
+    Gastos
+  </h3>
+
+  <div class="expenses-widget__total">
+    <span class="expenses-widget__amount">{{ expenses.total | number:'1.2-2' }} €</span>
+    <span class="expenses-widget__subtitle">Gastos totales del viaje</span>
+  </div>
+
+  <ul class="expenses-widget__list">
+    <li
+      *ngFor="let expense of expenses.items"
+      class="expenses-widget__item"
+    >
+      <div class="expenses-widget__item-header">
+        <strong>{{ expense.description }}</strong>
+        <span class="expenses-widget__item-amount">{{ expense.amount | number:'1.2-2' }} €</span>
+      </div>
+      <div class="expenses-widget__item-details">
+        <span>Pagado por: {{ expense.paidBy }}</span>
+        <span>{{ expense.date }}</span>
+      </div>
+    </li>
+  </ul>
+
+  <div class="expenses-widget__action">
+    <app-button
+      label="Añadir Gasto"
+      variant="primary"
+      size="md"
+      (click)="addExpense()"
+    ></app-button>
+  </div>
+</div>

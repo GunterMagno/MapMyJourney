@@ -74,7 +74,7 @@ export class TripService {
    * Eliminar un viaje
    * @param tripId ID del viaje
    */
-  deleteTrip(tripId: string): Observable<void> {
+  deleteTrip(tripId: number): Observable<void> {
     return this.api.delete<void>(`${this.endpoint}/${tripId}`);
   }
 

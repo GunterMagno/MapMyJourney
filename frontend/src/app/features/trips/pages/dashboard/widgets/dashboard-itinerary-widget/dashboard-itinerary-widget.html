@@ -1,0 +1,40 @@
+<div class="itinerary-widget">
+  <h3 class="itinerary-widget__title">
+    <img src="/assets/icons/sidebar/itinerary.svg" alt="Itinerario" class="itinerary-widget__icon">
+    Itinerario
+  </h3>
+
+  <div class="itinerary-widget__timeline">
+    <div
+      *ngFor="let day of days; let i = index"
+      class="itinerary-widget__day-card"
+      [class.itinerary-widget__day-card--completed]="day.isCompleted"
+      (click)="goToDay(i)"
+    >
+      <div class="itinerary-widget__date">{{ day.date }}</div>
+
+      <ul class="itinerary-widget__activities" *ngIf="day.activities.length > 0">
+        <li *ngFor="let activity of day.activities">• {{ activity }}</li>
+      </ul>
+
+      <p class="itinerary-widget__no-activities" *ngIf="day.activities.length === 0">
+        Sin actividades aún
+      </p>
+
+      <button
+        *ngIf="!day.isCompleted"
+        class="itinerary-widget__day-button"
+        (click)="goToDay(i); $event.stopPropagation()"
+      >
+        →
+      </button>
+
+      <div
+        *ngIf="day.isCompleted"
+        class="itinerary-widget__completed-badge"
+      >
+        ✓ Completado
+      </div>
+    </div>
+  </div>
+</div>

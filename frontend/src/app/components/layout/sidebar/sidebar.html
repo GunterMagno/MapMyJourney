@@ -1,58 +1,52 @@
 <aside class="sidebar" [class.sidebar--collapsed]="isCollapsed">
-  <button class="sidebar__toggle" (click)="toggleSidebar()" title="Toggle sidebar">
-    {{ isCollapsed ? '→' : '←' }}
-  </button>
+  <!-- Header del Viaje -->
+  <div class="sidebar__trip-header" *ngIf="tripInfo">
+    <button 
+      class="sidebar__toggle" 
+      (click)="toggleSidebar()"
+      aria-label="Toggle sidebar"
+      title="Colapsar/Expandir menú"
+    >
+      <span class="sidebar__toggle-icon">{{ isCollapsed ? '☰' : '✕' }}</span>
+    </button>
+    
+    <div class="sidebar__trip-info" *ngIf="!isCollapsed">
+      <h2 class="sidebar__trip-title">{{ tripInfo.title }}</h2>
+      <p class="sidebar__trip-destination">{{ getDestination() }}</p>
+      <p class="sidebar__trip-dates">{{ getFormattedDates() }}</p>
+    </div>
+  </div>
 
-  <article class="sidebar__header" *ngIf="!isCollapsed">
-    <h3 class="sidebar__trip-title">{{ tripTitle }}</h3>
-    <p class="sidebar__trip-dates">{{ tripDates }}</p>
-  </article>
-
-  <nav class="sidebar__nav">
-    <h2 class="sidebar__nav-title" *ngIf="!isCollapsed">Gestión del Viaje</h2>
+  <!-- Enlaces de Navegación -->
+  <nav class="sidebar__nav" *ngIf="navLinks.length > 0">
     <ul class="sidebar__list">
-      <li class="sidebar__item">
-        <a routerLink="/dashboard" routerLinkActive="active" class="sidebar__link" title="Dashboard">
-          <img class="sidebar__icon" src="/assets/images/dashboard-icon.svg" alt="Dashboard">
-          <span class="sidebar__label" *ngIf="!isCollapsed">Dashboard</span>
-        </a>
-      </li>
-      <li class="sidebar__item">
-        <a routerLink="/itinerario" routerLinkActive="active" class="sidebar__link" title="Itinerario">
-          <img class="sidebar__icon" src="/assets/images/itinerary-icon.svg" alt="Itinerario">
-          <span class="sidebar__label" *ngIf="!isCollapsed">Itinerario</span>
-        </a>
-      </li>
-      <li class="sidebar__item">
-        <a routerLink="/gastos" routerLinkActive="active" class="sidebar__link" title="Gastos">
-          <img class="sidebar__icon" src="/assets/images/expenses-icon.svg" alt="Gastos">
-          <span class="sidebar__label" *ngIf="!isCollapsed">Gastos</span>
-        </a>
-      </li>
-      <li class="sidebar__item">
-        <a routerLink="/miembros" routerLinkActive="active" class="sidebar__link" title="Miembros">
-          <img class="sidebar__icon" src="/assets/images/members-icon.svg" alt="Miembros">
-          <span class="sidebar__label" *ngIf="!isCollapsed">Miembros</span>
-        </a>
-      </li>
-      <li class="sidebar__item">
-        <a routerLink="/chat" routerLinkActive="active" class="sidebar__link" title="Chat">
-          <img class="sidebar__icon" src="/assets/images/chat-icon.svg" alt="Chat">
-          <span class="sidebar__label" *ngIf="!isCollapsed">Chat</span>
-        </a>
-      </li>
-      <li class="sidebar__item">
-        <a routerLink="/documentos" routerLinkActive="active" class="sidebar__link" title="Documentos">
-          <img class="sidebar__icon" src="/assets/images/documents-icon.svg" alt="Documentos">
-          <span class="sidebar__label" *ngIf="!isCollapsed">Documentos</span>
-        </a>
-      </li>
-      <li class="sidebar__item">
-        <a routerLink="/votaciones" routerLinkActive="active" class="sidebar__link" title="Votaciones">
-          <img class="sidebar__icon" src="/assets/images/voting-icon.svg" alt="Votaciones">
-          <span class="sidebar__label" *ngIf="!isCollapsed">Votaciones</span>
+      <li class="sidebar__item" *ngFor="let link of navLinks">
+        <a 
+          [routerLink]="link.route"
+          routerLinkActive="sidebar__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="sidebar__link"
+          [title]="link.label"
+        >
+          <img class="sidebar__icon" [src]="link.icon" [alt]="link.label">
+          <span class="sidebar__label" *ngIf="!isCollapsed">{{ link.label }}</span>
+          <span class="sidebar__badge" *ngIf="link.badge && link.badge > 0 && !isCollapsed">
+            {{ link.badge }}
+          </span>
         </a>
       </li>
     </ul>
   </nav>
+
+  <!-- Footer con botón de Chat -->
+  <div class="sidebar__footer">
+    <button 
+      class="sidebar__chat-button" 
+      (click)="openChat()"
+      aria-label="Abrir chat"
+      title="Abrir chat del viaje"
+    >
+      <img class="sidebar__chat-icon" src="/assets/icons/sidebar/chat.svg" alt="Chat">
+    </button>
+  </div>
 </aside>

@@ -1,0 +1,29 @@
+<app-header></app-header>
+
+<main class="status-container">
+  <section class="status-header">
+    <h1 class="status-title">Estado de Servicios</h1>
+    <p class="status-subtitle">Verifica el estado actual de todos los servicios de MapMyJourney</p>
+  </section>
+
+  <section class="status-grid">
+    <article class="status-card" *ngFor="let service of services">
+      <div class="status-card__header">
+        <h2 class="status-card__title">{{ service.name }}</h2>
+        <div class="status-badge" [style.background-color]="getStatusColor(service.status)">
+          <span class="status-badge__dot"></span>
+          <span class="status-badge__text">{{ getStatusText(service.status) }}</span>
+        </div>
+      </div>
+      <div class="status-card__body">
+        <p class="status-card__endpoint">{{ service.endpoint }}</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="status-info">
+    <p class="status-refresh">Los estados se actualizan automáticamente cada 30 segundos.</p>
+  </section>
+</main>
+
+<app-footer></app-footer>

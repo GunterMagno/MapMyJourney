@@ -4,18 +4,23 @@
 -- Descripcion: Inserción de usuarios y datos de prueba para desarrollo
 
 -- Usuarios de prueba
--- Contraseña de ejemplo: SecurePass123 (hasheada con BCrypt)
+-- Contraseña de ejemplo: test123
+-- BCrypt hash: $2a$10$slYQmyNdGzin7olVN3P9XO8XiI3eKKGJYNJM7FhJWN/S5K4gZXp7K
+-- Nuevo usuario - Contraseña: password123
+-- BCrypt hash: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/KLm
 INSERT INTO users (id, name, email, password_hash, role) VALUES
-(1, 'Juan García', 'juan@example.com', '$2a$10$K.CiBrJx.7U0mF/RaKSqruJNpVY0i4nxNAQrqFYfVVHIkxEL0p3uy', 'USER'),
-(2, 'María López', 'maria@example.com', '$2a$10$K.CiBrJx.7U0mF/RaKSqruJNpVY0i4nxNAQrqFYfVVHIkxEL0p3uy', 'USER'),
-(3, 'Carlos Rodríguez', 'carlos@example.com', '$2a$10$K.CiBrJx.7U0mF/RaKSqruJNpVY0i4nxNAQrqFYfVVHIkxEL0p3uy', 'USER'),
-(4, 'Admin Sistema', 'admin@example.com', '$2a$10$K.CiBrJx.7U0mF/RaKSqruJNpVY0i4nxNAQrqFYfVVHIkxEL0p3uy', 'ADMIN');
+(1, 'Juan García', 'juan@example.com', '$2a$10$slYQmyNdGzin7olVN3P9XO8XiI3eKKGJYNJM7FhJWN/S5K4gZXp7K', 'USER'),
+(2, 'María López', 'maria@example.com', '$2a$10$slYQmyNdGzin7olVN3P9XO8XiI3eKKGJYNJM7FhJWN/S5K4gZXp7K', 'USER'),
+(3, 'Carlos Rodríguez', 'carlos@example.com', '$2a$10$slYQmyNdGzin7olVN3P9XO8XiI3eKKGJYNJM7FhJWN/S5K4gZXp7K', 'USER'),
+(4, 'Admin Sistema', 'admin@example.com', '$2a$10$slYQmyNdGzin7olVN3P9XO8XiI3eKKGJYNJM7FhJWN/S5K4gZXp7K', 'ADMIN'),
+(5, 'Nuevo Usuario', 'nuevo@test.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/KLm', 'USER');
 
 -- Viajes
 INSERT INTO trips (id, title, destination, description, start_date, end_date, budget, trip_code) VALUES
 (1, 'Viaje a París', 'París, Francia', 'Fin de semana con amigos explorando la ciudad de la luz', '2025-06-01', '2025-06-05', 2000.00, 'PARIS25'),
 (2, 'Barcelona Week', 'Barcelona, España', 'Una semana completa en la capital de Cataluña', '2025-07-15', '2025-07-22', 3500.00, 'BCN0725'),
-(3, 'Tokyo Adventure', 'Tokio, Japón', 'Viaje épico a Japón durante dos semanas', '2025-08-10', '2025-08-25', 5000.00, 'TOKYO25');
+(3, 'Tokyo Adventure', 'Tokio, Japón', 'Viaje épico a Japón durante dos semanas', '2025-08-10', '2025-08-25', 5000.00, 'TOKYO25'),
+(4, 'Viaje a Bali', 'Bali, Indonesia', 'Una semana de playa y relax', '2026-03-01', '2026-03-08', 3000.00, 'BALI26');
 
 -- Miembros de viaje
 INSERT INTO trip_members (id, user_id, trip_id, role) VALUES
@@ -25,7 +30,8 @@ INSERT INTO trip_members (id, user_id, trip_id, role) VALUES
 (4, 1, 2, 'OWNER'),
 (5, 2, 2, 'EDITOR'),
 (6, 1, 3, 'OWNER'),
-(7, 3, 3, 'EDITOR');
+(7, 3, 3, 'EDITOR'),
+(8, 5, 4, 'OWNER');
 
 -- Gastos
 INSERT INTO expenses (id, trip_id, paid_by_user_id, description, amount, expense_date, split_type) VALUES

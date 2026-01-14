@@ -1,0 +1,39 @@
+.trip-dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+
+  &__error {
+    background-color: var(--bg-surface);
+    border: 2px solid var(--text-danger);
+    border-radius: 8px;
+    padding: var(--spacing-6);
+    text-align: center;
+    color: var(--text-danger);
+    margin-bottom: var(--spacing-6);
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+
+  &__grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-6);
+
+    @media (max-width: 1023px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__widget {
+    min-height: 400px;
+  }
+}

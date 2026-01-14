@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
-import { ResolveFn, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { ResolveFn, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Observable, of, EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Interfaz para datos de Viaje (Trip)
@@ -63,26 +64,57 @@ class TripService {
 }
 
 /**
- * Trip Resolver - Precarga datos del viaje
+ * Trip Resolver (ResolveFn Moderno)
  *
- * Se ejecuta antes de activar la ruta, asegurando que el componente
- * recibe los datos de inmediato. Si no encuentra el viaje, retorna null
- * y el componente puede mostrar un mensaje de error.
+ * Resolvers y Carga de Datos
+ *
+ * Comportamiento:
+ * ✅ Se ejecuta ANTES de activar la ruta
+ * ✅ Asegura que los datos estén listos antes de render (sin parpadeos)
+ * ✅ Si falla o no existe, redirige a 404/listado y cancela la carga
+ *
+ * Manejo de Errores:
+ * - Si no encuentra el viaje (id no existe) → Redirige a /404
+ * - Si hay error en la API → Captura con catchError y redirige
+ * - Devuelve EMPTY para cancelar la carga del componente
  *
  * Uso en rutas:
- * { path: 'trips/:id', component: TripDetailComponent, resolve: { trip: tripResolver } }
+ * {
+ *   path: ':id',
+ *   component: TripDetailComponent,
+ *   resolve: { trip: tripResolver }
+ * }
+ *
+ * En el componente:
+ * constructor(private route: ActivatedRoute) {
+ *   const trip = this.route.snapshot.data['trip'];
+ * }
+ *
+ * @param route ActivatedRouteSnapshot con paramMap
+ * @returns Observable<Trip> con los datos del viaje
+ * @throws Redirige a 404 si el viaje no existe
  */
 export const tripResolver: ResolveFn<Trip | null> = (
   route: ActivatedRouteSnapshot
 ) => {
+  const router = inject(Router);
   const tripService = new TripService();
   const id = route.paramMap.get('id');
 
   if (!id) {
-    return of(null);
+    // ID no proporcionado
+    router.navigate(['/404']);
+    return EMPTY;
   }
 
-  return tripService.getTripById(id);
+  return tripService.getTripById(id).pipe(
+    catchError((error) => {
+      console.error('Error al cargar viaje:', error);
+      // Redirige a 404 si hay error o viaje no existe
+      router.navigate(['/404']);
+      return EMPTY;
+    })
+  );
 };
 
 /**
@@ -96,4 +128,3 @@ export const productResolver = tripResolver;
  * @deprecated Usar Trip en su lugar
  */
 export type Product = Trip;
-

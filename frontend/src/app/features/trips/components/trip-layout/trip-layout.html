@@ -1,0 +1,11 @@
+<div class="trip-layout">
+  <app-sidebar 
+    [tripInfo]="tripInfo" 
+    [navLinks]="navLinks"
+    [class.sidebar--collapsed]="false"
+  ></app-sidebar>
+  
+  <main class="trip-layout__content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

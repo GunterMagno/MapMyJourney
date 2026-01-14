@@ -1,79 +1,105 @@
 // ============================================================================
-// COMPONENTE: SIDEBAR
+// COMPONENTE: SIDEBAR - Layout de Viaje
 // ============================================================================
-// Desktop: Sidebar fijo a la izquierda
-// Móvil: Menú off-canvas con hamburguesa
-// Tablets: Transición gradual
+// Estructura:
+// - Header: Información del viaje (título, destino, fechas)
+// - Nav: Enlaces de navegación (Dashboard, Itinerario, Gastos, etc.)
+// - Footer: Botón de chat flotante
+// 
+// Responsive:
+// - Desktop (1024px+): Sidebar fijo vertical
+// - Tablet (768-1023px): Sidebar colapsado con iconos
+// - Móvil (<768px): Menú off-canvas
 
-// ============================================================================
-// ESTADO BASE (Desktop - 1024px+)
-// ============================================================================
 .sidebar {
-  width: 20%;
-  min-width: 200px;
-  padding: var(--spacing-12) var(--spacing-16);
-  background-color: var(--quinary-color);
-  border-right: var(--border-thin) solid var(--border-color);
-  height: 100vh;
-  overflow-y: auto;
+  width: 240px;
+  min-height: 100vh;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  position: relative;
-  transition: width var(--transition-medium), transform var(--transition-medium);
+  transition: all var(--transition-medium);
+  position: sticky;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+
+  // ============================================================================
+  // HEADER DEL VIAJE
+  // ============================================================================
+  &__trip-header {
+    background-color: var(--text-main);
+    color: var(--text-inverse);
+    padding: var(--spacing-6) var(--spacing-4);
+    position: relative;
+    flex-shrink: 0;
+  }
 
   &__toggle {
     position: absolute;
-    top: var(--spacing-4);
-    right: var(--spacing-4);
-    width: 32px;
-    height: 32px;
+    top: var(--spacing-3);
+    right: var(--spacing-3);
+    background: none;
     border: none;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #FFFFFF;
-    border-radius: var(--border-radius-small);
-    font-size: var(--font-size-medium);
+    color: var(--text-inverse);
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: background-color var(--transition-fast);
-    display: flex;
+    padding: var(--spacing-2);
+    display: none;
     align-items: center;
     justify-content: center;
+    transition: opacity var(--transition-fast);
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
+      opacity: 0.8;
+    }
+
+    @media (max-width: 767px) {
+      display: flex;
     }
   }
 
-  &__header {
-    margin-bottom: var(--spacing-12);
-    margin-top: var(--spacing-8);
+  &__toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__trip-info {
+    margin-top: var(--spacing-2);
   }
 
   &__trip-title {
-    font-family: var(--font-primary);
-    font-size: var(--font-size-tittle-h4);
-    font-weight: var(--font-weight-bold);
-    color: #FFFFFF;
+    font-size: 1.25rem;
+    font-weight: 600;
     margin: 0 0 var(--spacing-2) 0;
+    color: var(--text-inverse);
+    line-height: 1.2;
+  }
+
+  &__trip-destination {
+    font-size: 0.875rem;
+    margin: 0 0 var(--spacing-1) 0;
+    opacity: 0.95;
+    color: var(--text-inverse);
   }
 
   &__trip-dates {
-    font-family: var(--font-secondary);
-    font-size: var(--font-size-small);
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.75rem;
     margin: 0;
+    opacity: 0.85;
+    color: var(--text-inverse);
   }
 
+  // ============================================================================
+  // NAVEGACIÓN
+  // ============================================================================
   &__nav {
-    flex-grow: 1;
-  }
-
-  &__nav-title {
-    font-family: var(--font-primary);
-    font-size: var(--font-size-small);
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 var(--spacing-8) 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    flex: 1;
+    padding: var(--spacing-4) 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
   }
 
   &__list {
@@ -82,7 +108,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-6);
+    gap: var(--spacing-2);
   }
 
   &__item {
@@ -92,32 +118,25 @@
   &__link {
     display: flex;
     align-items: center;
-    gap: var(--spacing-4);
+    gap: var(--spacing-3);
     padding: var(--spacing-3) var(--spacing-4);
+    color: var(--text-secondary);
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.9);
-    border-radius: var(--border-radius-small);
-    transition: background-color var(--transition-fast);
     position: relative;
+    transition: all var(--transition-fast);
+    border-left: 3px solid transparent;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: var(--bg-light);
+      color: var(--text-main);
     }
 
-    &.active {
-      background-color: rgba(255, 255, 255, 0.2);
-      color: #FFFFFF;
-
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background-color: var(--principal-color);
-        border-radius: var(--border-radius-small);
-      }
+    // Estado activo
+    &--active {
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      font-weight: 600;
+      border-left-color: var(--principal-color);
     }
   }
 
@@ -128,138 +147,183 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: currentColor;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   }
 
   &__label {
-    font-family: var(--font-secondary);
-    font-size: var(--font-size-medium);
-    font-weight: var(--font-weight-medium);
+    flex: 1;
+    font-size: 0.9375rem;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  &__chat-btn {
+  &__badge {
+    background-color: var(--principal-color);
+    color: var(--text-inverse);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 12px;
+    min-width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  // ============================================================================
+  // FOOTER (Botón de Chat)
+  // ============================================================================
+  &__footer {
+    padding: var(--spacing-4);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__chat-button {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background-color: var(--quaternary-color);
+    background-color: var(--text-main);
+    color: var(--text-inverse);
     border: none;
     cursor: pointer;
-    align-self: center;
-    margin-top: auto;
-    margin-bottom: var(--spacing-4);
+    box-shadow: var(--shadow-md);
     transition: transform var(--transition-fast), background-color var(--transition-fast);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #FFFFFF;
-
-    svg {
-      width: 24px;
-      height: 24px;
-      stroke-width: 2;
-    }
+    padding: 0;
 
     &:hover {
       transform: scale(1.1);
-      background-color: var(--quaternary-color-hover);
+      background-color: var(--principal-color);
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
   }
 
-  &--collapsed {
-    width: 100px;
-    padding: var(--spacing-8) var(--spacing-4);
+  &__chat-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
 
-    .sidebar__list {
-      gap: var(--spacing-8);
+  // ============================================================================
+  // ESTADO: COLAPSADO (Móvil)
+  // ============================================================================
+  &--collapsed {
+    width: 80px;
+    
+    .sidebar__trip-info {
+      display: none;
+    }
+
+    .sidebar__label {
+      display: none;
+    }
+
+    .sidebar__badge {
+      display: none;
     }
 
     .sidebar__link {
       justify-content: center;
-      padding: var(--spacing-4);
+      padding: var(--spacing-3);
+    }
+
+    .sidebar__icon {
+      width: 28px;
+      height: 28px;
     }
   }
 }
 
 // ============================================================================
-// RESPONSIVE: LARGE DESKTOP
+// RESPONSIVE: TABLET (768px - 1023px)
 // ============================================================================
-@media (max-width: var(--breakpoint-large-desktop)) {
+@media (max-width: 1023px) and (min-width: 768px) {
   .sidebar {
-    width: 25%;
-  }
-}
+    width: 80px;
 
-// ============================================================================
-// RESPONSIVE: TABLET - Sidebar fijo con navegación horizontal
-// ============================================================================
-@media (max-width: 1023px) and (min-width: var(--breakpoint-tablet)) {
-  .sidebar {
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: var(--border-thin) solid var(--border-color);
-    padding: var(--spacing-8) var(--spacing-12);
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
+    &__trip-header {
+      padding: var(--spacing-4) var(--spacing-2);
+    }
 
     &__toggle {
       display: none;
     }
 
-    &__header {
-      width: 100%;
-      margin-bottom: var(--spacing-6);
-      margin-top: 0;
-    }
-
-    &__nav {
-      width: 100%;
-      flex-grow: 0;
+    &__trip-title,
+    &__trip-destination,
+    &__trip-dates {
+      display: none;
     }
 
     &__list {
-      flex-direction: row;
-      flex-wrap: wrap;
       gap: var(--spacing-4);
     }
 
-    &__item {
-      flex: 0 1 auto;
+    &__link {
+      justify-content: center;
+      padding: var(--spacing-3);
     }
 
-    &__chat-btn {
-      position: fixed;
-      bottom: var(--spacing-4);
-      right: var(--spacing-4);
-      margin: 0;
+    &__label {
+      display: none;
+    }
+
+    &__badge {
+      display: none;
+    }
+
+    &__icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    &__footer {
+      padding: var(--spacing-3);
+    }
+
+    &__chat-button {
+      width: 48px;
+      height: 48px;
+    }
+
+    &__chat-icon {
+      width: 20px;
+      height: 20px;
     }
   }
 }
 
 // ============================================================================
-// RESPONSIVE: MÓVIL (< 768px) - Hamburguesa (Off-Canvas Modal)
+// RESPONSIVE: MÓVIL (< 768px) - Off-canvas
 // ============================================================================
 @media (max-width: 767px) {
-  // Sidebar: Hidden por defecto, aparece como modal off-canvas
   .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 80%;
-    max-width: 300px;
     height: 100vh;
-    padding: var(--spacing-8) var(--spacing-6);
-    border-right: var(--border-thin) solid var(--border-color);
+    width: 240px;
+    max-width: 85vw;
     z-index: 1000;
-    
-    // Inicialmente oculto, se muestra con clase .sidebar--open
     transform: translateX(-100%);
     transition: transform var(--transition-medium) ease-in-out;
+    box-shadow: var(--shadow-lg);
 
-    // Cuando está abierto
-    &--open {
+    &--collapsed {
       transform: translateX(0);
     }
 
@@ -269,50 +333,48 @@
       top: var(--spacing-4);
       left: var(--spacing-4);
       z-index: 1001;
-      background-color: var(--principal-color);
-      color: white;
-
-      &:hover {
-        background-color: var(--principal-color-hover);
-      }
+      width: 40px;
+      height: 40px;
+      background-color: var(--text-main);
+      border-radius: 50%;
     }
 
-    &__header {
-      margin-top: var(--spacing-12);
-      margin-bottom: var(--spacing-8);
+    &__trip-header {
+      margin-top: var(--spacing-8);
     }
 
     &__trip-title {
-      font-size: var(--font-size-tittle-h4);
+      font-size: 1.125rem;
     }
 
-    &__nav {
-      flex-grow: 1;
+    &__label {
+      display: block !important;
     }
 
-    &__list {
-      flex-direction: column;
-      gap: var(--spacing-4);
-    }
-
-    &__item {
-      flex: 1 1 100%;
+    &__icon {
+      width: 24px;
+      height: 24px;
     }
 
     &__link {
-      padding: var(--spacing-3) var(--spacing-3);
-      font-size: var(--font-size-medium);
+      padding: var(--spacing-3) var(--spacing-4);
     }
 
-    &__chat-btn {
+    &__chat-button {
       position: fixed;
       bottom: var(--spacing-4);
       right: var(--spacing-4);
+      width: 56px;
+      height: 56px;
       margin: 0;
+    }
+
+    &__footer {
+      display: none;
     }
   }
 
-  // Overlay backdrop cuando sidebar está abierto
+  // Overlay para cerrar sidebar en móvil
   .sidebar-backdrop {
     position: fixed;
     top: 0;
@@ -329,10 +391,5 @@
       opacity: 1;
       visibility: visible;
     }
-  }
-
-  // Ícono hamburguesa debe estar visible en móvil
-  .hamburger-icon {
-    display: flex;
   }
 }

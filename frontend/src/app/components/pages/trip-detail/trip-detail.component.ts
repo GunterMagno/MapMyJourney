@@ -173,29 +173,43 @@ export class TripDetailComponent implements OnInit, OnDestroy {
   // ============================================================================
 
   ngOnInit(): void {
-    // Obtener ID del viaje de la ruta
-    this.tripId = this.route.snapshot.paramMap.get('id') || '';
-
-    // ✅ Cargar gastos del viaje desde el store
-    if (this.tripId) {
+    // LEER DATOS DEL RESOLVER
+    // Los datos ya fueron precargados por tripResolver
+    // No hay parpadeo porque el componente espera hasta que estén listos
+    
+    const tripData = this.route.snapshot.data['trip'];
+    
+    if (tripData) {
+      console.log('Datos del viaje cargados por resolver (SIN PARPADEO):', tripData);
+      this.tripId = tripData.id;
+      
+      // Cargar gastos asociados al viaje
       this.expenseStore.loadExpensesByTrip(this.tripId);
+    } else {
+      // Fallback: obtener ID de paramMap (si resolver falla)
+      this.tripId = this.route.snapshot.paramMap.get('id') || '';
+      console.warn('No se recibieron datos del resolver, usando paramMap como fallback');
+      
+      if (this.tripId) {
+        this.expenseStore.loadExpensesByTrip(this.tripId);
+      }
     }
 
     // Cargar otros datos (itinerario, votaciones, documentos)
     this.loadMockData();
   }
 
+  ngOnDestroy(): void {
+    // Limpieza de IntersectionObserver
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
   ngAfterViewInit(): void {
     // Inicializar IntersectionObserver para infinite scroll de gastos
     if (this.expenseScrollAnchor) {
       this._initializeExpenseScrollObserver();
-    }
-  }
-
-  ngOnDestroy(): void {
-    // Limpiar observer
-    if (this.observer) {
-      this.observer.disconnect();
     }
   }
 
@@ -220,17 +234,112 @@ export class TripDetailComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * ✅ Eliminar un gasto (Optimistic UI)
-   * Elimina inmediatamente del store, revierte si la API falla
+   * Cargar datos simulados (itinerario, votaciones, documentos)
+   */
+  loadMockData(): void {
+    // Itinerario
+    this.itineraryDays = [
+      {
+        date: new Date(2024, 5, 10),
+        title: 'Día 1 - Llegada',
+        description: 'Llegada a París',
+        activities: [
+          { icon: '✈️', title: 'Llegada al aeropuerto', time: '10:00 AM', location: 'CDG' },
+          { icon: '🏨', title: 'Check-in hotel', time: '02:00 PM', location: 'Hotel Paris' }
+        ]
+      },
+      {
+        date: new Date(2024, 5, 11),
+        title: 'Día 2 - Exploración',
+        description: 'Tour por los monumentos',
+        activities: [
+          { icon: '🗼', title: 'Tour por la Torre Eiffel', time: '09:00 AM', location: 'Torre Eiffel' },
+          { icon: '🍽️', title: 'Cena en el Sena', time: '07:00 PM', location: 'Crucero Sena' }
+        ]
+      }
+    ];
+
+    // Votaciones
+    this.proposals = [
+      {
+        id: '1',
+        title: 'Museo del Louvre',
+        description: 'Visita al museo',
+        options: [
+          { label: 'Sí, ir', votes: 3, userVoted: true },
+          { label: 'No, pasar', votes: 1, userVoted: false }
+        ],
+        totalVotes: 4
+      },
+      {
+        id: '2',
+        title: 'Castillos del Loire',
+        description: 'Excursión de un día',
+        options: [
+          { label: 'Sí, ir', votes: 2, userVoted: false },
+          { label: 'No, pasar', votes: 2, userVoted: false }
+        ],
+        totalVotes: 4
+      }
+    ];
+
+    // Documentos
+    this.documents = [
+      {
+        id: '1',
+        name: 'Itinerario.pdf',
+        type: 'pdf',
+        uploadedBy: 'Juan Pérez',
+        date: new Date(2024, 4, 1)
+      },
+      {
+        id: '2',
+        name: 'Presupuesto.xlsx',
+        type: 'spreadsheet',
+        uploadedBy: 'María García',
+        date: new Date(2024, 4, 5)
+      }
+    ];
+  }
+
+  /**
+   * Eliminar un gasto (Optimistic UI)
    */
   deleteExpense(expenseId: string): void {
     if (confirm('¿Eliminar este gasto?')) {
-      // Guardar por si hay que revertir
       const currentExpenses = this.expenses();
       const deletedExpense = currentExpenses.find(e => e.id === expenseId);
 
-      // ✅ Optimistic UI: eliminar inmediatamente
+      // Optimistic UI: eliminar inmediatamente
       this.expenseStore.removeExpense(expenseId);
+    }
+  }
+
+  /**
+   * Inicializar IntersectionObserver para infinite scroll de gastos
+   */
+  private _initializeExpenseScrollObserver(): void {
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !this.expenseLoading()) {
+            // Intentar llamar loadMore si existe en el store
+            const loadMore = (this.expenseStore as any).loadMore;
+            if (typeof loadMore === 'function') {
+              loadMore.call(this.expenseStore);
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '100px',
+        threshold: 0.1
+      }
+    );
+
+    if (this.expenseScrollAnchor) {
+      this.observer.observe(this.expenseScrollAnchor.nativeElement);
     }
   }
 
@@ -258,88 +367,11 @@ export class TripDetailComponent implements OnInit, OnDestroy {
   }
 
   // ============================================================================
-  // MÉTODOS PRIVADOS
-  // ============================================================================
-
-  /**
-   * Cargar datos mockeados para secciones no críticas
-   */
-  private loadMockData(): void {
-    // Itinerario
-    this.itineraryDays = [
-      {
-        date: new Date(2024, 5, 10),
-        title: 'Llegada a París',
-        description: 'Vuelo y traslado al hotel',
-        activities: [
-          {
-            icon: '✈️',
-            title: 'Vuelo de llegada',
-            time: '10:00 AM',
-            location: 'CDG'
-          }
-        ]
-      }
-    ];
-
-    // Votaciones
-    this.proposals = [
-      {
-        id: '1',
-        title: '¿Qué restaurante?',
-        description: 'Cena del viernes',
-        options: [
-          { label: 'Le Petit Bistro', votes: 8, userVoted: false },
-          { label: 'Chez Maxim\'s', votes: 5, userVoted: true }
-        ],
-        totalVotes: 13
-      }
-    ];
-
-    // Documentos
-    this.documents = [
-      {
-        id: '1',
-        name: 'Boletos de vuelo.pdf',
-        type: 'pdf',
-        uploadedBy: 'Juan Pérez',
-        date: new Date(2024, 4, 1)
-      }
-    ];
-  }
-
-  /**
-   * ✅ INFINITE SCROLL: Observador para cargar más gastos
-   */
-  private _initializeExpenseScrollObserver(): void {
-    if (!this.expenseScrollAnchor) return;
-
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (!this.expenseLoading() && this.expenseStore.hasMore()) {
-              this.expenseStore.loadMore();
-            }
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: '100px',
-        threshold: 0.1
-      }
-    );
-
-    this.observer.observe(this.expenseScrollAnchor.nativeElement);
-  }
-
-  // ============================================================================
   // TRACKBY FUNCTIONS
   // ============================================================================
 
   /**
-   * ✅ TrackBy para lista de gastos
+   * TrackBy para lista de gastos
    */
   trackExpenseById(expense: ExpenseWithDetails): string {
     return expense.id;

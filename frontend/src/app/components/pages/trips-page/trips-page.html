@@ -1,15 +1,20 @@
 <app-header></app-header>
 
 <section class="trips-page">
-  <!-- HEADER -->
+  <!-- HEADER CON FILTROS -->
   <section class="trips-page__header">
-    <h1>Mis Viajes</h1>
-    <app-button
-      label="Crear Nuevo Viaje"
-      variant="primary"
-      size="lg"
-      (click)="createTrip()">
-    </app-button>
+    <div class="trips-page__header-top">
+      <h1>Mis Viajes</h1>
+      <app-button
+        label="Crear Nuevo Viaje"
+        variant="primary"
+        size="lg"
+        (click)="createTrip()">
+      </app-button>
+    </div>
+    
+    <!-- FILTROS DE ORDENAMIENTO -->
+    <app-trips-filters></app-trips-filters>
   </section>
 
   <!-- ERROR STATE -->

@@ -16,7 +16,6 @@ import { LoadingService } from '../../../services/loading.service';
   imports: [
     CommonModule,
     ButtonComponent,
-    CardComponent,
     CreateTripModalComponent,
     HeaderComponent,
     FooterComponent

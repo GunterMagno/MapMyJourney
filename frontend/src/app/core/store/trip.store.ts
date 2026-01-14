@@ -224,7 +224,7 @@ export class TripStore {
    * @param id ID del viaje a actualizar
    * @param changes Propiedades a cambiar
    */
-  updateTrip(id: string, changes: Partial<Trip>): void {
+  updateTrip(id: number, changes: Partial<Trip>): void {
     this._state.update(s => ({
       ...s,
       trips: s.trips.map(trip =>
@@ -239,7 +239,7 @@ export class TripStore {
    *
    * @param id ID del viaje a eliminar
    */
-  removeTrip(id: string): void {
+  removeTrip(id: number): void {
     this._state.update(s => ({
       ...s,
       trips: s.trips.filter(trip => trip.id !== id),

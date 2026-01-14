@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ButtonComponent } from '../../shared/button/button';
 import { CardComponent } from '../../shared/card/card';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
+import { TripsFiltersComponent } from '../../shared/trips-filters/trips-filters.component';
 import { CreateTripModalComponent } from '../home/create-trip-modal/create-trip-modal';
 import { AuthService } from '../../../services/auth.service';
 import { LoadingService } from '../../../services/loading.service';
@@ -36,10 +37,10 @@ import { Trip } from '../../../core/models';
 @Component({
   selector: 'app-trips-page',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, CardComponent, HeaderComponent, FooterComponent, CreateTripModalComponent],
+  imports: [CommonModule, ButtonComponent, CardComponent, HeaderComponent, FooterComponent, TripsFiltersComponent, CreateTripModalComponent],
   templateUrl: './trips-page.html',
   styleUrl: './trips-page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush // ✅ Cambio detección solo cuando cambien señales o inputs
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TripsPageComponent implements OnInit, OnDestroy {
   // ============================================================================
@@ -51,7 +52,8 @@ export class TripsPageComponent implements OnInit, OnDestroy {
   private toastService = inject(ToastService);
   private communicationService = inject(CommunicationService);
   private router = inject(Router);
-  tripStore = inject(TripStore); // ✅ Inyectar store
+  private activatedRoute = inject(ActivatedRoute);
+  tripStore = inject(TripStore);
 
   // ============================================================================
   // REFERENCIAS AL DOM (para Infinite Scroll)
@@ -86,6 +88,8 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.checkAuthentication();
     // El TripStore ya carga en su constructor, aquí solo nos suscribimos
     this._setupInfiniteScroll();
+    
+    this._leerNavegacionAvanzada();
   }
 
   ngAfterViewInit(): void {
@@ -121,7 +125,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
    * Ver detalles de un viaje
    * Navega a la página de detalles
    */
-  viewTrip(tripId: string): void {
+  viewTrip(tripId: number): void {
     this.router.navigate(['/trips', tripId]);
   }
 
@@ -130,7 +134,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
    * ✅ Optimistic UI: elimina del store inmediatamente
    * Revierte si la API falla
    */
-  deleteTrip(tripId: string): void {
+  deleteTrip(tripId: number): void {
     if (confirm('¿Estás seguro de que quieres eliminar este viaje?')) {
       // Guardar el viaje por si hay que revertir
       const currentTrips = this.tripStore.trips();
@@ -163,7 +167,8 @@ export class TripsPageComponent implements OnInit, OnDestroy {
   onTripCreated(tripData: TripFormData): void {
     // Mapear TripFormData a CreateTripDto
     const createTripDto = {
-      destination: tripData.name, // name -> destination
+      title: tripData.title,
+      destination: tripData.destination,
       startDate: tripData.startDate,
       endDate: tripData.endDate,
       budget: tripData.budget || 0
@@ -267,7 +272,85 @@ export class TripsPageComponent implements OnInit, OnDestroy {
    * @example
    * @for (trip of trips(); track trackById(trip))
    */
-  trackById(trip: Trip): string {
+  trackById(trip: Trip): number {
     return trip.id;
+  }
+
+  // ============================================================================
+  // BLOQUE 4.2: LECTURA DE NAVEGACIÓN AVANZADA
+  // ============================================================================
+
+  /**
+   * Lee y procesa los datos de navegación avanzada
+   *
+   * Navegación Programática Completa
+   *
+   * Lectura de:
+   * ✅ QueryParams: orden, pag, q (visibles en URL)
+   * ✅ Fragment: top, middle, etc. (scroll a sección)
+   * ✅ State: origen, timestamp, filtros (datos ocultos)
+   *
+   * @example
+   * URL recibida: /trips?orden=fecha_asc&pag=1&q=Barcelona#top
+   * State recibido: { origen: 'busqueda_avanzada', timestamp: 1234567890 }
+   *
+   * Output console:
+   * "📍 QueryParams recibidos: { orden: 'fecha_asc', pag: 1, q: 'Barcelona' }"
+   * "📌 Fragment: top"
+   * "📦 State: { origen: 'busqueda_avanzada', timestamp: 1234567890 }"
+   */
+  private _leerNavegacionAvanzada(): void {
+    // 1️⃣ LEER QUERY PARAMS (visibles en URL: ?clave=valor)
+    this.activatedRoute.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        const orden = params['orden'] || 'fecha_desc';
+        const pagina = params['pag'] || '1';
+        const query = params['q'] || '';
+
+        console.log('📍 QueryParams recibidos en TripsPageComponent:', {
+          orden,
+          pagina,
+          query
+        });
+
+        // Aplicar filtros si existen
+        if (query) {
+          console.log(`🔍 Filtro de búsqueda activo: "${query}"`);
+        }
+      });
+
+    // 2️⃣ LEER FRAGMENT (#sección)
+    this.activatedRoute.fragment
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(fragment => {
+        if (fragment) {
+          console.log('📌 Fragment recibido:', fragment);
+          
+          // Scroll programático al elemento
+          setTimeout(() => {
+            const element = document.getElementById(fragment);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+              console.log(`✅ Scroll ejecutado a #${fragment}`);
+            }
+          }, 300);
+        }
+      });
+
+    // 3️⃣ LEER STATE (datos ocultos en la navegación)
+    const state = this.router.getCurrentNavigation()?.extras?.state;
+    if (state) {
+      console.log('📦 State recibido en TripsPageComponent:', state);
+      console.log('   - Origen:', state['origen']);
+      console.log('   - Timestamp:', new Date(state['timestamp']).toLocaleString());
+      console.log('   - Filtros:', state['filtros']);
+    } else {
+      // Intenta leer desde window.history.state si no está en navigation
+      const historyState = (window.history.state as any);
+      if (historyState?.origen) {
+        console.log('📦 State desde history.state:', historyState);
+      }
+    }
   }
 }

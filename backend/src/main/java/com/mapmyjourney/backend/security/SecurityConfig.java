@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Rutas públicas - permitir sin autenticación
                         .requestMatchers("/users/login", "/users/register").permitAll()
+                        .requestMatchers("/health", "/health/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         // Todos los demás endpoints requieren autenticación

@@ -1,0 +1,135 @@
+.itinerary-widget {
+  background-color: #FFF9C4;
+  border-radius: 12px;
+  padding: var(--spacing-6);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 var(--spacing-4) 0;
+    color: var(--text-main);
+  }
+
+  &__icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  &__timeline {
+    display: flex;
+    gap: var(--spacing-4);
+    overflow-x: auto;
+    padding-bottom: var(--spacing-3);
+    flex: 1;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+  }
+
+  &__day-card {
+    flex-shrink: 0;
+    width: 180px;
+    background-color: white;
+    border-radius: 8px;
+    padding: var(--spacing-4);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    &--completed {
+      background-color: #C8F5E9;
+      border: 2px solid #4CAF50;
+    }
+  }
+
+  &__date {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-3);
+    text-align: center;
+    color: var(--text-main);
+  }
+
+  &__activities {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-3) 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+
+    li {
+      margin-bottom: var(--spacing-2);
+      word-wrap: break-word;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__no-activities {
+    margin: 0 0 var(--spacing-3) 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  &__day-button {
+    position: absolute;
+    bottom: var(--spacing-3);
+    right: var(--spacing-3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--principal-color);
+    color: white;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__completed-badge {
+    margin-top: var(--spacing-3);
+    background-color: #4CAF50;
+    color: white;
+    padding: var(--spacing-2);
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}

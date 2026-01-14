@@ -1,0 +1,119 @@
+.documents-widget {
+  background-color: #FFF9C4;
+  border-radius: 12px;
+  padding: var(--spacing-6);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-4);
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-main);
+  }
+
+  &__icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  &__badge {
+    background-color: var(--text-main);
+    color: white;
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-4) 0;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-4);
+    background-color: white;
+    border-radius: 8px;
+    margin-bottom: var(--spacing-3);
+    flex-wrap: wrap;
+
+    &--complete {
+      opacity: 0.7;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__checkbox {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    flex: 1;
+    font-size: 0.9375rem;
+    color: var(--text-main);
+    min-width: 150px;
+  }
+
+  &__count {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  &__upload-link {
+    color: var(--text-main);
+    text-decoration: underline;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--principal-color);
+    }
+  }
+
+  &__upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: var(--spacing-6);
+    text-align: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    p {
+      margin: 0;
+      font-size: 0.9375rem;
+    }
+
+    &:hover {
+      border-color: var(--text-main);
+      background-color: rgba(17, 138, 178, 0.05);
+    }
+  }
+}
