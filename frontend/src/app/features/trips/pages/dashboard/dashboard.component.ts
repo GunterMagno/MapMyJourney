@@ -8,6 +8,8 @@ import { takeUntil } from 'rxjs/operators';
 import { LoadingSpinnerComponent } from '../../../../components/shared/loading-spinner/loading-spinner';
 import { TripService } from '../../../../services/trip.service';
 import { ExpenseService } from '../../../../core/services/expense.service';
+import { HeaderComponent } from '../../../../components/layout/header/header';
+import { FooterComponent } from '../../../../components/layout/footer/footer';
 
 import { DashboardData } from '../../models/dashboard.model';
 import { DashboardItineraryWidgetComponent } from './widgets/dashboard-itinerary-widget/dashboard-itinerary-widget';
@@ -22,6 +24,8 @@ import { DashboardPollsWidgetComponent } from './widgets/dashboard-polls-widget/
     CommonModule,
     RouterModule,
     LoadingSpinnerComponent,
+    HeaderComponent,
+    FooterComponent,
     DashboardItineraryWidgetComponent,
     DashboardDocumentsWidgetComponent,
     DashboardExpensesWidgetComponent,
