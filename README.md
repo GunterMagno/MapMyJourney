@@ -259,8 +259,7 @@ graph TD
 
 ## Estado de los tests
 
-### ✅ - Test Correctos- [Insomnia Collection](/backend/MapMyJourney_Insomnia.json) - Requests de API para testing
-
+### ✅ - Test Correctos
 ---
 
 ## 📝 Licencia
