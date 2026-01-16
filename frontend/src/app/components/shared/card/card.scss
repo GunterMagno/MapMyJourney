@@ -45,7 +45,7 @@
 
   // Altura adaptativa
   height: 100%;
-  min-height: 500px;
+  min-height: 380px;
 
   // Estado hover - Elevar la card con escala suave
   // FASE 5: Solo anima transform (GPU accelerated)
@@ -125,7 +125,7 @@
 
   // MEDIANO: 300px - 500px - Layout vertical normal
   @container (min-width: 300px) and (max-width: 500px) {
-    min-height: 480px;
+    min-height: 360px;
 
     .card__image {
       height: 200px;
@@ -241,7 +241,7 @@
 // ============================================================================
 .card__title {
   margin: 0;
-  font-size: var(--font-size-tittle-h4);
+  font-size: var(--font-size-tittle-h3);
   font-weight: var(--font-weight-bold);
   color: var(--text-main);
   line-height: var(--line-height-tight);

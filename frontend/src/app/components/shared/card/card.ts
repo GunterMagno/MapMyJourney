@@ -23,8 +23,8 @@ export class CardComponent {
   // Título de la tarjeta
   @Input() title: string = '';
 
-  // Descripción o contenido principal
-  @Input() description: string = '';
+  // Descripción o contenido principal (opcional)
+  @Input() description?: string;
 
   // URL de la imagen (opcional)
   @Input() image?: string;

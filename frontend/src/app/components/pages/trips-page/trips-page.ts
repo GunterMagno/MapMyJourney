@@ -169,6 +169,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     const createTripDto = {
       title: tripData.title,
       destination: tripData.destination,
+      description: tripData.description,
       startDate: tripData.startDate,
       endDate: tripData.endDate,
       budget: tripData.budget || 0
