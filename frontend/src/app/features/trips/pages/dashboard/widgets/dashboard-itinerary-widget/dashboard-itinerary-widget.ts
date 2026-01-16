@@ -22,4 +22,15 @@ export class DashboardItineraryWidgetComponent {
       queryParams: { day: index }
     });
   }
+
+  getDayNumber(dateString: string): string {
+    const date = new Date(dateString);
+    return date.getDate().toString();
+  }
+
+  getMonth(dateString: string): string {
+    const date = new Date(dateString);
+    const months = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    return months[date.getMonth()];
+  }
 }

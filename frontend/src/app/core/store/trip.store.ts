@@ -14,6 +14,17 @@
  * - Mejor rendimiento (fine-grained reactivity)
  * - TypeScript puro, menos boilerplate
  * - Automático: no requiere unsubscribe en componentes
+ * 
+ * Métodos públicos:
+ * - loadTrips(): Carga la primera página
+ * - loadMore(): Carga la siguiente página (infinite scroll)
+ * - addTrip(trip): Agrega un viaje
+ * - updateTrip(id, changes): Actualiza un viaje
+ * - removeTrip(id): Elimina un viaje
+ * - searchLocal(term): Busca localmente
+ * - reset(): Resetea el estado
+ * - clearError(): Limpia el error
+ * - reloadTrips(): Recarga desde la primera página
  */
 
 import { Injectable, computed, signal, inject } from '@angular/core';
@@ -69,9 +80,9 @@ export class TripStore {
   loading = computed(() => this._state().loading);
 
   /**
-   * Mensaje de error (null si no hay error)
+   * Mensaje de error (siempre null - los errores se muestran solo en toasts)
    */
-  error = computed(() => this._state().error);
+  error = computed(() => null);
 
   /**
    * Página actual
@@ -124,7 +135,7 @@ export class TripStore {
   private toastService = inject(ToastService);
 
   constructor(private tripService: TripService) {
-    // Carga inicial de la primera página
+    // Inicializar la carga de viajes
     this.loadTrips();
   }
 
@@ -152,10 +163,15 @@ export class TripStore {
         }));
       },
       error: (err) => {
-        const errorMsg = 'No se pudieron cargar los viajes';
-        this._setError(errorMsg);
+        // No guardar error persistente en el estado
+        // Solo mostrar en toast si NO es error de autenticación
+        const isAuthError = err.status === 401 || err.status === 403 || err.status === 500;
+        
+        if (!isAuthError) {
+          this.toastService.error('No se pudieron cargar los viajes');
+        }
+        
         this._setLoading(false);
-        this.toastService.error(errorMsg);
         console.error('TripStore.loadTrips error:', err);
       }
     });

@@ -17,30 +17,9 @@
     <app-trips-filters></app-trips-filters>
   </section>
 
-  <!-- ERROR STATE -->
-  @if (error()) {
-    <article class="trips-page__error" role="alert">
-      <button 
-        class="trips-page__error-close" 
-        (click)="dismissError()"
-        aria-label="Cerrar mensaje de error">
-        ✕
-      </button>
-      
-      <div class="trips-page__error-icon">❌</div>
-      
-      <h2 class="trips-page__error-title">Error al cargar viajes</h2>
-      <p class="trips-page__error-message">{{ error() }}</p>
-      
-      <app-button
-        label="Reintentar"
-        variant="primary"
-        (click)="retryLoadTrips()">
-      </app-button>
-    </article>
-  }
+  <!-- ERROR STATE - NUNCA MOSTRAR ERROR AL USUARIO, SOLO EN TOASTS -->
 
-  <!-- EMPTY STATE -->
+  <!-- EMPTY STATE - Solo si no hay viajes Y no está cargando -->
   @if (trips().length === 0 && !loading()) {
     <article class="trips-page__empty">
       <p>No tienes viajes registrados aún.</p>
@@ -55,60 +34,40 @@
   <!-- TRIPS GRID CON INFINITE SCROLL -->
   @if (trips().length > 0) {
     <section class="trips-page__grid">
-      <!-- ✅ @for con track para preservar DOM y rendimiento -->
       @for (trip of trips(); track trackById(trip)) {
-        <app-card
-          [title]="trip.destination"
-          [description]="'Presupuesto: €' + trip.budget + ' | Gastos: €' + trip.totalExpenses"
-          [image]="trip.imageUrl"
-          variant="vertical"
-          class="card--primary">
-          <article class="trip-card__content">
-            <!-- Fechas del viaje -->
-            <section class="trip-card__dates">
-              <span class="trip-card__label">Fechas:</span>
-              <span class="trip-card__value">
-                {{ trip.startDate | date: 'dd/MM/yyyy' }} - {{ trip.endDate | date: 'dd/MM/yyyy' }}
-              </span>
-            </section>
-
-            <!-- Estado presupuesto -->
-            <section class="trip-card__budget">
-              <span class="trip-card__label">Presupuesto:</span>
-              <span class="trip-card__value">€{{ trip.budget }}</span>
-            </section>
-
-            <!-- Gastos actuales -->
-            <section class="trip-card__expense">
-              <span class="trip-card__label">Gastos totales:</span>
-              <span class="trip-card__value">€{{ trip.totalExpenses }}</span>
-            </section>
-
-            <!-- Barra de presupuesto -->
-            <progress
-              class="trip-card__progress"
-              [value]="trip.totalExpenses"
-              [max]="trip.budget"
-              [attr.aria-label]="'Presupuesto: ' + trip.totalExpenses + ' de ' + trip.budget">
-            </progress>
-
-            <!-- Acciones -->
-            <section class="trip-card__actions">
+        <div class="card-container" (click)="viewTrip(trip.id)">
+          <app-card 
+            [title]="trip.destination"
+            [description]="trip.description || 'Sin descripción'"
+            [image]="trip.imageUrl"
+            variant="vertical">
+            
+            <div class="trip-info">
+              <div class="trip-info__dates">
+                <span class="trip-info__label">Fechas:</span>
+                <span class="trip-info__value">{{ trip.startDate | date: 'dd/MM/yyyy' }} - {{ trip.endDate | date: 'dd/MM/yyyy' }}</span>
+              </div>
+              
+              <div class="trip-info__budget">
+                <div class="trip-info__item">
+                  <span class="trip-info__label">Presupuesto:</span>
+                  <span class="trip-info__value">€{{ trip.budget || 0 }}</span>
+                </div>
+                <div class="trip-info__item">
+                  <span class="trip-info__label">Gastado:</span>
+                  <span class="trip-info__value trip-info__value--spent">€{{ trip.totalExpenses || 0 }}</span>
+                </div>
+              </div>
+              
               <app-button
                 label="Ver Detalles"
                 variant="primary"
-                size="sm"
-                (click)="viewTrip(trip.id)">
+                size="md"
+                (click)="viewTrip(trip.id); $event.stopPropagation()">
               </app-button>
-              <app-button
-                label="Eliminar"
-                variant="danger"
-                size="sm"
-                (click)="deleteTrip(trip.id)">
-              </app-button>
-            </section>
-          </article>
-        </app-card>
+            </div>
+          </app-card>
+        </div>
       }
     </section>
 
@@ -123,13 +82,8 @@
     </span>
 
     <!-- LOADING STATE DURANTE INFINITE SCROLL -->
-    @if (loading()) {
+    @if (loading() && trips().length > 0) {
       <section class="trips-page__loading" role="status" aria-label="Cargando viajes">
-        <progress
-          [value]="50"
-          max="100"
-          aria-label="Cargando">
-        </progress>
         <p>Cargando más viajes...</p>
       </section>
     }

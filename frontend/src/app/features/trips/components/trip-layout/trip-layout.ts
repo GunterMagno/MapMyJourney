@@ -4,13 +4,15 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SidebarComponent, SidebarNavLink, TripSidebarInfo } from '../../../../components/layout/sidebar/sidebar';
+import { HeaderComponent } from '../../../../components/layout/header/header';
+import { FooterComponent } from '../../../../components/layout/footer/footer';
 import { TripService, Trip } from '../../../../services/trip.service';
 import { LoadingService } from '../../../../services/loading.service';
 
 @Component({
   selector: 'app-trip-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, SidebarComponent],
+  imports: [CommonModule, RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent],
   templateUrl: './trip-layout.html',
   styleUrl: './trip-layout.scss'
 })
@@ -19,6 +21,7 @@ export class TripLayoutComponent implements OnInit, OnDestroy {
   navLinks: SidebarNavLink[] = [];
   tripId?: number;
   isLoading = true;
+  isCollapsed = false;
 
   private destroy$ = new Subject<void>();
 

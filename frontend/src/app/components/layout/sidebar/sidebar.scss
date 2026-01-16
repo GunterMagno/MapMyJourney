@@ -13,9 +13,9 @@
 
 .sidebar {
   width: 240px;
-  min-height: 100vh;
-  background-color: var(--bg-card);
-  border-right: 1px solid var(--border-color);
+  height: 100vh;
+  background-color: var(--quinary-color);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   transition: all var(--transition-medium);
@@ -23,12 +23,49 @@
   top: 0;
   left: 0;
   overflow-y: auto;
+  overflow-x: hidden;
+  flex-shrink: 0;
+
+  // ============================================================================
+  // BOTÓN DE COLAPSAR/EXPANDIR
+  // ============================================================================
+  &__collapse-button {
+    position: absolute;
+    top: var(--spacing-3);
+    right: var(--spacing-3);
+    width: 32px;
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
+
+  &__collapse-icon {
+    width: 20px;
+    height: 20px;
+  }
 
   // ============================================================================
   // HEADER DEL VIAJE
   // ============================================================================
   &__trip-header {
-    background-color: var(--text-main);
+    background-color: var(--quinary-color);
     color: var(--text-inverse);
     padding: var(--spacing-6) var(--spacing-4);
     position: relative;
@@ -100,6 +137,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    background-color: var(--quinary-color);
   }
 
   &__list {
@@ -108,7 +146,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-2);
+    gap: var(--spacing-1);
   }
 
   &__item {
@@ -120,21 +158,21 @@
     align-items: center;
     gap: var(--spacing-3);
     padding: var(--spacing-3) var(--spacing-4);
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     position: relative;
     transition: all var(--transition-fast);
     border-left: 3px solid transparent;
 
     &:hover {
-      background-color: var(--bg-light);
-      color: var(--text-main);
+      background-color: var(--quinary-color-hover);
+      color: white;
     }
 
     // Estado activo
     &--active {
-      background-color: var(--bg-light);
-      color: var(--text-main);
+      background-color: var(--quinary-color-hover);
+      color: white;
       font-weight: 600;
       border-left-color: var(--principal-color);
     }
@@ -148,6 +186,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    filter: brightness(0) invert(1);
 
     img {
       width: 100%;
@@ -181,34 +220,36 @@
   // ============================================================================
   &__footer {
     padding: var(--spacing-4);
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: center;
     flex-shrink: 0;
+    background-color: var(--quinary-color);
   }
 
   &__chat-button {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background-color: var(--text-main);
-    color: var(--text-inverse);
+    width: 100%;
+    height: 48px;
+    border-radius: 8px;
+    background-color: var(--quaternary-color);
+    color: white;
     border: none;
     cursor: pointer;
-    box-shadow: var(--shadow-md);
-    transition: transform var(--transition-fast), background-color var(--transition-fast);
+    transition: all var(--transition-fast);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    gap: var(--spacing-2);
+    padding: 0 var(--spacing-3);
+    font-weight: 600;
 
     &:hover {
-      transform: scale(1.1);
-      background-color: var(--principal-color);
+      background-color: var(--quaternary-color-hover);
+      transform: translateY(-2px);
     }
 
     &:active {
-      transform: scale(0.95);
+      transform: translateY(0);
     }
   }
 
@@ -216,13 +257,18 @@
     width: 24px;
     height: 24px;
     object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
+  &__chat-label {
+    font-size: 0.9375rem;
   }
 
   // ============================================================================
-  // ESTADO: COLAPSADO (Móvil)
+  // ESTADO: COLAPSADO
   // ============================================================================
   &--collapsed {
-    width: 80px;
+    width: 70px;
     
     .sidebar__trip-info {
       display: none;
@@ -236,6 +282,10 @@
       display: none;
     }
 
+    .sidebar__chat-label {
+      display: none;
+    }
+
     .sidebar__link {
       justify-content: center;
       padding: var(--spacing-3);
@@ -244,6 +294,13 @@
     .sidebar__icon {
       width: 28px;
       height: 28px;
+    }
+
+    .sidebar__chat-button {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      padding: 0;
     }
   }
 }

@@ -7,30 +7,44 @@
     <span class="documents-widget__badge">{{ totalCompleted }}/{{ documents.length }}</span>
   </div>
 
-  <ul class="documents-widget__list">
+  <ul class="documents-widget__list" *ngIf="documents.length > 0">
     <li
       *ngFor="let doc of documents"
       class="documents-widget__item"
       [class.documents-widget__item--complete]="doc.isComplete"
     >
-      <span class="documents-widget__checkbox">
-        {{ doc.isComplete ? '✅' : '❌' }}
-      </span>
+      <svg class="documents-widget__status-icon" [class.documents-widget__status-icon--complete]="doc.isComplete" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" [attr.stroke]="doc.isComplete ? 'var(--quaternary-color)' : 'var(--principal-color)'" stroke-width="2"/>
+        <path *ngIf="doc.isComplete" d="M8 12l2 2 4-4" [attr.stroke]="'var(--quaternary-color)'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(1, 1)"/>
+        <path *ngIf="!doc.isComplete" d="M9 9l6 6M15 9l-6 6" [attr.stroke]="'var(--principal-color)'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      
       <span class="documents-widget__name">{{ doc.name }}</span>
-      <span class="documents-widget__count">{{ doc.count }}</span>
-
-      <a
-        *ngIf="!doc.isComplete"
-        href="#"
-        class="documents-widget__upload-link"
-        (click)="uploadFile($event, doc)"
-      >
-        Subir archivo
-      </a>
+      
+      <div class="documents-widget__actions">
+        <a
+          *ngIf="!doc.isComplete"
+          href="#"
+          class="documents-widget__upload-link"
+          (click)="uploadFile($event, doc)"
+        >
+          <svg class="documents-widget__upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15V3m0 0L8 7m4-4l4 4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <span class="documents-widget__count">{{ doc.count }}</span>
+      </div>
     </li>
   </ul>
 
+  <p class="documents-widget__no-documents" *ngIf="documents.length === 0">
+    Sin documentos aún
+  </p>
+
   <div class="documents-widget__upload-area">
-    <p>📤 Sube aquí el archivo o haz click para subirlo</p>
+    <svg class="documents-widget__upload-area-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 15V3m0 0L8 7m4-4l4 4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <p>Sube aquí el archivo o haz click para subirlo</p>
   </div>
 </div>

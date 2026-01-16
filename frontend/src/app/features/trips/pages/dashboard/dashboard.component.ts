@@ -8,8 +8,6 @@ import { takeUntil } from 'rxjs/operators';
 import { LoadingSpinnerComponent } from '../../../../components/shared/loading-spinner/loading-spinner';
 import { TripService } from '../../../../services/trip.service';
 import { ExpenseService } from '../../../../core/services/expense.service';
-import { HeaderComponent } from '../../../../components/layout/header/header';
-import { FooterComponent } from '../../../../components/layout/footer/footer';
 
 import { DashboardData } from '../../models/dashboard.model';
 import { DashboardItineraryWidgetComponent } from './widgets/dashboard-itinerary-widget/dashboard-itinerary-widget';
@@ -24,8 +22,6 @@ import { DashboardPollsWidgetComponent } from './widgets/dashboard-polls-widget/
     CommonModule,
     RouterModule,
     LoadingSpinnerComponent,
-    HeaderComponent,
-    FooterComponent,
     DashboardItineraryWidgetComponent,
     DashboardDocumentsWidgetComponent,
     DashboardExpensesWidgetComponent,
@@ -46,9 +42,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private expenseService = inject(ExpenseService);
 
   ngOnInit(): void {
-    // Obtener tripId de la ruta padre
-    this.tripId = Number(this.route.parent?.snapshot.paramMap.get('id'));
-    this.loadDashboardData();
+    // Obtener tripId de la ruta actual o del parent
+    const id = this.route.snapshot.paramMap.get('id') || this.route.parent?.snapshot.paramMap.get('id');
+    this.tripId = Number(id);
+    
+    if (this.tripId) {
+      this.loadDashboardData();
+    } else {
+      this.error = 'No se especificó un ID de viaje';
+      this.isLoading = false;
+    }
   }
 
   ngOnDestroy(): void {
@@ -65,21 +68,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // Cargar datos en paralelo desde el backend
     forkJoin({
+      trip: this.tripService.getTripById(this.tripId),
       expenses: this.expenseService.getExpensesByTrip(this.tripId.toString())
     })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: any) => {
-          // Combinar datos del backend con datos mock
-          this.dashboardData = this.buildDashboardData(data.expenses);
+          // Combinar datos del backend
+          this.dashboardData = this.buildDashboardData(data.trip, data.expenses);
           this.isLoading = false;
         },
         error: (err: any) => {
           console.error('Error loading dashboard data:', err);
-          // Si falla la carga del backend, usar solo datos mock
-          this.dashboardData = this.getMockData();
+          this.error = 'Error al cargar los datos del dashboard';
           this.isLoading = false;
-          // No mostrar error para no romper la UX
         }
       });
   }
@@ -87,7 +89,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   /**
    * Construye los datos del dashboard a partir de los datos del backend
    */
-  private buildDashboardData(expensesResponse: any): DashboardData {
+  private buildDashboardData(trip: any, expensesResponse: any): DashboardData {
     // Procesar gastos del backend
     const expenses = Array.isArray(expensesResponse) 
       ? expensesResponse 
@@ -104,15 +106,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
       };
     });
 
+    // Generar días del itinerario basado en las fechas del viaje
+    const itineraryDays = this.generateItineraryDays(trip.startDate, trip.endDate);
+
     return {
-      itinerary: this.getMockData().itinerary, // Mock por ahora
-      documents: this.getMockData().documents, // Mock por ahora
+      itinerary: itineraryDays,
+      documents: [], // Sin documentos por ahora
       expenses: {
         total: totalExpenses,
+        budget: trip.budget || 0,
+        remaining: (trip.budget || 0) - totalExpenses,
         items: expenseItems
       },
-      polls: this.getMockData().polls // Mock por ahora
+      polls: [] // Sin votaciones por ahora
     };
+  }
+
+  /**
+   * Genera los días del itinerario basado en las fechas del viaje
+   */
+  private generateItineraryDays(startDate: string, endDate: string): any[] {
+    const days: any[] = [];
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    let current = new Date(start);
+    let dayNumber = 1;
+    
+    while (current <= end) {
+      days.push({
+        date: current.toISOString(),
+        activities: [], // Sin actividades por ahora
+        isCompleted: false,
+        dayNumber: dayNumber
+      });
+      current.setDate(current.getDate() + 1);
+      dayNumber++;
+    }
+    
+    return days;
   }
 
   /**
@@ -133,89 +165,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Retorna datos mock para desarrollo
-   */
-  private getMockData(): DashboardData {
-    return {
-      itinerary: [
-        {
-          date: '17 OCT',
-          activities: ['Llegada', 'Visita Museo', 'Big Ben'],
-          isCompleted: true,
-          dayNumber: 1
-        },
-        {
-          date: '18 OCT',
-          activities: ['London Eye', 'Apocalipsis'],
-          isCompleted: false,
-          dayNumber: 2
-        },
-        {
-          date: '19 OCT',
-          activities: [],
-          isCompleted: false,
-          dayNumber: 3
-        },
-        {
-          date: '19 OCT',
-          activities: [],
-          isCompleted: false,
-          dayNumber: 4
-        },
-        {
-          date: '19 OCT',
-          activities: [],
-          isCompleted: false,
-          dayNumber: 5
-        }
-      ],
-      documents: [
-        { name: 'Billetes de vuelo ida', isComplete: true, count: '4/4' },
-        { name: 'Reserva de hotel', isComplete: false, count: '0/1' },
-        { name: 'Entradas para museo', isComplete: true, count: '4/4' },
-        { name: 'Billetes de vuelo vuelta', isComplete: false, count: '3/4' }
-      ],
-      expenses: {
-        total: 2081.25,
-        items: [
-          {
-            description: 'Billetes del vuelo',
-            paidBy: 'Ale Magno',
-            date: 'Mayo 10, 2024',
-            amount: 1250.75
-          },
-          {
-            description: 'Pago Alojamiento',
-            paidBy: 'Luque',
-            date: 'Mayo 15, 2024',
-            amount: 450.0
-          },
-          {
-            description: 'Coche de alquiler',
-            paidBy: 'Fran Talita',
-            date: 'Mayo 20, 2024',
-            amount: 380.5
-          }
-        ]
-      },
-      polls: [
-        {
-          question: 'A que deberíamos ir primero el día 1?',
-          options: [
-            { name: 'Torre Eiffel', votes: 3 },
-            { name: 'Arco del Triunfo', votes: 1 },
-            { name: 'Museo del Louvre', votes: 2 }
-          ]
-        },
-        {
-          question: 'A que deberíamos ir por la tarde el día 2?',
-          options: [
-            { name: 'Canal de San Martín', votes: 2 },
-            { name: 'Musée d\'Orsay', votes: 3 }
-          ]
-        }
-      ]
-    };
-  }
 }

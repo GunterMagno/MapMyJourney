@@ -53,7 +53,6 @@
     background-color: white;
     border-radius: 8px;
     margin-bottom: var(--spacing-3);
-    flex-wrap: wrap;
 
     &--complete {
       opacity: 0.7;
@@ -64,37 +63,64 @@
     }
   }
 
-  &__checkbox {
-    font-size: 1.25rem;
+  &__status-icon {
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
+    
+    &--complete {
+      circle {
+        stroke: var(--quaternary-color);
+      }
+    }
   }
 
   &__name {
     flex: 1;
     font-size: 0.9375rem;
     color: var(--text-main);
-    min-width: 150px;
+    min-width: 100px;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex-shrink: 0;
+  }
+
+  &__upload-link {
+    color: var(--text-main);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--principal-color);
+    }
+  }
+
+  &__upload-icon {
+    width: 20px;
+    height: 20px;
   }
 
   &__count {
     font-weight: 600;
     color: var(--text-main);
     font-size: 0.875rem;
-    flex-shrink: 0;
+    min-width: 30px;
+    text-align: right;
   }
 
-  &__upload-link {
-    color: var(--text-main);
-    text-decoration: underline;
-    font-size: 0.75rem;
-    cursor: pointer;
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: var(--principal-color);
-    }
+  &__no-documents {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin: var(--spacing-6) 0;
+    font-size: 0.9375rem;
   }
 
   &__upload-area {
@@ -105,6 +131,10 @@
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
 
     p {
       margin: 0;
@@ -115,5 +145,11 @@
       border-color: var(--text-main);
       background-color: rgba(17, 138, 178, 0.05);
     }
+  }
+
+  &__upload-area-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--text-secondary);
   }
 }

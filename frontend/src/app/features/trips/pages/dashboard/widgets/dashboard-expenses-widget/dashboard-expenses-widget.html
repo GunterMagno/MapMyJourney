@@ -4,26 +4,50 @@
     Gastos
   </h3>
 
-  <div class="expenses-widget__total">
-    <span class="expenses-widget__amount">{{ expenses.total | number:'1.2-2' }} €</span>
-    <span class="expenses-widget__subtitle">Gastos totales del viaje</span>
+  <div class="expenses-widget__summary">
+    <div class="expenses-widget__summary-item">
+      <span class="expenses-widget__label">Presupuesto</span>
+      <span class="expenses-widget__amount expenses-widget__amount--budget">{{ expenses.budget | number:'1.2-2' }} €</span>
+    </div>
+    <div class="expenses-widget__summary-item">
+      <span class="expenses-widget__label">Gastado</span>
+      <span class="expenses-widget__amount expenses-widget__amount--spent">{{ expenses.total | number:'1.2-2' }} €</span>
+    </div>
+    <div class="expenses-widget__summary-item">
+      <span class="expenses-widget__label">Restante</span>
+      <span class="expenses-widget__amount" [class.expenses-widget__amount--negative]="expenses.remaining < 0">{{ expenses.remaining | number:'1.2-2' }} €</span>
+    </div>
   </div>
 
-  <ul class="expenses-widget__list">
+  <div class="expenses-widget__progress-container">
+    <div class="expenses-widget__progress-bar">
+      <div 
+        class="expenses-widget__progress-fill" 
+        [style.width.%]="getProgressPercentage()"
+        [class.expenses-widget__progress-fill--over]="expenses.total > expenses.budget"
+      ></div>
+    </div>
+    <span class="expenses-widget__progress-label">{{ getProgressPercentage() }}%</span>
+  </div>
+
+  <ul class="expenses-widget__list" *ngIf="expenses.items.length > 0">
     <li
       *ngFor="let expense of expenses.items"
       class="expenses-widget__item"
     >
       <div class="expenses-widget__item-header">
         <strong>{{ expense.description }}</strong>
-        <span class="expenses-widget__item-amount">{{ expense.amount | number:'1.2-2' }} €</span>
       </div>
       <div class="expenses-widget__item-details">
-        <span>Pagado por: {{ expense.paidBy }}</span>
-        <span>{{ expense.date }}</span>
+        <span>{{ expense.paidBy }}</span>
+        <span class="expenses-widget__item-amount">{{ expense.amount | number:'1.2-2' }} €</span>
       </div>
     </li>
   </ul>
+
+  <p class="expenses-widget__no-expenses" *ngIf="expenses.items.length === 0">
+    Sin gastos aún
+  </p>
 
   <div class="expenses-widget__action">
     <app-button

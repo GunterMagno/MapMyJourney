@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         next: (response) => {
           this.isLoading = false;
           this.toastService.success('¡Bienvenido de vuelta!');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/trips']);
         },
         error: (error) => {
           this.isLoading = false;
@@ -115,7 +115,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         next: (response) => {
           this.isLoading = false;
           this.toastService.success('¡Cuenta creada exitosamente!');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/trips']);
         },
         error: (error) => {
           this.isLoading = false;

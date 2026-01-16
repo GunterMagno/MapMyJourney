@@ -19,7 +19,7 @@ import { TripStore } from '../../../core/store';
 import { Trip } from '../../../core/models';
 
 /**
- * FASE 6: Trips List Page - Gestión Reactiva y Infinite Scroll
+ * Trips List Page - Gestión Reactiva y Infinite Scroll
  *
  * Refactorizado para usar:
  * - TripStore con Signals (gestión de estado)
@@ -274,6 +274,15 @@ export class TripsPageComponent implements OnInit, OnDestroy {
    */
   trackById(trip: Trip): number {
     return trip.id;
+  }
+
+  /**
+   * Calcula el porcentaje de presupuesto gastado
+   */
+  getProgressPercentage(trip: Trip): number {
+    if (!trip.budget || trip.budget === 0) return 0;
+    const spent = trip.totalExpenses || 0;
+    return Math.min((spent / trip.budget) * 100, 100);
   }
 
   // ============================================================================

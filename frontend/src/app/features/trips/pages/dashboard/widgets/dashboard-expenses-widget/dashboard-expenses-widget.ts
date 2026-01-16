@@ -12,10 +12,16 @@ import { ExpenseSummary } from '../../../../models/dashboard.model';
   styleUrl: './dashboard-expenses-widget.scss'
 })
 export class DashboardExpensesWidgetComponent {
-  @Input() expenses: ExpenseSummary = { total: 0, items: [] };
+  @Input() expenses: ExpenseSummary = { total: 0, budget: 0, remaining: 0, items: [] };
 
   addExpense(): void {
     console.log('Añadir nuevo gasto');
     // TODO: Abrir modal o navegar a formulario de gastos
+  }
+
+  getProgressPercentage(): number {
+    if (this.expenses.budget === 0) return 0;
+    const percentage = (this.expenses.total / this.expenses.budget) * 100;
+    return Math.min(Math.round(percentage), 100);
   }
 }

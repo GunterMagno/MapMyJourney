@@ -1,6 +1,7 @@
 .trip-dashboard {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: var(--spacing-6);
 
   &__error {
     background-color: var(--bg-surface);
@@ -20,13 +21,13 @@
   &__grid {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-6);
+    gap: var(--spacing-4);
   }
 
   &__row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-6);
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--spacing-4);
 
     @media (max-width: 1023px) {
       grid-template-columns: 1fr;
@@ -34,6 +35,6 @@
   }
 
   &__widget {
-    min-height: 400px;
+    min-height: 350px;
   }
 }

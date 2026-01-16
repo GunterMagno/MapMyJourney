@@ -26,6 +26,8 @@ export interface ExpenseItem {
 
 export interface ExpenseSummary {
   total: number;
+  budget: number;
+  remaining: number;
   items: ExpenseItem[];
 }
 

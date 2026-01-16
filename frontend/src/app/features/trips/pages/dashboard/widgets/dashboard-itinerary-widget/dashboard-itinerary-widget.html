@@ -9,32 +9,43 @@
       *ngFor="let day of days; let i = index"
       class="itinerary-widget__day-card"
       [class.itinerary-widget__day-card--completed]="day.isCompleted"
-      (click)="goToDay(i)"
     >
-      <div class="itinerary-widget__date">{{ day.date }}</div>
+      <div class="itinerary-widget__date">
+        <div class="itinerary-widget__day-number">{{ getDayNumber(day.date) }}</div>
+        <div class="itinerary-widget__month">{{ getMonth(day.date) }}</div>
+      </div>
 
-      <ul class="itinerary-widget__activities" *ngIf="day.activities.length > 0">
-        <li *ngFor="let activity of day.activities">• {{ activity }}</li>
-      </ul>
+      <div class="itinerary-widget__separator"></div>
 
-      <p class="itinerary-widget__no-activities" *ngIf="day.activities.length === 0">
-        Sin actividades aún
-      </p>
+      <div class="itinerary-widget__activities-section">
+        <ul class="itinerary-widget__activities" *ngIf="day.activities.length > 0">
+          <li *ngFor="let activity of day.activities">• {{ activity }}</li>
+        </ul>
+
+        <p class="itinerary-widget__no-activities" *ngIf="day.activities.length === 0">
+          Sin actividades aún
+        </p>
+      </div>
 
       <button
         *ngIf="!day.isCompleted"
         class="itinerary-widget__day-button"
         (click)="goToDay(i); $event.stopPropagation()"
       >
-        →
+        <svg class="itinerary-widget__button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 12H6M18 12L13 7M18 12L13 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </button>
 
-      <div
+      <button
         *ngIf="day.isCompleted"
-        class="itinerary-widget__completed-badge"
+        class="itinerary-widget__day-button itinerary-widget__day-button--completed"
+        (click)="goToDay(i); $event.stopPropagation()"
       >
-        ✓ Completado
-      </div>
+        <svg class="itinerary-widget__button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
   </div>
 </div>
