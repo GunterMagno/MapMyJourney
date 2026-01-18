@@ -1,7 +1,9 @@
 .trip-dashboard {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-6);
+  width: 100%;
+  padding: var(--spacing-4);
+  margin: 0;
+  overflow-x: hidden;
+  background-color: var(--quinary-color-disabled);
 
   &__error {
     background-color: var(--bg-surface);
@@ -19,19 +21,18 @@
   }
 
   &__grid {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-4);
-  }
-
-  &__row {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     gap: var(--spacing-4);
+    width: 100%;
 
     @media (max-width: 1023px) {
       grid-template-columns: 1fr;
     }
+  }
+
+  &__row {
+    display: contents;
   }
 
   &__widget {

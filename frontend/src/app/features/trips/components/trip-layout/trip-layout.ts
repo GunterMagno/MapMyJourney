@@ -76,6 +76,11 @@ export class TripLayoutComponent implements OnInit, OnDestroy {
         label: 'Compartir', 
         route: 'compartir', 
         icon: '/assets/icons/sidebar/share.svg' 
+      },
+      { 
+        label: 'Configuración', 
+        route: 'configuracion', 
+        icon: '/assets/icons/sidebar/settings.svg' 
       }
     ];
   }

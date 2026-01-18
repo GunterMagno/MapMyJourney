@@ -28,7 +28,13 @@
     </div>
   </div>
 
-  <p class="polls-widget__no-polls" *ngIf="polls.length === 0">
-    Sin votaciones aún
-  </p>
+  <div class="polls-widget__empty-state" *ngIf="polls.length === 0">
+    <p class="polls-widget__no-polls">Sin votaciones aún</p>
+    <button class="polls-widget__create-btn" (click)="createNewPoll()">
+      <svg class="polls-widget__create-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Crear Votación
+    </button>
+  </div>
 </div>

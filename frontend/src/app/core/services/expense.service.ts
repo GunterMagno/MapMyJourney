@@ -43,8 +43,8 @@ export class ExpenseService {
     pageSize: number = 20
   ): Observable<ApiPaginatedResponse<ExpenseWithDetails>> {
     return this.api.get<ApiPaginatedResponse<ExpenseWithDetails>>(
-      this.endpoint,
-      { tripId, page, pageSize }
+      `trips/${tripId}/expenses`,
+      { page, pageSize }
     );
   }
 

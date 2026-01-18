@@ -1,6 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AutoSaveStateService } from '../../../core/services/auto-save-state.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Interfaz para un enlace de navegación del sidebar
@@ -30,7 +33,7 @@ export interface TripSidebarInfo {
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   // Información del viaje
   @Input() tripInfo?: TripSidebarInfo;
   
@@ -39,14 +42,39 @@ export class SidebarComponent implements OnInit {
   
   // Estado de colapso (para móvil)
   isCollapsed = false;
+  isSaved = true;
+  isAutoSaving = false;
 
-  constructor(private router: Router) {}
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private router: Router,
+    private autoSaveStateService: AutoSaveStateService
+  ) {}
 
   ngOnInit(): void {
     // Inicializar navegación si no se proporciona desde el padre
     if (this.navLinks.length === 0) {
       this.initializeDefaultNavLinks();
     }
+
+    // Subscribe to auto-save state changes
+    this.autoSaveStateService.getIsSaved()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(isSaved => {
+        this.isSaved = isSaved;
+      });
+
+    this.autoSaveStateService.getIsAutoSaving()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(isAutoSaving => {
+        this.isAutoSaving = isAutoSaving;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -84,6 +112,11 @@ export class SidebarComponent implements OnInit {
         label: 'Compartir', 
         route: 'compartir', 
         icon: '/assets/icons/sidebar/share.svg' 
+      },
+      { 
+        label: 'Configuración', 
+        route: 'configuracion', 
+        icon: '/assets/icons/sidebar/settings.svg' 
       }
     ];
   }
@@ -98,6 +131,17 @@ export class SidebarComponent implements OnInit {
   openChat(): void {
     // TODO: Implementar apertura de chat
     console.log('Abriendo chat...');
+  }
+
+  /**
+   * Ejecuta el guardado manual
+   */
+  async saveChanges(): Promise<void> {
+    try {
+      await this.autoSaveStateService.executeSave();
+    } catch (error) {
+      console.error('Error saving changes:', error);
+    }
   }
 
   /**

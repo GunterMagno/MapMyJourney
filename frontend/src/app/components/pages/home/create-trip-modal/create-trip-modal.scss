@@ -81,12 +81,13 @@
       padding-right: var(--spacing-10);
       
       &::-webkit-calendar-picker-indicator {
-        opacity: 0;
+        opacity: 1;
         position: absolute;
         right: var(--spacing-3);
         cursor: pointer;
         width: 24px;
         height: 24px;
+        filter: invert(0.5);
       }
     }
 

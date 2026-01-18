@@ -8,8 +8,9 @@ import { takeUntil } from 'rxjs/operators';
 import { LoadingSpinnerComponent } from '../../../../components/shared/loading-spinner/loading-spinner';
 import { TripService } from '../../../../services/trip.service';
 import { ExpenseService } from '../../../../core/services/expense.service';
+import { ItineraryStateService } from '../../services/itinerary-state.service';
 
-import { DashboardData } from '../../models/dashboard.model';
+import { DashboardData, ItineraryDay } from '../../models/dashboard.model';
 import { DashboardItineraryWidgetComponent } from './widgets/dashboard-itinerary-widget/dashboard-itinerary-widget';
 import { DashboardDocumentsWidgetComponent } from './widgets/dashboard-documents-widget/dashboard-documents-widget';
 import { DashboardExpensesWidgetComponent } from './widgets/dashboard-expenses-widget/dashboard-expenses-widget';
@@ -40,6 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private tripService = inject(TripService);
   private expenseService = inject(ExpenseService);
+  private itineraryStateService = inject(ItineraryStateService);
 
   ngOnInit(): void {
     // Obtener tripId de la ruta actual o del parent
@@ -74,9 +76,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: any) => {
+          // Inicializar el itinerario en el servicio de estado
+          this.itineraryStateService.initializeItinerary(
+            this.tripId,
+            data.trip.startDate,
+            data.trip.endDate
+          );
+          
           // Combinar datos del backend
           this.dashboardData = this.buildDashboardData(data.trip, data.expenses);
           this.isLoading = false;
+          
+          // Suscribirse a cambios en el itinerario
+          this.itineraryStateService.getItineraryState(this.tripId)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(itineraryDays => {
+              if (this.dashboardData) {
+                this.dashboardData.itinerary = this.convertToItineraryDays(itineraryDays);
+              }
+            });
         },
         error: (err: any) => {
           console.error('Error loading dashboard data:', err);
@@ -106,8 +124,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       };
     });
 
-    // Generar días del itinerario basado en las fechas del viaje
-    const itineraryDays = this.generateItineraryDays(trip.startDate, trip.endDate);
+    // Generar días del itinerario desde el servicio de estado
+    const itineraryStates = this.itineraryStateService.getCurrentItinerary(this.tripId);
+    const itineraryDays = this.convertToItineraryDays(itineraryStates);
 
     return {
       itinerary: itineraryDays,
@@ -123,28 +142,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Genera los días del itinerario basado en las fechas del viaje
+   * Convierte los estados del itinerario a formato ItineraryDay para el dashboard
    */
-  private generateItineraryDays(startDate: string, endDate: string): any[] {
-    const days: any[] = [];
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    
-    let current = new Date(start);
-    let dayNumber = 1;
-    
-    while (current <= end) {
-      days.push({
-        date: current.toISOString(),
-        activities: [], // Sin actividades por ahora
-        isCompleted: false,
-        dayNumber: dayNumber
-      });
-      current.setDate(current.getDate() + 1);
-      dayNumber++;
-    }
-    
-    return days;
+  private convertToItineraryDays(states: any[]): ItineraryDay[] {
+    return states.map(state => ({
+      date: state.date,
+      activities: state.activities || [],
+      isCompleted: state.isCompleted,
+      dayNumber: state.dayIndex + 1
+    }));
   }
 
   /**

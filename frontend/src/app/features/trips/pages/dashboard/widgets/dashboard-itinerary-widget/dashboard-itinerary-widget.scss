@@ -2,9 +2,14 @@
   background-color: #FFF9C4;
   border-radius: 12px;
   padding: var(--spacing-6);
-  height: 100%;
+  height: 40vh;
+  max-height: 40vh;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
 
   &__title {
     display: flex;
@@ -14,6 +19,7 @@
     font-weight: 600;
     margin: 0 0 var(--spacing-4) 0;
     color: var(--text-main);
+    flex-shrink: 0;
   }
 
   &__icon {
@@ -23,29 +29,42 @@
 
   &__timeline {
     display: flex;
-    gap: var(--spacing-3);
-    overflow-x: auto;
+    gap: var(--spacing-4);
     padding-bottom: var(--spacing-3);
     flex: 1;
+    width: 100%;
+    height: 100%;
     max-width: 100%;
-
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    max-width: calc(49vw + 4 * var(--spacing-4));
+    
     &::-webkit-scrollbar {
-      height: 6px;
+      height: 8px;
     }
-
+    
     &::-webkit-scrollbar-track {
-      background: transparent;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
     }
-
+    
     &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 3px;
+      background: var(--principal-color);
+      border-radius: 4px;
+      
+      &:hover {
+        background: var(--principal-color-hover);
+      }
     }
   }
 
   &__day-card {
-    flex-shrink: 0;
-    width: 160px;
+    flex: 0 0 170px;
+    min-width: 170px;
+    max-width: 170px;
     background-color: white;
     border-radius: 8px;
     padding: var(--spacing-3);
@@ -121,6 +140,55 @@
     color: var(--text-secondary);
     font-style: italic;
     text-align: center;
+  }
+
+  &__status-btn {
+    width: 100%;
+    height: 36px;
+    border-radius: 8px;
+    background-color: #EF476F;
+    color: white;
+    border: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-2);
+    padding: 0 var(--spacing-3);
+    margin-top: auto;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 71, 111, 0.3);
+      opacity: 0.95;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &--completed {
+      background-color: var(--quaternary-color);
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(17, 138, 178, 0.3);
+      }
+    }
+  }
+
+  &__status-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  &__status-text {
+    line-height: 1;
+    flex: 1;
+    text-align: left;
   }
 
   &__day-button {

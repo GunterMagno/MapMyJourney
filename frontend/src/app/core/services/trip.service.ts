@@ -54,6 +54,14 @@ export class TripService {
   }
 
   /**
+   * Obtener un viaje por su ID
+   * @param tripId ID del viaje
+   */
+  getTripById(tripId: number): Observable<Trip> {
+    return this.api.get<Trip>(`${this.endpoint}/${tripId}`);
+  }
+
+  /**
    * Crear un nuevo viaje
    * @param trip Datos del viaje a crear
    */

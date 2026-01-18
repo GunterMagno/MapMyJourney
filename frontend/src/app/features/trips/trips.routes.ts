@@ -69,6 +69,12 @@ export const TRIPS_ROUTES: Routes = [
         loadComponent: () => 
           import('./pages/share/share.component').then(m => m.ShareComponent),
         data: { breadcrumb: 'Compartir' }
+      },
+      {
+        path: 'configuracion',
+        loadComponent: () => 
+          import('./pages/trip-settings/trip-settings').then(m => m.TripSettingsComponent),
+        data: { breadcrumb: 'Configuración' }
       }
     ]
   }

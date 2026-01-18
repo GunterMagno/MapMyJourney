@@ -1,0 +1,48 @@
+<div class="itinerary-page">
+  <div class="itinerary-page__header">
+    <h1 class="itinerary-page__title">Itinerario del Viaje</h1>
+    <p class="itinerary-page__subtitle">Gestiona los días de tu viaje y marca los que hayas completado</p>
+  </div>
+
+  <div class="itinerary-page__days-grid">
+    <div
+      *ngFor="let day of days; let i = index"
+      class="itinerary-page__day-card"
+      [class.itinerary-page__day-card--completed]="day.isCompleted"
+    >
+      <div class="itinerary-page__day-header">
+        <div class="itinerary-page__date-info">
+          <div class="itinerary-page__day-number">{{ getDayNumber(day) }}</div>
+          <div class="itinerary-page__month">{{ getMonth(day) }}</div>
+        </div>
+      </div>
+
+      <div class="itinerary-page__separator"></div>
+
+      <div class="itinerary-page__activities-section">
+        <ul class="itinerary-page__activities" *ngIf="day.activities.length > 0">
+          <li *ngFor="let activity of day.activities">• {{ activity }}</li>
+        </ul>
+
+        <p class="itinerary-page__no-activities" *ngIf="day.activities.length === 0">
+          Sin actividades aún
+        </p>
+      </div>
+
+      <button
+        class="itinerary-page__status-btn"
+        [class.itinerary-page__status-btn--completed]="day.isCompleted"
+        (click)="toggleDayCompletion(i)"
+        [title]="day.isCompleted ? 'Marcar como no completado' : 'Marcar como completado'"
+      >
+        <span class="itinerary-page__status-text">
+          {{ day.isCompleted ? 'Completado' : 'No Completado' }}
+        </span>
+        <svg class="itinerary-page__status-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path *ngIf="day.isCompleted" d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path *ngIf="!day.isCompleted" d="M18 6l-12 12M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
