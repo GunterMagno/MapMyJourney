@@ -259,8 +259,7 @@ graph TD
 
 ## Estado de los tests
 
-### ✅ - Test Correctos## 📝 Licencia
-
+### ✅ - Test Correctos
 Este proyecto está bajo licencia abierta. Consulta el archivo [LICENSE](/docs/legal/LICENSE) para más detalles.
 
 ---
