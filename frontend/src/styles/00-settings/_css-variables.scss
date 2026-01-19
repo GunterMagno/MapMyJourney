@@ -93,6 +93,15 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+  
+  // ========================================================================
+  // COLORES DE MARCA - MODO OSCURO (Para componentes que los usan)
+  // ========================================================================
+  --principal-color-disabled: #2A1530;
+  --secondary-color-disabled: #2A1D15;
+  --tertiary-color-disabled: #1A2A2A;
+  --quaternary-color-disabled: #2A2A1A;
+  --quinary-color-disabled: #1A1A2A;
 }
 
 // ============================================================================

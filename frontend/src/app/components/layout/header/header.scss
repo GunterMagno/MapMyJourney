@@ -11,6 +11,7 @@
   width: 100%;
   position: relative;
   box-sizing: border-box;
+  transition: var(--theme-transition);
 
   &__left {
     display: flex;
@@ -349,6 +350,22 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 998;
     animation: fadeIn var(--transition-medium);
+  }
+
+  // Tablet: Mostrar hamburguesa
+  @media (max-width: 767px) and (min-width: 376px) {
+    &__hamburguesa {
+      display: flex !important;
+    }
+    
+    &__center {
+      display: none;
+    }
+    
+    &__btn--primary,
+    &__btn--secondary {
+      display: none;
+    }
   }
 
   @media (max-width: var(--breakpoint-mobile-max)) {

@@ -3,10 +3,14 @@ body {
   font-family: var(--font-tertiary);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-normal);
-  background-color: var(--tertiary-color-disabled);
+  background-color: var(--bg-body);
   color: var(--text-main);
   
   // FASE 6: Transición suave al cambiar tema
+  transition: var(--theme-transition);
+}
+
+h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select {
   transition: var(--theme-transition);
 }
 

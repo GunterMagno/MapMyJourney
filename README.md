@@ -33,6 +33,13 @@
 
 ## 🛠️ Stack Tecnológico
 
+![Angular](https://img.shields.io/badge/Angular-21.0-red?style=flat-square&logo=angular)
+![SCSS](https://img.shields.io/badge/SCSS-ITCSS-blue?style=flat-square&logo=sass)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?style=flat-square&logo=typescript)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-green?style=flat-square&logo=springboot)
+![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-success?style=flat-square&logo=github)
+![Java](https://img.shields.io/badge/Java-21-orange?style=flat-square&logo=java)
+
 ### Backend
 - **Framework**: Spring Boot 3.5.6
 - **Lenguaje**: Java 21

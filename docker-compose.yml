@@ -1,0 +1,76 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: mapmyjourney-db
+    environment:
+      - POSTGRES_DB=mapmyjourney
+      - POSTGRES_USER=mapmyjourney
+      - POSTGRES_PASSWORD=mapmyjourney123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./backend/src/main/resources/db/migration:/docker-entrypoint-initdb.d
+    networks:
+      - mapmyjourney-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mapmyjourney"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mapmyjourney-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mapmyjourney
+      - SPRING_DATASOURCE_USERNAME=mapmyjourney
+      - SPRING_DATASOURCE_PASSWORD=mapmyjourney123
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDLAUTO=validate
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+    networks:
+      - mapmyjourney-network
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - backend-logs:/app/logs
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mapmyjourney-frontend
+    ports:
+      - "4200:4200"
+      - "4300:4300"
+    environment:
+      - NODE_ENV=production
+      - API_URL=http://backend:8080/api
+    networks:
+      - mapmyjourney-network
+    restart: unless-stopped
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  mapmyjourney-network:
+    driver: bridge
+
+volumes:
+  backend-logs:
+  postgres-data:

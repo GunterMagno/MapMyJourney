@@ -7,3 +7,46 @@
 @use "./styles/03-elements/base";
 @use "./styles/04-layout/layout";
 @use "./styles/05-animations/animations";
+
+// Dark Mode Overrides - Aplica a [data-theme="dark"]
+[data-theme="dark"] {
+    /* Principal Colors */
+    --principal-color: #FF5A7E;
+    --secondary-color: #FF8C5A;
+    --tertiary-color: #FFD966;
+    --quaternary-color: #4DD0B3;
+    --quinary-color: #1AAFDD;
+
+    /* Hover Colors */
+    --principal-color-hover: #E63F68;
+    --secondary-color-hover: #E67A4A;
+    --tertiary-color-hover: #E6C555;
+    --quaternary-color-hover: #39B894;
+    --quinary-color-hover: #0F98C5;
+
+    /* Disabled Colors */
+    --principal-color-disabled: #8B3355;
+    --secondary-color-disabled: #8B5544;
+    --tertiary-color-disabled: #8B7744;
+    --quaternary-color-disabled: #4D7D6B;
+    --quinary-color-disabled: #4D7A8B;
+    
+    /* Support Colors */
+    --text-color: var(--quinary-color);
+    --correct-color: #66DD33;
+    --error-color: #FF6B5B;
+    --error-color-disabled: #8B4D47;
+    --warning-color: var(--secondary-color);
+    --info-color: var(--quinary-color);
+    --dark-color: #141414;
+
+    /* Background & Text */
+    --bg-body: #1A1A1A;
+    --bg-surface: #252525;
+    --bg-elevated: #323232;
+    --text-main: #FFFFFF;
+    --text-secondary: #D0D0D0;
+    --text-inverse: #1A1A1A;
+    --border-color: #404040;
+    --hover-bg: #3A3A3A;
+}

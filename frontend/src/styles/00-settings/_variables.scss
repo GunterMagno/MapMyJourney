@@ -134,7 +134,8 @@
     --spacing-24: 6rem;    
 }
 
-.dark-mode {
+.dark-mode,
+[data-theme="dark"] {
     /* Principal Colors */
     --principal-color: #FF5A7E;
     --secondary-color: #FF8C5A;
