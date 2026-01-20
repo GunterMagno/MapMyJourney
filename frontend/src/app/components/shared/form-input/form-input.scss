@@ -35,14 +35,18 @@
     border-radius: var(--border-radius-small);
     font-size: var(--font-size-medium);
     font-family: var(--font-tertiary);
-    background-color: var(--tertiary-color-disabled);
-    color: var(--text-main);
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
     transition: border-color var(--transition-fast), background-color var(--transition-fast);
 
     &:focus {
       outline: none;
       border-color: var(--info-color);
-      background-color: var(--tertiary-color-disabled);
+      background-color: #FFFFFF !important;
+    }
+
+    &::placeholder {
+      color: #999999 !important;
     }
 
     &--error {
@@ -82,23 +86,39 @@
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
   }
 
   // Botón para toggle password visibility
   &__toggle-password {
     position: absolute;
-    right: var(--spacing-3);
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    background: none;
+    background: transparent;
     border: none;
     cursor: pointer;
-    padding: var(--spacing-2);
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 4px;
     color: var(--text-secondary);
-    transition: color var(--transition-fast);
+    transition: opacity var(--transition-fast), color var(--transition-fast);
+    z-index: 10;
+    width: 28px;
+    height: 28px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      opacity: 0.8;
+      color: var(--principal-color);
+    }
 
     &:hover {
       color: var(--text-main);

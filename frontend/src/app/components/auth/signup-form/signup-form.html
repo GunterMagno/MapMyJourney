@@ -29,47 +29,23 @@
       <div class="signup__password-group">
         <app-form-input
           label="Contraseña"
-          [type]="showPassword ? 'text' : 'password'"
+          type="password"
           placeholder="Min. 8 chars, mayús., minús., número, especial"
           inputId="password"
           [control]="$any(signupForm.get('password'))">
         </app-form-input>
-        <button
-          type="button"
-          (click)="togglePasswordVisibility()"
-          class="signup__password-toggle"
-          title="Mostrar/ocultar contraseña"
-          tabindex="-1">
-          @if (showPassword) {
-            👁️
-          } @else {
-            👁️‍🗨️
-          }
-        </button>
       </div>
 
       <!-- Confirm password field with cross-field validation and toggle -->
       <div class="signup__password-group">
         <app-form-input
           label="Confirmar Contraseña"
-          [type]="showConfirmPassword ? 'text' : 'password'"
+          type="password"
           placeholder="Repite tu contraseña"
           inputId="confirmPassword"
           [control]="$any(signupForm.get('confirmPassword'))"
           [parentForm]="signupForm">
         </app-form-input>
-        <button
-          type="button"
-          (click)="toggleConfirmPasswordVisibility()"
-          class="signup__password-toggle"
-          title="Mostrar/ocultar contraseña"
-          tabindex="-1">
-          @if (showConfirmPassword) {
-            👁️
-          } @else {
-            👁️‍🗨️
-          }
-        </button>
       </div>
 
       <!-- Dynamic phone numbers FormArray -->

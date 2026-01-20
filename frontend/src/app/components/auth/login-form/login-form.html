@@ -16,23 +16,11 @@
       <div class="login-form__password-group">
         <app-form-input
           label="Contraseña"
-          [type]="showPassword ? 'text' : 'password'"
+          type="password"
           placeholder="••••••••"
           inputId="login-password"
           [control]="$any(passwordControl)">
         </app-form-input>
-        <button
-          type="button"
-          (click)="togglePasswordVisibility()"
-          class="login-form__password-toggle"
-          title="Mostrar/ocultar contraseña"
-          tabindex="-1">
-          @if (showPassword) {
-            👁️
-          } @else {
-            👁️‍🗨️
-          }
-        </button>
       </div>
 
       <app-form-checkbox

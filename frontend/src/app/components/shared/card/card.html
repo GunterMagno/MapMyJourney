@@ -6,8 +6,7 @@
         media="(min-width: 768px)"
         srcset="
           https://placehold.co/800x450/667eea/ffffff?text=Trip@800w 800w,
-          https://placehold.co/1200x675/667eea/ffffff?text=Trip@1200w 1200w
-        "
+          https://placehold.co/1200x675/667eea/ffffff?text=Trip@1200w 1200w"
         sizes="(min-width: 1200px) 400px, (min-width: 768px) 50vw, 100vw">
       
       <img 
@@ -30,17 +29,7 @@
       <ng-content select="[slot='destination']"></ng-content>
     </div>
 
-    <!-- Descripción -->
-    <div class="card__description">
-      <ng-content select="[slot='description']"></ng-content>
-    </div>
-
-    <!-- Fechas -->
-    <div class="card__dates">
-      <ng-content select="[slot='dates']"></ng-content>
-    </div>
-
-    <!-- Footer con botón "Ver" -->
+    <!-- Footer con botón "Ver Detalles" -->
     <footer class="card__footer">
       <ng-content select="[slot='footer']"></ng-content>
     </footer>

@@ -21,12 +21,15 @@ export class ToastService {
   }
 
   show(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info', duration: number = 3000): void {
-    // Evitar duplicados: si el mensaje ya existe, no agregar
+    // Evitar duplicados: Si ya existe un toast con el mismo mensaje, no hacer nada
     const currentToasts = this.toasts$.getValue();
-    const isDuplicate = currentToasts.some(t => t.message === message && t.type === type);
+    
+    // Comparar mensajes normalizados (ignorar espacios extra y mayúsculas iniciales)
+    const normalizedNewMessage = message.trim().toLowerCase();
+    const isDuplicate = currentToasts.some(t => t.message.trim().toLowerCase() === normalizedNewMessage);
     
     if (isDuplicate) {
-      return; // No agregar si es duplicado
+      return;
     }
 
     const id = `toast-${Date.now()}`;

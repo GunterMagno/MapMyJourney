@@ -11,6 +11,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-12);
+  background-color: var(--tertiary-color-disabled);
 }
 
 .login-form {
@@ -29,7 +30,7 @@
 .login-form__title {
   margin: 0 0 var(--spacing-4) 0;
   font-size: var(--font-size-tittle-h2);
-  color: var(--text-main);
+  color: var(--principal-color);
   text-align: center;
   font-weight: var(--font-weight-bold);
 }
@@ -41,22 +42,31 @@
 
 .login-form__password-toggle {
   position: absolute;
-  right: var(--spacing-3);
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
+  background: transparent;
   border: none;
   cursor: pointer;
-  font-size: var(--font-size-large);
-  padding: var(--spacing-2);
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), color var(--transition-fast);
   color: var(--text-secondary);
+  width: 28px;
+  height: 28px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    flex-shrink: 0;
+  }
 
   &:hover {
-    opacity: 0.7;
+    opacity: 0.8;
+    color: var(--principal-color);
   }
 
   &:active {

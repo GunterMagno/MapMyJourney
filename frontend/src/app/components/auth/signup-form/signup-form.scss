@@ -62,22 +62,31 @@
 
   &__password-toggle {
     position: absolute;
-    right: var(--spacing-3);
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    background: none;
+    background: transparent;
     border: none;
     cursor: pointer;
-    font-size: var(--font-size-large);
-    padding: var(--spacing-2);
+    padding: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity var(--transition-fast);
+    transition: opacity var(--transition-fast), color var(--transition-fast);
     color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      flex-shrink: 0;
+    }
 
     &:hover {
-      opacity: 0.7;
+      opacity: 0.8;
+      color: var(--principal-color);
     }
 
     &:active {

@@ -43,7 +43,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
         // No encontrado
         case 404:
-          toastService.warning(`Recurso no encontrado: ${error.error?.message || ''}`);
+          toastService.warning(error.error?.message || 'Recurso no encontrado');
           break;
 
         // Error de servidor
