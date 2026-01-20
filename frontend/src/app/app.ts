@@ -1,6 +1,6 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
+import { ToastComponent } from './components/shared/toast/toast';
 import { LoadingComponent } from './components/shared/loading/loading';
 import { ThemeService } from './services/theme.service';
 
@@ -11,7 +11,7 @@ import { ThemeService } from './services/theme.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ToastContainerComponent, LoadingComponent],
+  imports: [RouterOutlet, ToastComponent, LoadingComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialize theme from system preference or localStorage
-    this.themeService.getCurrentTheme();
+    this.themeService.initializeTheme();
   }
 }
 

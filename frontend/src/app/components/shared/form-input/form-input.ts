@@ -18,6 +18,9 @@ export class FormInputComponent {
   @Input() control: AbstractControl | null = null;
   @Input() parentForm: FormGroup | null = null;
 
+  // Toggle password visibility
+  isPasswordVisible: boolean = false;
+
   /**
    * Cast control to FormControl for template usage
    */
@@ -105,4 +108,12 @@ export class FormInputComponent {
     
     return 'Campo inválido';
   }
+
+  /**
+   * Toggle password visibility for password fields
+   */
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
 }
+

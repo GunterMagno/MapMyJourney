@@ -1,7 +1,7 @@
 <header class="header" [class.dark-mode-active]="isDarkTheme">
   <section class="header__left">
     <a routerLink="/">
-      <img src="assets/logo.png" alt="MapMyJourney-Logo" class="header__logo-img">
+      <img src="assets/logo.png" alt="MapMyJourney-Logo" class="header__logo-img" />
     </a>
   </section>
 
@@ -10,8 +10,21 @@
   </section>
 
   <section class="header__right">
-    <button class="header__theme-btn" (click)="toggleTheme()" aria-label="Cambiar tema">
-      <svg class="header__theme-icon header__theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button
+      class="header__theme-btn"
+      (click)="toggleTheme()"
+      aria-label="Cambiar tema"
+      type="button"
+    >
+      <svg
+        class="header__theme-icon header__theme-icon--sun"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <circle cx="12" cy="12" r="5"></circle>
         <line x1="12" y1="1" x2="12" y2="3"></line>
         <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -32,7 +45,7 @@
       class="header__hamburger"
       (click)="toggleMobileMenu()"
       aria-label="Abrir menú de navegación"
-      aria-expanded="false"
+      [attr.aria-expanded]="isMobileMenuOpen"
       aria-controls="mobile-menu"
       type="button"
     >
@@ -41,82 +54,101 @@
       <span class="header__hamburger-line"></span>
     </button>
 
-    @if (!isLoggedIn) {
-      <button class="header__btn header__btn--primary" (click)="login()">
-        Iniciar Sesion
+    <ng-container *ngIf="!isLoggedIn">
+      <button class="header__btn header__btn--primary" (click)="login()" type="button">
+        Iniciar Sesión
       </button>
-      <button class="header__btn header__btn--secondary" (click)="signup()">
+      <button class="header__btn header__btn--secondary" (click)="signup()" type="button">
         Registrarse
       </button>
-    }
+    </ng-container>
 
-    @if (isLoggedIn) {
-      @if (showMyTripsBtn) {
-        <button class="header__btn header__btn--primary" (click)="goToTrips()">
+    <ng-container *ngIf="isLoggedIn">
+      <ng-container *ngIf="showMyTripsBtn">
+        <button class="header__btn header__btn--primary" (click)="goToTrips()" type="button">
           Mis Viajes
         </button>
-      }
-      @if (showCreateTripBtn) {
-        <button class="header__btn header__btn--primary" (click)="createTrip()">
+      </ng-container>
+      <ng-container *ngIf="showCreateTripBtn">
+        <button class="header__btn header__btn--primary" (click)="createTrip()" type="button">
           Crear un viaje
         </button>
-      }
-      <button class="header__profile-btn" (click)="goToProfile()" aria-label="Ir a mi perfil">
-        <img src="assets/profile-picture.png" alt="Perfil" class="header__profile-picture">
+      </ng-container>
+      <button class="header__profile-btn" (click)="goToProfile()" aria-label="Ir a mi perfil" type="button">
+        <img src="assets/profile-picture.png" alt="Perfil" class="header__profile-picture" />
       </button>
-      <button class="header__btn header__btn--secondary" (click)="logout()" aria-label="Cerrar sesion">
-        Cerrar sesion
+      <button class="header__btn header__btn--secondary" (click)="logout()" aria-label="Cerrar sesión" type="button">
+        Cerrar sesión
       </button>
-    }
+    </ng-container>
   </section>
 
-  <!-- Mobile Menu Overlay -->
   <nav
     class="header__mobile-menu"
     [class.header__mobile-menu--open]="isMobileMenuOpen"
     #mobileMenu
     id="mobile-menu"
     role="navigation"
+    [attr.aria-hidden]="!isMobileMenuOpen"
   >
     <article class="header__mobile-menu-header">
       <h2 class="header__mobile-menu-title">Menú</h2>
-      <button class="header__mobile-menu-close" (click)="closeMobileMenu()" aria-label="Cerrar menu">×</button>
+      <button class="header__mobile-menu-close" (click)="closeMobileMenu()" aria-label="Cerrar menú" type="button">
+        ×
+      </button>
     </article>
-    
+
     <article class="header__mobile-menu-content">
-      <button class="header__mobile-menu-btn header__mobile-menu-btn--theme" (click)="toggleTheme()">
+      <button class="header__mobile-menu-btn header__mobile-menu-btn--theme" (click)="toggleTheme()" type="button">
         {{ isDarkTheme ? 'Modo Claro' : 'Modo Oscuro' }}
       </button>
 
-      @if (!isLoggedIn) {
-        <button class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="login(); closeMobileMenu()">
-          Iniciar Sesion
+      <ng-container *ngIf="!isLoggedIn">
+        <button
+          class="header__mobile-menu-btn header__mobile-menu-btn--primary"
+          (click)="login(); closeMobileMenu()"
+          type="button"
+        >
+          Iniciar Sesión
         </button>
-        <button class="header__mobile-menu-btn header__mobile-menu-btn--secondary" (click)="signup(); closeMobileMenu()">
+        <button
+          class="header__mobile-menu-btn header__mobile-menu-btn--secondary"
+          (click)="signup(); closeMobileMenu()"
+          type="button"
+        >
           Registrarse
         </button>
-      }
+      </ng-container>
 
-      @if (isLoggedIn) {
-        @if (showMyTripsBtn) {
-          <button class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="goToTrips(); closeMobileMenu()">
+      <ng-container *ngIf="isLoggedIn">
+        <ng-container *ngIf="showMyTripsBtn">
+          <button
+            class="header__mobile-menu-btn header__mobile-menu-btn--primary"
+            (click)="goToTrips(); closeMobileMenu()"
+            type="button"
+          >
             Mis Viajes
           </button>
-        }
-        @if (showCreateTripBtn) {
-          <button class="header__mobile-menu-btn header__mobile-menu-btn--primary" (click)="createTrip(); closeMobileMenu()">
+        </ng-container>
+        <ng-container *ngIf="showCreateTripBtn">
+          <button
+            class="header__mobile-menu-btn header__mobile-menu-btn--primary"
+            (click)="createTrip(); closeMobileMenu()"
+            type="button"
+          >
             Crear un viaje
           </button>
-        }
-        <button class="header__mobile-menu-btn header__mobile-menu-btn--danger" (click)="logout(); closeMobileMenu()">
-          Cerrar sesion
+        </ng-container>
+        <button
+          class="header__mobile-menu-btn header__mobile-menu-btn--danger"
+          (click)="logout(); closeMobileMenu()"
+          type="button"
+        >
+          Cerrar sesión
         </button>
-      }
+      </ng-container>
     </article>
   </nav>
 
-  <!-- Overlay backdrop -->
-  @if (isMobileMenuOpen) {
-    <article class="header__overlay" (click)="closeMobileMenu()"></article>
-  }
+  <div class="header__overlay" *ngIf="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
 </header>

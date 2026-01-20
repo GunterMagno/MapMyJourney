@@ -24,7 +24,6 @@ export { AccordionComponent } from './components/shared/accordion/accordion';
 export { DynamicContentComponent } from './components/shared/dynamic-content/dynamic-content';
 
 // PHASE 2: Global Components
-export { ToastComponent } from './components/shared/toast/toast';
 export { LoadingComponent } from './components/shared/loading/loading';
 
 // PHASE 3: Form Components
@@ -47,7 +46,7 @@ export { TripsPageComponent } from './components/pages/trips-page/trips-page';
 // Services
 export { AuthService } from './services/auth.service';
 export { CommunicationService } from './services/communication.service';
-export { ToastService } from './services/toast.service';
+export { ToastService } from './core/services/toast.service';
 export { LoadingService } from './services/loading.service';
 export { ThemeService } from './services/theme.service';
 export { CustomValidators } from './services/custom-validators';

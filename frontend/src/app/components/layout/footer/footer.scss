@@ -8,17 +8,19 @@
 
   &__container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-20);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-12);
     margin-bottom: var(--spacing-8);
     max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
+    align-items: start;
   }
 
   &__section {
     display: flex;
     flex-direction: column;
+    gap: var(--spacing-2);
   }
 
   &__logo-section {
@@ -27,17 +29,8 @@
     text-align: center;
   }
 
-  &__links-section {
-    grid-column: 2;
-    align-items: center;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
+  &__links-section,
   &__legal-section {
-    grid-column: 3;
     align-items: center;
     text-align: center;
     display: flex;
@@ -153,21 +146,61 @@
     margin-right: auto;
   }
 
+  /* MEDIA QUERIES */
+  @media (max-width: 768px) {
+    padding: var(--spacing-6) var(--spacing-4);
+
+    &__container {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-6);
+      text-align: center;
+    }
+
+    &__section,
+    &__logo-section,
+    &__links-section,
+    &__legal-section {
+      text-align: center;
+      align-items: center;
+    }
+
+    &__logo {
+      justify-content: center;
+    }
+
+    &__social {
+      justify-content: center;
+    }
+
+    &__nav {
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    &__bottom-container {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
   @media (max-width: var(--breakpoint-tablet-max)) {
     padding: var(--spacing-6) var(--spacing-8);
 
     &__container {
-      grid-template-columns: repeat(2, 1fr);
       gap: var(--spacing-10);
-      margin-bottom: var(--spacing-4);
     }
 
     &__logo-section {
       grid-column: 1 / -1;
+      align-items: center;
+      text-align: center;
     }
 
+    &__links-section,
     &__legal-section {
-      grid-column: 2;
+      align-items: center;
+      text-align: center;
     }
 
     &__logo-img {
@@ -189,12 +222,12 @@
     }
   }
 
-  @media (max-width: var(--breakpoint-mobile-max)) {
+  @media (max-width: 639px) {
     padding: var(--spacing-6) var(--spacing-4);
 
     &__container {
       grid-template-columns: 1fr;
-      gap: var(--spacing-8);
+      gap: var(--spacing-6);
       margin-bottom: var(--spacing-4);
     }
 

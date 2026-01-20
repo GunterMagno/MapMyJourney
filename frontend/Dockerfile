@@ -28,7 +28,7 @@ RUN rm -rf /usr/share/nginx/html/*
 # Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Create custom nginx config for SPA
+# Create custom nginx config for SPA with API proxy
 RUN echo 'server { \
   listen 4200; \
   server_name _; \
@@ -37,6 +37,18 @@ RUN echo 'server { \
   \
   location / { \
     try_files $uri $uri/ /index.html; \
+  } \
+  \
+  location /api/ { \
+    proxy_pass http://backend:8080/api/; \
+    proxy_http_version 1.1; \
+    proxy_set_header Upgrade $http_upgrade; \
+    proxy_set_header Connection "upgrade"; \
+    proxy_set_header Host $host; \
+    proxy_set_header X-Real-IP $remote_addr; \
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
+    proxy_set_header X-Forwarded-Proto $scheme; \
+    proxy_cache_bypass $http_upgrade; \
   } \
   \
   location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ { \

@@ -12,11 +12,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(
-    135deg,
-    var(--principal-color) 0%,
-    var(--secondary-color) 100%
-  );
+  background-color: var(--tertiary-color-disabled);
   padding: var(--spacing-3);
   animation: backgroundShift 15s ease infinite;
 }
@@ -231,7 +227,7 @@
   margin: 0;
   font-size: var(--font-size-tittle-h3);
   font-weight: var(--font-weight-bold);
-  color: var(--text-main);
+  color: var(--principal-color);
   font-family: var(--font-primary);
 }
 

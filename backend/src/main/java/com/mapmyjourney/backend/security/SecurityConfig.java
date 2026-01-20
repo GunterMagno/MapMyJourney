@@ -52,6 +52,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Configurar autorización de endpoints
                 .authorizeHttpRequests(authorize -> authorize
+                        // Permitir todas las solicitudes OPTIONS (preflight CORS)
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         // Rutas públicas - permitir sin autenticación
                         .requestMatchers("/users/login", "/users/register").permitAll()
                         .requestMatchers("/health/**", "/health").permitAll()
@@ -70,14 +72,49 @@ public class SecurityConfig {
 
     /**
      * Configura CORS para permitir solicitudes desde el frontend en localhost:4200.
+     * Explícitamente permite el preflight (OPTIONS) que es obligatorio para CORS en navegadores.
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        
+        // Permitir orígenes específicos
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:4200", 
+            "http://localhost:3000",
+            "http://127.0.0.1:4200",
+            "http://127.0.0.1:3000"
+        ));
+        
+        // Permitir todos los métodos HTTP incluyendo OPTIONS (preflight)
+        configuration.setAllowedMethods(Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
+        ));
+        
+        // Permitir headers específicos
+        configuration.setAllowedHeaders(Arrays.asList(
+            "*",
+            "Content-Type",
+            "Authorization",
+            "X-Requested-With",
+            "Accept",
+            "Origin",
+            "Access-Control-Request-Method",
+            "Access-Control-Request-Headers",
+            "X-App-Client"
+        ));
+        
+        // Permitir credenciales (cookies, tokens)
         configuration.setAllowCredentials(true);
+        
+        // Permitir exponerExposeHeaders para el frontend
+        configuration.setExposedHeaders(Arrays.asList(
+            "Authorization",
+            "Content-Type",
+            "X-Total-Count"
+        ));
+        
+        // Cache preflight por 1 hora
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

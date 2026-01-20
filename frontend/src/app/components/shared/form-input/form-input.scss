@@ -35,14 +35,14 @@
     border-radius: var(--border-radius-small);
     font-size: var(--font-size-medium);
     font-family: var(--font-tertiary);
-    background-color: var(--bg-body);
+    background-color: var(--tertiary-color-disabled);
     color: var(--text-main);
     transition: border-color var(--transition-fast), background-color var(--transition-fast);
 
     &:focus {
       outline: none;
       border-color: var(--info-color);
-      background-color: var(--bg-body);
+      background-color: var(--tertiary-color-disabled);
     }
 
     &--error {
@@ -75,5 +75,44 @@
     margin-top: var(--spacing-2);
     color: var(--error-color);
     font-size: var(--font-size-extra-small);
+  }
+
+  // Wrapper para contener input y botón toggle
+  &__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  // Botón para toggle password visibility
+  &__toggle-password {
+    position: absolute;
+    right: var(--spacing-3);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--text-main);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  // SVG eye icon
+  &__eye-icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 0;
   }
 }

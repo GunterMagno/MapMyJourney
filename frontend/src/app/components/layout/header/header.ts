@@ -4,7 +4,6 @@ import {
   HostListener,
   ViewChild,
   ElementRef,
-  Renderer2,
   OnDestroy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -12,13 +11,12 @@ import { RouterModule, Router } from '@angular/router';
 import { ThemeService } from '../../../services/theme.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommunicationService } from '../../../services/communication.service';
-import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 /**
  * Header component (Navbar) with:
- * - Secure DOM manipulation using ViewChild and Renderer2
+ * - Secure DOM manipulation using ViewChild
  * - Event binding for menu toggle and theme switching
  * - @HostListener for window resize and ESC key
  * - Integration with services (Theme, Auth, Communication)
@@ -49,8 +47,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private themeService: ThemeService,
     private authService: AuthService,
     private communicationService: CommunicationService,
-    private renderer: Renderer2,
-    private elementRef: ElementRef,
     private router: Router
   ) {}
 
@@ -87,27 +83,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
    */
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    this.updateMenuVisibility();
-  }
-
-  /**
-   * Usa Renderer2 para evitar acceso directo al DOM
-   */
-  private updateMenuVisibility(): void {
-    if (!this.mobileMenu || !this.hamburgerBtn) {
-      return;
-    }
-
-    const menuElement = this.mobileMenu.nativeElement;
-    const buttonElement = this.hamburgerBtn.nativeElement;
-
-    if (this.isMobileMenuOpen) {
-      this.renderer.addClass(menuElement, 'open');
-      this.renderer.setAttribute(buttonElement, 'aria-expanded', 'true');
-    } else {
-      this.renderer.removeClass(menuElement, 'open');
-      this.renderer.setAttribute(buttonElement, 'aria-expanded', 'false');
-    }
   }
 
   /**
@@ -115,7 +90,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
    */
   closeMobileMenu(): void {
     this.isMobileMenuOpen = false;
-    this.updateMenuVisibility();
   }
 
   /**
@@ -212,14 +186,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * FASE 1: Event Handling - Close menu on window resize
-   * Prevents mobile menu from being stuck open when resizing to desktop
+   * Ensure the mobile menu closes when switching to desktop breakpoints
    */
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any): void {
-    if (window.innerWidth > 768) {
-      this.isMobileMenuOpen = false;
-      this.updateMenuVisibility();
+  @HostListener('window:resize')
+  onResize(): void {
+    if (window.innerWidth > 768 && this.isMobileMenuOpen) {
+      this.closeMobileMenu();
     }
   }
 

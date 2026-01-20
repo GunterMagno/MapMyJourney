@@ -1,67 +1,48 @@
 <article [class]="getCardClasses()">
+  <!-- Imagen con aspect ratio 16:9 -->
   <section class="card__image">
-    <!-- ============================================================================
-         FASE 5: RESPONSIVE IMAGES WITH ART DIRECTION
-         ============================================================================
-         
-         Estructura:
-         1. <picture> para Art Direction (diferentes formatos por dispositivo)
-         2. <source> con srcset y media queries para responsive images
-         3. Fallback <img> para navegadores sin soporte picture
-         
-         Breakpoints:
-         - Móvil (< 768px): Ratio 1:1 (cuadrado)
-         - Desktop (>= 768px): Ratio 16:9 (panorámico)
-         
-         Tamaños (responsive):
-         - 400w (móvil pequeño)
-         - 800w (móvil grande, tablet)
-         - 1200w (desktop)
-    ============================================================================ -->
     <picture class="card__picture">
-      <!-- MOBILE: Ratio 1:1 (cuadrado) - Max 768px -->
-      <source 
-        media="(max-width: 767px)"
-        srcset="
-          https://placehold.co/400x400/667eea/ffffff?text=Trip@400w 400w,
-          https://placehold.co/800x800/667eea/ffffff?text=Trip@800w 800w
-        "
-        sizes="(max-width: 480px) 100vw, (max-width: 768px) 90vw"
-        type="image/webp">
-      
-      <!-- DESKTOP: Ratio 16:9 (panorámico) - Min 768px -->
       <source 
         media="(min-width: 768px)"
         srcset="
           https://placehold.co/800x450/667eea/ffffff?text=Trip@800w 800w,
           https://placehold.co/1200x675/667eea/ffffff?text=Trip@1200w 1200w
         "
-        sizes="(min-width: 1200px) 400px, (min-width: 768px) 50vw, 100vw"
-        type="image/webp">
+        sizes="(min-width: 1200px) 400px, (min-width: 768px) 50vw, 100vw">
       
-      <!-- FALLBACK: Imagen principal (formato optimizado para web) -->
       <img 
         [src]="image || 'https://placehold.co/800x450/667eea/ffffff?text=MapMyJourney'" 
         [alt]="title || 'Trip Image'" 
         class="card__image-element"
         loading="lazy"
-        decoding="async"
-        width="800"
-        height="450">
+        decoding="async">
     </picture>
   </section>
 
+  <!-- Cuerpo minimalista -->
   <section class="card__content">
     @if (title) {
       <h3 class="card__title">{{ title }}</h3>
     }
 
-    @if (description) {
-      <p class="card__description">{{ description }}</p>
-    }
+    <!-- Destino -->
+    <div class="card__destination">
+      <ng-content select="[slot='destination']"></ng-content>
+    </div>
 
+    <!-- Descripción -->
+    <div class="card__description">
+      <ng-content select="[slot='description']"></ng-content>
+    </div>
+
+    <!-- Fechas -->
+    <div class="card__dates">
+      <ng-content select="[slot='dates']"></ng-content>
+    </div>
+
+    <!-- Footer con botón "Ver" -->
     <footer class="card__footer">
-      <ng-content></ng-content>
+      <ng-content select="[slot='footer']"></ng-content>
     </footer>
   </section>
 </article>

@@ -48,43 +48,32 @@
             [image]="trip.imageUrl"
             variant="vertical">
             
-            <div class="trip-info">
-              <div class="trip-info__destination">
-                <span class="trip-info__label">Destino:</span>
-                <span class="trip-info__value">{{ trip.destination }}</span>
-              </div>
+            <!-- Destino slot -->
+            <div slot="destination" class="trip-info__destination">
+              <span class="trip-info__label">Destino:</span>
+              <span class="trip-info__value">{{ trip.destination }}</span>
+            </div>
 
-              @if (trip.description) {
-                <div class="trip-info__description">
-                  <span class="trip-info__label">Descripción:</span>
-                  <span class="trip-info__value">{{ trip.description }}</span>
-                </div>
-              }
+            <!-- Description slot -->
+            <div slot="description" class="trip-info__description">
+              <span class="trip-info__label">Descripción:</span>
+              <span class="trip-info__value">{{ trip.description || 'Sin descripción' }}</span>
+            </div>
 
-              <div class="trip-info__dates">
-                <span class="trip-info__label">Fechas:</span>
-                <span class="trip-info__value">{{ trip.startDate | date: 'dd/MM/yyyy' }} - {{ trip.endDate | date: 'dd/MM/yyyy' }}</span>
-              </div>
-              
-              <div class="trip-info__budget">
-                <div class="trip-info__item">
-                  <span class="trip-info__label">Presupuesto:</span>
-                  <span class="trip-info__value">€{{ trip.budget || 0 }}</span>
-                </div>
-                <div class="trip-info__item">
-                  <span class="trip-info__label">Gastado:</span>
-                  <span class="trip-info__value trip-info__value--spent">€{{ trip.totalExpenses || 0 }}</span>
-                </div>
-              </div>
-              
-              <div class="trip-card__button-wrapper">
-                <app-button
-                  label="Ver Detalles"
-                  variant="primary"
-                  size="md"
-                  (click)="viewTrip(trip.id); $event.stopPropagation()">
-                </app-button>
-              </div>
+            <!-- Dates slot -->
+            <div slot="dates" class="trip-info__dates">
+              <span class="trip-info__label">Fechas:</span>
+              <span class="trip-info__value">{{ trip.startDate | date: 'dd/MM/yyyy' }} - {{ trip.endDate | date: 'dd/MM/yyyy' }}</span>
+            </div>
+
+            <!-- Footer slot with button -->
+            <div slot="footer" class="trip-card__button-wrapper">
+              <app-button
+                label="Ver Detalles"
+                variant="primary"
+                size="md"
+                (click)="viewTrip(trip.id); $event.stopPropagation()">
+              </app-button>
             </div>
           </app-card>
         </div>

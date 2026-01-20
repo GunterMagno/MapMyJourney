@@ -21,6 +21,14 @@ export class ToastService {
   }
 
   show(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info', duration: number = 3000): void {
+    // Evitar duplicados: si el mensaje ya existe, no agregar
+    const currentToasts = this.toasts$.getValue();
+    const isDuplicate = currentToasts.some(t => t.message === message && t.type === type);
+    
+    if (isDuplicate) {
+      return; // No agregar si es duplicado
+    }
+
     const id = `toast-${Date.now()}`;
     const toast: Toast = {
       id,
@@ -29,7 +37,6 @@ export class ToastService {
       duration
     };
 
-    const currentToasts = this.toasts$.getValue();
     this.toasts$.next([...currentToasts, toast]);
 
     // Auto-remove after duration
