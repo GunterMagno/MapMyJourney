@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { ButtonComponent } from '../../shared/button/button';
 import { FormInputComponent } from '../../shared/form-input/form-input';
 import { AuthService } from '../../../services/auth.service';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-login',

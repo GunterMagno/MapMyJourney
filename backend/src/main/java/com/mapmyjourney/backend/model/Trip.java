@@ -29,7 +29,8 @@ import java.util.Set;
 public class Trip {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trips_id_gen")
+    @SequenceGenerator(name = "trips_id_gen", sequenceName = "trips_id_seq", allocationSize = 1)
     private Long id;
 
     @NotBlank(message = "El título del viaje no puede estar vacío")

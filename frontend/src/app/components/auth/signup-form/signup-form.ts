@@ -20,7 +20,7 @@ import { ButtonComponent } from '../../shared/button/button';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
 import { AuthService } from '../../../services/auth.service';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { CustomValidators } from '../../../services/custom-validators';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -55,6 +55,8 @@ export class SignupFormComponent implements OnInit, OnDestroy {
 
   signupForm!: FormGroup;
   isSubmitting = false;
+  showPassword = false;
+  showConfirmPassword = false;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -183,7 +185,13 @@ export class SignupFormComponent implements OnInit, OnDestroy {
           this.isSubmitting = false;
         },
         error: (err) => {
-          this.toastService.error('Error en el registro. Intenta de nuevo.');
+          console.warn('=== SIGNUP ERROR HANDLER TRIGGERED ===');
+          console.error('Full error object:', err);
+          console.warn('Error extracted message:', err.error?.message);
+          const message = err.error?.message || err.message || 'Error en el registro. Intenta de nuevo.';
+          console.warn('Toast message to show:', message);
+          this.toastService.error(message);
+          console.warn('Toast.error() called');
           this.isSubmitting = false;
         }
       });
@@ -201,6 +209,20 @@ export class SignupFormComponent implements OnInit, OnDestroy {
         this.markFormGroupTouched(control);
       }
     });
+  }
+
+  /**
+   * Toggles password visibility.
+   */
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  /**
+   * Toggles confirm password visibility.
+   */
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   /**

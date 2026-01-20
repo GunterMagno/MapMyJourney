@@ -11,7 +11,7 @@ import { TripsFiltersComponent } from '../../shared/trips-filters/trips-filters.
 import { CreateTripModalComponent } from '../home/create-trip-modal/create-trip-modal';
 import { AuthService } from '../../../services/auth.service';
 import { LoadingService } from '../../../services/loading.service';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { TripFormData } from '../../../services/trip.service';
 import { TripService } from '../../../core/services/trip.service';

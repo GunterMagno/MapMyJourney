@@ -24,7 +24,8 @@ import java.time.LocalDateTime;
 public class ExpenseSplit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "expense_splits_id_gen")
+    @SequenceGenerator(name = "expense_splits_id_gen", sequenceName = "expense_splits_id_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

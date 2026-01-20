@@ -18,14 +18,12 @@
         }
       </span>
       <span class="toast__message">{{ toast.message }}</span>
-      @if (toast.dismissible) {
-        <button
-          class="toast__close-btn"
-          (click)="dismissToast(toast.id)"
-          aria-label="Cerrar notificación">
-          ✕
-        </button>
-      }
+      <button
+        class="toast__close-btn"
+        (click)="removeToast(toast.id)"
+        aria-label="Cerrar notificación">
+        ✕
+      </button>
     </div>
   }
 </div>

@@ -6,7 +6,7 @@ import { CardComponent } from '../../shared/card/card';
 import { CreateTripModalComponent } from './create-trip-modal/create-trip-modal';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { TripService, TripFormData, Trip } from '../../../services/trip.service';
 import { LoadingService } from '../../../services/loading.service';
 

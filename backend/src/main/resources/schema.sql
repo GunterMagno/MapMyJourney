@@ -4,7 +4,7 @@
 
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE INDEX IF NOT EXISTS idx_email ON users(email);
 
 -- Tabla de viajes
 CREATE TABLE IF NOT EXISTS trips (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     title VARCHAR(20) NOT NULL,
     destination VARCHAR(20) NOT NULL,
     description TEXT,
@@ -35,7 +35,7 @@ CREATE INDEX IF NOT EXISTS idx_created_at ON trips(created_at);
 
 -- Tabla de miembros de viaje (Many-to-Many)
 CREATE TABLE IF NOT EXISTS trip_members (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
     trip_id BIGINT NOT NULL,
     role VARCHAR(20) DEFAULT 'VIEWER',
@@ -49,7 +49,7 @@ CREATE INDEX IF NOT EXISTS idx_user_id_members ON trip_members(user_id);
 
 -- Tabla de gastos
 CREATE TABLE IF NOT EXISTS expenses (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     trip_id BIGINT NOT NULL,
     paid_by_user_id BIGINT NOT NULL,
     description VARCHAR(150) NOT NULL,
@@ -69,7 +69,7 @@ CREATE INDEX IF NOT EXISTS idx_expense_date ON expenses(expense_date);
 
 -- Tabla de divisiones de gastos
 CREATE TABLE IF NOT EXISTS expense_splits (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     expense_id BIGINT NOT NULL,
     participant_user_id BIGINT NOT NULL,
     amount DECIMAL(10,2) NOT NULL,

@@ -24,7 +24,8 @@ import java.time.LocalDateTime;
 public class TripMember {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_members_id_gen")
+    @SequenceGenerator(name = "trip_members_id_gen", sequenceName = "trip_members_id_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

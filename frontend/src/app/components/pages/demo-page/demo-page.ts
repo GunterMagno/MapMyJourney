@@ -11,7 +11,7 @@ import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
 import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
 import { CommunicationService } from '../../../services/communication.service';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
 import { Router } from '@angular/router';
 

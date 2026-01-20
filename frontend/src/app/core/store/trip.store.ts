@@ -29,7 +29,7 @@
 
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { TripService } from '../services/trip.service';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '../services/toast.service';
 import { Trip, ApiPaginatedResponse } from '../models';
 
 interface TripStoreState {

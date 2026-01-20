@@ -8,7 +8,7 @@ import { ButtonComponent } from '../../shared/button/button';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
 import { AuthService } from '../../../services/auth.service';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
 
 /**
@@ -41,6 +41,7 @@ import { LoadingService } from '../../../services/loading.service';
 export class LoginFormComponent implements OnInit {
   loginForm!: FormGroup;
   isSubmitting = false;
+  showPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -100,6 +101,10 @@ export class LoginFormComponent implements OnInit {
         this.toastService.error(error.message || 'Error al iniciar sesión');
       }
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   get emailControl() {

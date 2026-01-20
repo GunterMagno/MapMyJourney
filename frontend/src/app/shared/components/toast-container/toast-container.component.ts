@@ -8,16 +8,18 @@ import { ToastService, Toast } from '../../../core/services/toast.service';
   imports: [CommonModule],
   template: `
     <div class="toast-container">
-      <div *ngFor="let toast of toasts" [ngClass]="['toast', 'toast--' + toast.type]" [@fadeInOut]>
-        <div class="toast__content">
-          <div class="toast__message">{{ toast.message }}</div>
+      @for (toast of toasts; track toast.id) {
+        <div [class]="'toast toast--' + toast.type">
+          <div class="toast__content">
+            <div class="toast__message">{{ toast.message }}</div>
+          </div>
+          <button class="toast__close" (click)="toastService.remove(toast.id)">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
-        <button class="toast__close" (click)="toastService.remove(toast.id)">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
+      }
     </div>
   `,
   styles: [`

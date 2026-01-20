@@ -12,12 +12,12 @@ RUN npm ci --legacy-peer-deps
 # Copy source code
 COPY . .
 
-# Build the application (the exit code 1 is due to budget warnings, not actual build failure)
-RUN npm run build -- --configuration production --optimization=false || true
+# Build the application
+RUN npm run build -- --configuration production --optimization=false
 
-# List what was built
-RUN ls -la /app/dist/frontend/ || echo "No dist found"
-RUN ls -la /app/dist/frontend/browser/ 2>/dev/null | head -10 || echo "No browser folder"
+# List what was built for debugging
+RUN ls -la /app/dist/ || echo "No dist found"
+RUN find /app/dist -type d -maxdepth 2 2>/dev/null | head -20 || echo "No dist structure found"
 
 # Runtime stage - use nginx for serving SPA
 FROM nginx:alpine
@@ -45,7 +45,7 @@ RUN echo 'server { \
   } \
 }' > /etc/nginx/conf.d/default.conf
 
-# Copy built application from builder directory by directory
+# Copy built application - Angular outputs to dist/frontend/browser
 COPY --from=builder /app/dist/frontend/browser /usr/share/nginx/html
 
 # Verify the copy worked

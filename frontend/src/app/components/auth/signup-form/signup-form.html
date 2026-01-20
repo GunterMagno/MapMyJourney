@@ -25,24 +25,52 @@
         [control]="$any(signupForm.get('email'))">
       </app-form-input>
 
-      <!-- Password field with strength validation -->
-      <app-form-input
-        label="Contraseña"
-        type="password"
-        placeholder="Min. 8 chars, mayús., minús., número, especial"
-        inputId="password"
-        [control]="$any(signupForm.get('password'))">
-      </app-form-input>
+      <!-- Password field with strength validation and toggle -->
+      <div class="signup__password-group">
+        <app-form-input
+          label="Contraseña"
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Min. 8 chars, mayús., minús., número, especial"
+          inputId="password"
+          [control]="$any(signupForm.get('password'))">
+        </app-form-input>
+        <button
+          type="button"
+          (click)="togglePasswordVisibility()"
+          class="signup__password-toggle"
+          title="Mostrar/ocultar contraseña"
+          tabindex="-1">
+          @if (showPassword) {
+            👁️
+          } @else {
+            👁️‍🗨️
+          }
+        </button>
+      </div>
 
-      <!-- Confirm password field with cross-field validation -->
-      <app-form-input
-        label="Confirmar Contraseña"
-        type="password"
-        placeholder="Repite tu contraseña"
-        inputId="confirmPassword"
-        [control]="$any(signupForm.get('confirmPassword'))"
-        [parentForm]="signupForm">
-      </app-form-input>
+      <!-- Confirm password field with cross-field validation and toggle -->
+      <div class="signup__password-group">
+        <app-form-input
+          label="Confirmar Contraseña"
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          placeholder="Repite tu contraseña"
+          inputId="confirmPassword"
+          [control]="$any(signupForm.get('confirmPassword'))"
+          [parentForm]="signupForm">
+        </app-form-input>
+        <button
+          type="button"
+          (click)="toggleConfirmPasswordVisibility()"
+          class="signup__password-toggle"
+          title="Mostrar/ocultar contraseña"
+          tabindex="-1">
+          @if (showConfirmPassword) {
+            👁️
+          } @else {
+            👁️‍🗨️
+          }
+        </button>
+      </div>
 
       <!-- Dynamic phone numbers FormArray -->
       <div class="signup__phones-section" formArrayName="phoneNumbers">
