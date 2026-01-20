@@ -3,6 +3,7 @@ package com.mapmyjourney.backend.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +14,7 @@ import javax.sql.DataSource;
 
 /**
  * Executes the SQL statements contained in {@code data.sql} when the database is empty.
+ * IMPORTANT: This seeder is DISABLED in 'prod' profile to prevent overwriting user data.
  */
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
@@ -20,14 +22,25 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
+    private final Environment environment;
 
-    public DatabaseSeeder(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public DatabaseSeeder(JdbcTemplate jdbcTemplate, DataSource dataSource, Environment environment) {
         this.jdbcTemplate = jdbcTemplate;
         this.dataSource = dataSource;
+        this.environment = environment;
     }
 
     @Override
     public void run(String... args) throws Exception {
+        // CRÍTICO: No ejecutar seeding en producción
+        String[] activeProfiles = environment.getActiveProfiles();
+        boolean isProd = java.util.Arrays.asList(activeProfiles).contains("prod");
+        
+        if (isProd) {
+            log.info("Running in PROD profile. Skipping database seeding to preserve user data.");
+            return;
+        }
+
         log.info("Checking if database seeding is required...");
         if (!isSeedRequired()) {
             log.info("Skipping data.sql seeding; target user already exists or tables are not empty.");

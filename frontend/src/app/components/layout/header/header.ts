@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showMyTripsBtn = false;
   showCreateTripBtn = false;
   currentUserName: string | null = null;
+  currentUserAvatar: string | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -75,6 +76,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => {
         this.currentUserName = user?.name || null;
+        this.currentUserAvatar = user?.profilePicture || 'assets/profile-picture.png';
       });
   }
 

@@ -140,4 +140,31 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.isAuthenticated();
   }
+
+  /**
+   * Verifica que el token sea válido llamando al endpoint GET /api/users/me
+   * Si la petición falla (401/404/403), realiza logout inmediato
+   * 
+   * @returns Observable<User> si el token es válido
+   */
+  verifyToken(): Observable<User> {
+    // Si no hay token, no hay nada que verificar
+    if (!this.hasValidToken()) {
+      return throwError(() => new Error('No valid token found'));
+    }
+
+    return this.api.get<User>('users/me').pipe(
+      tap(user => {
+        // Token válido, actualizar datos del usuario
+        this.currentUserSubject.next(user);
+        this.isAuthenticatedSubject.next(true);
+      }),
+      catchError(error => {
+        // Token inválido o sesión expirada
+        console.warn('Token verification failed:', error.status);
+        this.logout();
+        return throwError(() => error);
+      })
+    );
+  }
 }

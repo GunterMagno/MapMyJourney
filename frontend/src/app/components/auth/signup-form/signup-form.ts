@@ -20,6 +20,7 @@ import { ButtonComponent } from '../../shared/button/button';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
 import { AuthService } from '../../../services/auth.service';
+import { TripService } from '../../../services/trip.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { CustomValidators } from '../../../services/custom-validators';
 import { Subject } from 'rxjs';
@@ -62,6 +63,7 @@ export class SignupFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private tripService: TripService,
     private toastService: ToastService,
     private router: Router,
     private renderer: Renderer2
@@ -165,6 +167,11 @@ export class SignupFormComponent implements OnInit, OnDestroy {
   /**
    * Handles form submission.
    * Shows loading state, validates form, and calls AuthService.
+   * 
+   * Después del registro + login exitoso:
+   * 1. Verifica si existe un viaje en borrador en sessionStorage
+   * 2. Si existe: Crea el viaje y borra del storage
+   * 3. Navega al viaje creado o a /trips
    */
   onSubmit(): void {
     if (this.signupForm.invalid) {
@@ -181,8 +188,37 @@ export class SignupFormComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.toastService.success('Registro exitoso. ¡Bienvenido!');
-          this.router.navigate(['/']);
-          this.isSubmitting = false;
+          
+          // Verificar si existe un viaje guardado como borrador
+          const guestTrip = this.tripService.getGuestTrip();
+          
+          if (guestTrip) {
+            // Crear el viaje con los datos guardados
+            this.tripService.createTrip(guestTrip)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (createdTrip) => {
+                  // Borrar el borrador del storage
+                  this.tripService.clearGuestTrip();
+                  this.toastService.success('✓ Tu viaje ha sido creado');
+                  
+                  // Navegar al viaje creado
+                  this.router.navigate(['/trips', createdTrip.id]);
+                  this.isSubmitting = false;
+                },
+                error: (error) => {
+                  console.error('Error creating trip:', error);
+                  this.toastService.error('Error al crear el viaje. Intenta de nuevo.');
+                  this.isSubmitting = false;
+                  // Aún así navega a /trips (el borrador sigue guardado)
+                  this.router.navigate(['/trips']);
+                }
+              });
+          } else {
+            // No hay viaje en borrador, solo navega a /trips
+            this.router.navigate(['/trips']);
+            this.isSubmitting = false;
+          }
         },
         error: (err) => {
           console.warn('=== SIGNUP ERROR HANDLER TRIGGERED ===');

@@ -10,7 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./backend/src/main/resources/db/migration:/docker-entrypoint-initdb.d
     networks:
       - mapmyjourney-network
     restart: unless-stopped
@@ -33,7 +32,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=mapmyjourney
       - SPRING_DATASOURCE_PASSWORD=mapmyjourney123
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
-      - SPRING_JPA_HIBERNATE_DDLAUTO=validate
+      - SPRING_JPA_HIBERNATE_DDLAUTO=update
       - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
     networks:
       - mapmyjourney-network

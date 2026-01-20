@@ -20,13 +20,30 @@
 
   <!-- Cuerpo minimalista -->
   <section class="card__content">
+    <!-- Título con label -->
     @if (title) {
-      <h3 class="card__title">{{ title }}</h3>
+      <div class="card__title-row">
+        <span class="card__label">Titulo:</span>
+        <h3 class="card__title">{{ title }}</h3>
+      </div>
     }
 
-    <!-- Destino -->
+    <!-- Destino con label -->
     <div class="card__destination">
-      <ng-content select="[slot='destination']"></ng-content>
+      <span class="card__label">Destino:</span>
+      <span class="card__value"><ng-content select="[slot='destination']"></ng-content></span>
+    </div>
+
+    <!-- Descripción -->
+    <div class="card__description">
+      <span class="card__label">Descripción: </span>
+      <span class="card__value"><ng-content select="[slot='description']"></ng-content></span>
+    </div>
+
+    <!-- Fechas -->
+    <div class="card__dates">
+      <span class="card__label">Fechas:</span>
+      <span class="card__value"><ng-content select="[slot='dates']"></ng-content></span>
     </div>
 
     <!-- Footer con botón "Ver Detalles" -->

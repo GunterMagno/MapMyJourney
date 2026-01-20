@@ -14,5 +14,7 @@ export { LoadingService } from './loading.service';
 export { ThemeService } from './theme.service';
 export { TripService } from './trip.service';
 export type { Trip, TripFormData } from './trip.service';
+export { UserService } from './user.service';
+export type { UpdateUserRequest } from './user.service';
 export { CustomValidators } from './custom-validators';
 

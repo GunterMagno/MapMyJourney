@@ -12,16 +12,15 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(
       routes,
-      withPreloading(PreloadAllModules) // Precarga todos los lazy-loaded modules en segundo plano
+      withPreloading(PreloadAllModules)
     ),
     provideClientHydration(withEventReplay()),
     provideAnimations(),
-    // HTTP Client con interceptores funcionales en orden de ejecución
     provideHttpClient(
       withInterceptors([
-        authInterceptor,  // 1. Inyecta token Bearer
-        errorInterceptor, // 2. Maneja errores (401, 403, 500)
-        loadingInterceptor // 3. Muestra/oculta estado de carga
+        authInterceptor,
+        errorInterceptor,
+        loadingInterceptor
       ])
     )
   ]

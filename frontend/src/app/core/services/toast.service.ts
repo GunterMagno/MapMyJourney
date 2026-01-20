@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Toast {
@@ -13,26 +13,16 @@ export interface Toast {
 })
 export class ToastService {
   private toasts$ = new BehaviorSubject<Toast[]>([]);
+  private timeoutMap = new Map<string, any>();
 
-  constructor() {}
+  constructor(private ngZone: NgZone) {}
 
   getToasts(): Observable<Toast[]> {
     return this.toasts$.asObservable();
   }
 
   show(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info', duration: number = 3000): void {
-    // Evitar duplicados: Si ya existe un toast con el mismo mensaje, no hacer nada
-    const currentToasts = this.toasts$.getValue();
-    
-    // Comparar mensajes normalizados (ignorar espacios extra y mayúsculas iniciales)
-    const normalizedNewMessage = message.trim().toLowerCase();
-    const isDuplicate = currentToasts.some(t => t.message.trim().toLowerCase() === normalizedNewMessage);
-    
-    if (isDuplicate) {
-      return;
-    }
-
-    const id = `toast-${Date.now()}`;
+    const id = `toast-${Date.now()}-${Math.random()}`;
     const toast: Toast = {
       id,
       message,
@@ -40,13 +30,20 @@ export class ToastService {
       duration
     };
 
+    const currentToasts = this.toasts$.getValue();
     this.toasts$.next([...currentToasts, toast]);
 
-    // Auto-remove after duration
+    // Auto-remove after duration (FUERA de Angular para mayor control)
     if (duration > 0) {
-      setTimeout(() => {
-        this.remove(id);
-      }, duration);
+      this.ngZone.runOutsideAngular(() => {
+        const timeoutId = setTimeout(() => {
+          this.ngZone.run(() => {
+            this.remove(id);
+          });
+        }, duration);
+        
+        this.timeoutMap.set(id, timeoutId);
+      });
     }
   }
 
@@ -54,7 +51,7 @@ export class ToastService {
     this.show(message, 'success', duration);
   }
 
-  error(message: string, duration: number = 3000): void {
+  error(message: string, duration: number = 5000): void {
     this.show(message, 'error', duration);
   }
 
@@ -62,16 +59,27 @@ export class ToastService {
     this.show(message, 'info', duration);
   }
 
-  warning(message: string, duration: number = 3000): void {
+  warning(message: string, duration: number = 4000): void {
     this.show(message, 'warning', duration);
   }
 
   remove(id: string): void {
+    // Limpiar timeout si existe
+    const timeoutId = this.timeoutMap.get(id);
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      this.timeoutMap.delete(id);
+    }
+
     const currentToasts = this.toasts$.getValue();
     this.toasts$.next(currentToasts.filter(t => t.id !== id));
   }
 
   clear(): void {
+    // Limpiar todos los timeouts
+    this.timeoutMap.forEach(timeoutId => clearTimeout(timeoutId));
+    this.timeoutMap.clear();
     this.toasts$.next([]);
   }
 }
+

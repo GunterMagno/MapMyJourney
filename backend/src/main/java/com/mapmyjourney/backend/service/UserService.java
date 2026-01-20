@@ -2,6 +2,7 @@ package com.mapmyjourney.backend.service;
 
 import com.mapmyjourney.backend.dto.UserCreateRequestDTO;
 import com.mapmyjourney.backend.dto.UserDTO;
+import com.mapmyjourney.backend.dto.UserUpdateRequestDTO;
 import com.mapmyjourney.backend.dto.LoginResponseDTO;
 import com.mapmyjourney.backend.exception.DuplicateResourceException;
 import com.mapmyjourney.backend.exception.ResourceNotFoundException;
@@ -165,6 +166,71 @@ public class UserService {
     }
 
     /**
+     * Actualiza el perfil de un usuario existente.
+     * Versión más flexible que permite actualizar solo los campos necesarios.
+     * Valida cambios de contraseña.
+     * 
+     * @param userId ID del usuario a actualizar
+     * @param request DTO con los datos a actualizar (opcionales)
+     * @return DTO del usuario actualizado
+     * @throws ResourceNotFoundException si el usuario no existe
+     * @throws DuplicateResourceException si el nuevo email ya existe
+     * @throws IllegalArgumentException si la validación de contraseña falla
+     */
+    @Transactional
+    public UserDTO updateUserProfile(Long userId, UserUpdateRequestDTO request) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        
+        // Actualizar nombre
+        if (request.getName() != null && !request.getName().isEmpty()) {
+            user.setName(request.getName());
+        }
+        
+        // Actualizar email
+        if (request.getEmail() != null && !request.getEmail().isEmpty()) {
+            if (!user.getEmail().equals(request.getEmail()) && 
+                userRepository.existsByEmail(request.getEmail())) {
+                throw new DuplicateResourceException("El email ya está registrado");
+            }
+            user.setEmail(request.getEmail());
+        }
+        
+        // Cambiar contraseña (requiere contraseña actual y confirmación)
+        if (request.getNewPassword() != null && !request.getNewPassword().isEmpty()) {
+            // Validar que la contraseña actual sea correcta
+            if (request.getCurrentPassword() == null || request.getCurrentPassword().isEmpty()) {
+                throw new IllegalArgumentException("Debe proporcionar la contraseña actual");
+            }
+            
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+                throw new IllegalArgumentException("La contraseña actual es incorrecta");
+            }
+            
+            // Validar que las nuevas contraseñas coincidan
+            if (request.getNewPasswordConfirm() == null || 
+                !request.getNewPassword().equals(request.getNewPasswordConfirm())) {
+                throw new IllegalArgumentException("Las nuevas contraseñas no coinciden");
+            }
+            
+            // Validar que la nueva contraseña sea diferente de la anterior
+            if (request.getNewPassword().equals(request.getCurrentPassword())) {
+                throw new IllegalArgumentException("La nueva contraseña debe ser diferente a la actual");
+            }
+            
+            user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        }
+
+        // Actualizar foto de perfil
+        if (request.getProfilePicture() != null && !request.getProfilePicture().isEmpty()) {
+            user.setProfilePicture(request.getProfilePicture());
+        }
+        
+        User updatedUser = userRepository.save(user);
+        return mapToDTO(updatedUser);
+    }
+
+    /**
      * 5. Elimina un usuario.
      * 
      * @param userId ID del usuario a eliminar
@@ -223,6 +289,7 @@ public class UserService {
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole());
+        dto.setProfilePicture(user.getProfilePicture());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         

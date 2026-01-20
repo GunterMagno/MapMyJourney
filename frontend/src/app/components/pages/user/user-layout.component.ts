@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
+import { AuthService } from '../../../services/auth.service';
 
 /**
  * UserLayoutComponent - Layout para sección de usuario
  *
  * Componente contenedor para las subpáginas del usuario.
  * Contiene el router-outlet donde se renderizarán las rutas hijas.
+ *
+ * Valida que el usuario tenga datos válidos. Si currentUser es null, 
+ * redirige a login (sesión inválida).
  *
  * Rutas hijas:
  * - /usuario/perfil -> UserProfileComponent
@@ -35,13 +39,13 @@ import { FooterComponent } from '../../layout/footer/footer';
               </a>
             </li>
             <li>
-              <a
-                routerLink="itinerario"
-                routerLinkActive="user-layout__link--active"
-                class="user-layout__link"
+              <button
+                class="user-layout__link btn-logout"
+                (click)="logout()"
+                type="button"
               >
-                🗺️ Mi Itinerario
-              </a>
+                🚪 Cerrar Sesión
+              </button>
             </li>
           </ul>
         </nav>
@@ -107,6 +111,11 @@ import { FooterComponent } from '../../layout/footer/footer';
       transition: all var(--transition-fast);
       font-weight: var(--font-weight-medium);
       font-size: var(--font-size-medium);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
 
       &:hover {
         background-color: var(--hover-bg);
@@ -121,6 +130,19 @@ import { FooterComponent } from '../../layout/footer/footer';
         &:hover {
           background-color: var(--quinary-color-hover);
         }
+      }
+    }
+
+    .btn-logout {
+      color: var(--error-color);
+      font-weight: var(--font-weight-semibold);
+      margin-top: var(--spacing-4);
+      border-top: 1px solid var(--border-color, #e5e5e5);
+      padding-top: var(--spacing-4);
+
+      &:hover {
+        background-color: rgba(var(--error-color-rgb, 239, 68, 68), 0.1) !important;
+        color: var(--error-color) !important;
       }
     }
 
@@ -165,4 +187,21 @@ import { FooterComponent } from '../../layout/footer/footer';
     }
   `]
 })
-export class UserLayoutComponent {}
+export class UserLayoutComponent implements OnInit {
+  protected authService = inject(AuthService);
+  private router = inject(Router);
+
+  ngOnInit(): void {
+    // Validar que tenemos datos de usuario válidos
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.warn('⚠ Usuario no encontrado. Redirigiendo a login...');
+      this.router.navigate(['/auth/login']);
+    }
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/home']);
+  }
+}

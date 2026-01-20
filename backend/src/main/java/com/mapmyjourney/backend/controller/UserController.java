@@ -2,6 +2,7 @@ package com.mapmyjourney.backend.controller;
 
 import com.mapmyjourney.backend.dto.UserCreateRequestDTO;
 import com.mapmyjourney.backend.dto.UserDTO;
+import com.mapmyjourney.backend.dto.UserUpdateRequestDTO;
 import com.mapmyjourney.backend.dto.LoginRequestDTO;
 import com.mapmyjourney.backend.dto.LoginResponseDTO;
 import com.mapmyjourney.backend.service.UserService;
@@ -128,7 +129,29 @@ public class UserController {
     }
 
     /**
-     * 6. Elimina un usuario.
+     * 6. Actualiza el perfil del usuario (versión flexible).
+     * PUT /api/users/{userId}/profile
+     */
+    @PutMapping("/{userId}/profile")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Actualizar perfil del usuario", 
+               description = "Actualiza el perfil del usuario (nombre, email, teléfono, país). Los campos son opcionales.")
+    @ApiResponse(responseCode = "200", description = "Perfil actualizado exitosamente")
+    @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    @ApiResponse(responseCode = "409", description = "El nuevo email ya está registrado")
+    public ResponseEntity<UserDTO> updateUserProfile(
+            @Parameter(description = "ID del usuario a actualizar", example = "1")
+            @PathVariable Long userId, 
+            @org.springframework.web.bind.annotation.RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del perfil a actualizar (todos opcionales)") 
+            UserUpdateRequestDTO request) {
+        UserDTO updatedUser = userService.updateUserProfile(userId, request);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    /**
+     * 7. Elimina un usuario.
      * DELETE /api/users/{userId}
      */
     @DeleteMapping("/{userId}")

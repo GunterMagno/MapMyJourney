@@ -85,8 +85,29 @@
 }
 
 // ============================================================================
-// ELEMENTO: TÍTULO
+// ELEMENTO: TÍTULO - CON LABEL
 // ============================================================================
+.card__title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+}
+
+.card__label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-main);
+  font-size: var(--font-size-small);
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.card__value {
+  text-align: right;
+  flex: 1;
+}
+
 .card__title {
   margin: 0;
   font-size: var(--font-size-tittle-h4);
@@ -120,6 +141,11 @@
 // ELEMENTO: DESTINATION (slot="destination")
 // ============================================================================
 .card__destination {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
   margin: 0;
   font-size: var(--font-size-small);
   color: var(--text-secondary);
@@ -139,15 +165,21 @@
   flex: 1;
 
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // ============================================================================
 // ELEMENTO: DATES (slot="dates")
 // ============================================================================
 .card__dates {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
   margin: 0;
   font-size: var(--font-size-extra-small);
   color: var(--text-secondary);

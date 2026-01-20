@@ -74,11 +74,8 @@
           Crear un viaje
         </button>
       </ng-container>
-      <button class="header__profile-btn" (click)="goToProfile()" aria-label="Ir a mi perfil" type="button">
-        <img src="assets/profile-picture.png" alt="Perfil" class="header__profile-picture" />
-      </button>
-      <button class="header__btn header__btn--secondary" (click)="logout()" aria-label="Cerrar sesión" type="button">
-        Cerrar sesión
+      <button class="header__profile-btn" (click)="goToProfile()" aria-label="Ir a mi perfil" title="Mi perfil" type="button">
+        <img [src]="currentUserAvatar || 'assets/profile-picture.png'" alt="Perfil" class="header__profile-picture" />
       </button>
     </ng-container>
   </section>
@@ -140,11 +137,11 @@
           </button>
         </ng-container>
         <button
-          class="header__mobile-menu-btn header__mobile-menu-btn--danger"
-          (click)="logout(); closeMobileMenu()"
+          class="header__mobile-menu-btn header__mobile-menu-btn--primary"
+          (click)="goToProfile(); closeMobileMenu()"
           type="button"
         >
-          Cerrar sesión
+          Mi Perfil
         </button>
       </ng-container>
     </article>

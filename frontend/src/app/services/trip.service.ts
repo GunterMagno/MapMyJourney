@@ -73,4 +73,39 @@ export class TripService {
   deleteTrip(id: number): Observable<void> {
     return this.api.delete<void>(`trips/${id}`);
   }
+
+  /**
+   * Guarda un borrador de viaje en sessionStorage
+   * Usado para el flujo invitado -> usuario registrado
+   * 
+   * @param tripData Datos del viaje a guardar
+   */
+  saveGuestTrip(tripData: TripFormData): void {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('guest_trip_draft', JSON.stringify(tripData));
+      console.log('✓ Guest trip saved to sessionStorage:', tripData);
+    }
+  }
+
+  /**
+   * Obtiene el borrador de viaje guardado en sessionStorage
+   * 
+   * @returns Los datos del viaje o null si no existe
+   */
+  getGuestTrip(): TripFormData | null {
+    if (typeof sessionStorage === 'undefined') return null;
+    
+    const saved = sessionStorage.getItem('guest_trip_draft');
+    return saved ? JSON.parse(saved) : null;
+  }
+
+  /**
+   * Elimina el borrador de viaje de sessionStorage
+   */
+  clearGuestTrip(): void {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem('guest_trip_draft');
+      console.log('✓ Guest trip cleared from sessionStorage');
+    }
+  }
 }
