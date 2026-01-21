@@ -266,8 +266,7 @@ graph TD
 
 ## Estado de los tests
 
-### ✅ - Test Correctos
-## 👥 Contribuciones
+### ✅ - Test Correctos## 👥 Contribuciones
 
 Para contribuir al proyecto, por favor:
 1. Fork el repositorio
