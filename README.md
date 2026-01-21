@@ -266,8 +266,7 @@ graph TD
 
 ## Estado de los tests
 
-### ✅ - Test Correctos## 👥 Contribuciones
-
+### ✅ - Test Correctos
 Para contribuir al proyecto, por favor:
 1. Fork el repositorio
 2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
