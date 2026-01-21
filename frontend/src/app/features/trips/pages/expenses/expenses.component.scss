@@ -103,6 +103,12 @@
     }
   }
 
+  .button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
   .btn-add-expense {
     background-color: var(--quaternary-color);
     color: white;
@@ -113,10 +119,8 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    align-self: flex-start;
 
     @media (max-width: 768px) {
-      align-self: stretch;
       width: 100%;
     }
 

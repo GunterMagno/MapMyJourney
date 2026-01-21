@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,18 @@ public class ExpenseService {
         // Validar participantes
         if (request.getParticipantUserIds() == null || request.getParticipantUserIds().isEmpty()) {
             throw new ValidationException("Debe haber al menos un participante");
+        }
+
+        // Validar fecha del gasto dentro del rango del viaje
+        if (request.getExpenseDate() != null) {
+            LocalDate expenseDate = request.getExpenseDate();
+            LocalDate tripStartDate = trip.getStartDate();
+            LocalDate tripEndDate = trip.getEndDate();
+            
+            if (expenseDate.isBefore(tripStartDate) || expenseDate.isAfter(tripEndDate)) {
+                throw new ValidationException("La fecha del gasto debe estar dentro del período del viaje (" + 
+                    tripStartDate + " a " + tripEndDate + ")");
+            }
         }
 
         // Crear gasto

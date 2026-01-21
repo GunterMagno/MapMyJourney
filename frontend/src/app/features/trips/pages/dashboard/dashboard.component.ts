@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { LoadingSpinnerComponent } from '../../../../components/shared/loading-spinner/loading-spinner';
 import { TripService } from '../../../../services/trip.service';
 import { ExpenseService } from '../../../../core/services/expense.service';
+import { DateFormatService } from '../../../../core/services/date-format.service';
 import { ItineraryStateService } from '../../services/itinerary-state.service';
 
 import { DashboardData, ItineraryDay } from '../../models/dashboard.model';
@@ -41,6 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private tripService = inject(TripService);
   private expenseService = inject(ExpenseService);
+  private dateFormatService = inject(DateFormatService);
   private itineraryStateService = inject(ItineraryStateService);
 
   ngOnInit(): void {
@@ -116,9 +118,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     let totalExpenses = 0;
     const expenseItems = expenses.slice(0, 3).map((expense: any) => {
       totalExpenses += expense.amount || 0;
+      // Obtener el nombre del que pagó desde paidBy.name o paidByUserName (compatibilidad)
+      const paidByName = expense.paidBy?.name || expense.paidByUserName || 'Usuario desconocido';
       return {
         description: expense.description || 'Gasto sin descripción',
-        paidBy: expense.paidByUserName || 'Usuario desconocido',
+        paidBy: paidByName,
         date: this.formatDate(expense.expenseDate),
         amount: expense.amount || 0
       };
@@ -159,13 +163,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private formatDate(dateString: string): string {
     if (!dateString) return 'Fecha desconocida';
     try {
-      const date = new Date(dateString);
-      const options: Intl.DateTimeFormatOptions = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      };
-      return date.toLocaleDateString('es-ES', options);
+      return this.dateFormatService.formatDisplayDate(dateString);
     } catch (e) {
       return dateString;
     }

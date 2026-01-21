@@ -13,6 +13,13 @@
 
     <!-- FORMULARIO -->
     <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="expense-form">
+      <!-- ERROR GENERAL -->
+      @if (error) {
+        <div class="form-error-alert">
+          {{ error }}
+        </div>
+      }
+
       <!-- DESCRIPCIÓN -->
       <div class="form-group">
         <label for="description">Descripción *</label>
@@ -21,7 +28,8 @@
           type="text"
           formControlName="description"
           placeholder="Ej: Entrada a museo, cena en restaurante..."
-          [class.input-error]="hasError('description', 'required') || hasError('description', 'minlength')">
+          [class.input-error]="hasError('description', 'required') || hasError('description', 'minlength')"
+          [class.input-valid]="!hasError('description', 'required') && !hasError('description', 'minlength') && expenseForm.get('description')?.touched">
         @if (hasError('description', 'required')) {
           <span class="error-message">La descripción es requerida</span>
         }
@@ -40,7 +48,8 @@
           formControlName="amount"
           placeholder="0.00"
           min="0"
-          [class.input-error]="hasError('amount', 'required') || hasError('amount', 'min')">
+          [class.input-error]="hasError('amount', 'required') || hasError('amount', 'min')"
+          [class.input-valid]="!hasError('amount', 'required') && !hasError('amount', 'min') && expenseForm.get('amount')?.touched">
         @if (hasError('amount', 'required')) {
           <span class="error-message">El monto es requerido</span>
         }
@@ -55,7 +64,8 @@
         <select
           id="payerId"
           formControlName="payerId"
-          [class.input-error]="hasError('payerId', 'required')">
+          [class.input-error]="hasError('payerId', 'required')"
+          [class.input-valid]="!hasError('payerId', 'required') && expenseForm.get('payerId')?.touched">
           <option value="" disabled>Selecciona un participante</option>
           @for (participant of payerParticipants(); track participant.id) {
             <option [value]="participant.id">{{ participant.name }}</option>
@@ -72,7 +82,8 @@
         <select
           id="category"
           formControlName="category"
-          [class.input-error]="hasError('category', 'required')">
+          [class.input-error]="hasError('category', 'required')"
+          [class.input-valid]="!hasError('category', 'required') && expenseForm.get('category')?.touched">
           @for (cat of categories; track cat.value) {
             <option [value]="cat.value">{{ cat.label }}</option>
           }
@@ -89,9 +100,15 @@
           id="date"
           type="date"
           formControlName="date"
-          [class.input-error]="hasError('date', 'required')">
+          [min]="tripStartDate || null"
+          [max]="tripEndDate || null"
+          [class.input-error]="hasError('date', 'required') || error === 'La fecha debe estar dentro de las fechas del viaje'"
+          [class.input-valid]="!hasError('date', 'required') && error !== 'La fecha debe estar dentro de las fechas del viaje' && expenseForm.get('date')?.touched">
         @if (hasError('date', 'required')) {
           <span class="error-message">La fecha es requerida</span>
+        }
+        @if (error === 'La fecha debe estar dentro de las fechas del viaje') {
+          <span class="error-message">La fecha debe estar dentro del viaje</span>
         }
       </div>
 

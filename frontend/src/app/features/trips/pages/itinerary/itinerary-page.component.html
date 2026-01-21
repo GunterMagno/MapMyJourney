@@ -1,0 +1,185 @@
+<div class="itinerary-page">
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando itinerario...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading()" class="itinerary-page__container">
+    <!-- Header Resumen -->
+    <article class="itinerary-header">
+      <h1 class="itinerary-header__title">
+        <span class="icon">📍</span> {{ trip()?.destination }}
+      </h1>
+
+      <div class="itinerary-header__info">
+        <div class="info-item">
+          <span class="label">Duración</span>
+          <span class="value">{{ tripDateRange().length }} días</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Actividades</span>
+          <span class="value">{{ activities().length }}</span>
+        </div>
+      </div>
+
+      <div class="button-container">
+        <button 
+          class="btn-add-activity" 
+          (click)="openAddActivityModal()"
+          aria-label="Añadir nueva actividad">
+          + Añadir Actividad
+        </button>
+      </div>
+    </article>
+
+    <!-- SELECTOR DE DÍAS - Horizontal Scroll -->
+    <div class="date-selector-wrapper">
+      <h3 class="date-selector-title">Días del Viaje</h3>
+      <div class="date-selector">
+        @if (tripDateRange().length > 0) {
+          @for (date of tripDateRange(); let i = index; track date) {
+            <button 
+              class="date-card"
+              [class.selected]="selectedDate() === date"
+              (click)="selectDate(date)"
+              [attr.aria-pressed]="selectedDate() === date"
+              [style.--day-border-color]="getDayColor(i)">
+              <div class="day">{{ formatDateForSelector(date).day }}</div>
+              <div class="month">{{ formatDateForSelector(date).month }}</div>
+              <div class="label">Actividades</div>
+              <div class="total">{{ getTotalActivitiesForDate(date) }}</div>
+            </button>
+          }
+        } @else {
+          <p class="no-dates">No hay días disponibles en este viaje</p>
+        }
+      </div>
+    </div>
+
+    <!-- TÍTULO DEL DÍA SELECCIONADO -->
+    <div class="current-day" *ngIf="selectedDate()">
+      <h2 class="current-day__title">
+        {{ formatDateComplete(selectedDate()) }}
+      </h2>
+      <p class="current-day__subtitle">
+        {{ activitiesForSelectedDate().length > 0 ? activitiesForSelectedDate().length + ' actividades' : 'Sin actividades' }}
+      </p>
+    </div>
+
+    <!-- LISTA DE ACTIVIDADES Y TRANSICIONES (Drag & Drop) -->
+    <section class="activities-section">
+      @if (activitiesForSelectedDate().length > 0) {
+        <div 
+          class="activities-list"
+          cdkDropList
+          [cdkDropListData]="activitiesForSelectedDate()"
+          (cdkDropListDropped)="onDrop($event)">
+          
+          @for (activity of activitiesForSelectedDate(); let i = index; track activity.id) {
+            <!-- ACTIVIDAD NORMAL -->
+            @if (activity.type !== 'TRANSITION') {
+              <article 
+                class="activity-card"
+                cdkDrag
+                [style.--day-color]="getDayColor((tripDateRange().indexOf(selectedDate())) % 5)">
+                
+                <!-- Drag Handle -->
+                <div class="drag-handle" cdkDragHandle>
+                  <span class="icon">⋮⋮</span>
+                </div>
+
+                <!-- Contenido -->
+                <div class="activity-content">
+                  <!-- Hora y Título -->
+                  <div class="activity-header">
+                    <span class="time">{{ activity.startTime || '—' }}</span>
+                    <h3 class="title">{{ activity.name }}</h3>
+                  </div>
+
+                  <!-- Badges: Duración y Categoría -->
+                  <div class="badges">
+                    @if (activity.duration) {
+                      <span class="badge badge--duration">{{ activity.duration }}min</span>
+                    }
+                    @if (activity.category) {
+                      <span class="badge badge--category">{{ activity.category }}</span>
+                    }
+                  </div>
+
+                  <!-- Ubicación y Notas -->
+                  @if (activity.location) {
+                    <div class="location">
+                      <span class="icon">📍</span>
+                      <span>{{ activity.location }}</span>
+                    </div>
+                  }
+                  @if (activity.notes) {
+                    <p class="notes">{{ activity.notes }}</p>
+                  }
+                </div>
+
+                <!-- Acciones (Derecha) -->
+                <div class="activity-actions">
+                  <!-- Botón Completado -->
+                  <button
+                    class="btn-complete"
+                    [class.completed]="activity.completed"
+                    (click)="toggleActivityComplete(activity)"
+                    [attr.aria-label]="activity.completed ? 'Marcar como pendiente' : 'Marcar como completado'"
+                    [title]="activity.completed ? 'Completado' : 'Pendiente'">
+                    <span class="icon">✓</span>
+                  </button>
+
+                  <!-- Botón Eliminar -->
+                  <button
+                    class="btn-delete"
+                    (click)="deleteActivity(activity)"
+                    aria-label="Eliminar actividad">
+                    <span class="icon">🗑️</span>
+                  </button>
+                </div>
+              </article>
+            }
+
+            <!-- TRANSICIÓN (entre actividades) -->
+            @if (activity.type === 'TRANSITION') {
+              <div class="transition-card">
+                <div class="transition-content">
+                  <span>{{ activity.duration ? activity.duration + ' min de ' : '' }}{{ activity.name }}</span>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <p>Sin actividades para este día</p>
+          <button 
+            class="btn-add-activity-small"
+            (click)="openAddActivityModal()">
+            + Añadir Actividad
+          </button>
+        </div>
+      }
+    </section>
+
+    <!-- BOTÓN FLOTANTE PARA AÑADIR ACTIVIDAD -->
+    <button 
+      class="btn-add-floating" 
+      (click)="openAddActivityModal()"
+      aria-label="Añadir nueva actividad">
+      <span class="icon">+</span>
+    </button>
+  </div>
+
+  <!-- MODAL: Crear Actividad -->
+  @if (showAddActivityModal()) {
+    <app-create-activity-modal
+      [selectedDate]="selectedDate()"
+      (close)="closeAddActivityModal()"
+      (activityAdded)="onActivityAdded($event)">
+    </app-create-activity-modal>
+  }
+</div>

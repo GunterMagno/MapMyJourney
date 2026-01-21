@@ -10,6 +10,7 @@ import { FooterComponent } from '../../layout/footer/footer';
 // ✅ FASE 6: Importar stores y modelos
 import { TripStore, ExpenseStore } from '../../../core/store';
 import { Trip, ExpenseWithDetails } from '../../../core/models';
+import { DateFormatService } from '../../../core/services/date-format.service';
 
 // Interfaces locales para secciones que no son de estado global
 interface Activity {
@@ -82,6 +83,7 @@ export class TripDetailComponent implements OnInit, OnDestroy {
   // ============================================================================
 
   private route = inject(ActivatedRoute);
+  private dateFormatService = inject(DateFormatService);
   tripStore = inject(TripStore);
   expenseStore = inject(ExpenseStore);
 
@@ -369,6 +371,22 @@ export class TripDetailComponent implements OnInit, OnDestroy {
   // ============================================================================
   // TRACKBY FUNCTIONS
   // ============================================================================
+
+  /**
+   * Formatea una fecha en formato DD-MM-YYYY
+   */
+  formatDate(date: Date | string): string {
+    return this.dateFormatService.formatDisplayDate(date);
+  }
+
+  /**
+   * Formatea el rango de fechas del viaje
+   */
+  formatTripDateRange(): string {
+    const start = this.formatDate(this.tripStartDate());
+    const end = this.formatDate(this.tripEndDate());
+    return `${start} - ${end}`;
+  }
 
   /**
    * TrackBy para lista de gastos

@@ -1,0 +1,156 @@
+<!-- Modal Overlay -->
+<div class="modal-overlay" *ngIf="isOpen()" (click)="closeModal()">
+  <!-- Modal Content -->
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <header class="modal-header">
+      <h2 class="modal-title">Crear Actividad</h2>
+      <button class="modal-close" (click)="closeModal()">✕</button>
+    </header>
+
+    <!-- Form -->
+    <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="modal-form">
+      <!-- Nombre de la actividad -->
+      <div class="form-group">
+        <label for="title" class="form-label">Nombre de la actividad *</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          class="form-input"
+          placeholder="ej: Visita al Museo"
+          required
+        />
+        <span class="form-error" *ngIf="title.invalid && title.touched">
+          El nombre es obligatorio
+        </span>
+      </div>
+
+      <!-- Tipo -->
+      <div class="form-group">
+        <label class="form-label">Tipo *</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input
+              type="radio"
+              formControlName="type"
+              value="ACTIVITY"
+              class="radio-input"
+            />
+            <span class="radio-text">Actividad</span>
+          </label>
+          <label class="radio-label">
+            <input
+              type="radio"
+              formControlName="type"
+              value="TRANSITION"
+              class="radio-input"
+            />
+            <span class="radio-text">Transición</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Hora Inicio -->
+      <div class="form-group">
+        <label for="startTime" class="form-label">Hora Inicio *</label>
+        <div class="time-input-wrapper">
+          <input
+            id="startTime"
+            type="time"
+            formControlName="startTime"
+            class="form-input"
+            required
+          />
+          <svg class="time-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 6v6l4 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="form-error" *ngIf="startTime.invalid && startTime.touched">
+          La hora es obligatoria
+        </span>
+      </div>
+
+      <!-- Duración -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="duration" class="form-label">Duración *</label>
+          <input
+            id="duration"
+            type="number"
+            formControlName="duration"
+            class="form-input"
+            min="1"
+            max="1440"
+            required
+          />
+          <span class="form-error" *ngIf="duration.invalid && duration.touched">
+            Ingresa una duración válida
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="durationUnit" class="form-label">Unidad</label>
+          <select formControlName="durationUnit" class="form-input">
+            <option value="MIN">Minutos</option>
+            <option value="HOUR">Horas</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Ubicación -->
+      <div class="form-group">
+        <label for="location" class="form-label">Ubicación</label>
+        <div class="location-input-wrapper">
+          <input
+            id="location"
+            type="text"
+            formControlName="location"
+            class="form-input"
+            placeholder="ej: Museo del Louvre, París"
+          />
+          <svg class="location-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 13 8 13s8-7.75 8-13c0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Notas -->
+      <div class="form-group">
+        <label for="notes" class="form-label">Notas</label>
+        <textarea
+          id="notes"
+          formControlName="notes"
+          class="form-textarea"
+          rows="4"
+          placeholder="Añade detalles adicionales..."
+        ></textarea>
+      </div>
+
+      <!-- Categoría -->
+      <div class="form-group" *ngIf="activityForm.get('type')?.value === 'ACTIVITY'">
+        <label for="category" class="form-label">Categoría</label>
+        <select formControlName="category" class="form-input">
+          <option value="">Selecciona una categoría</option>
+          <option value="MUSEUM">Museo</option>
+          <option value="RESTAURANT">Restaurante</option>
+          <option value="TRANSPORT">Transporte</option>
+          <option value="ACCOMMODATION">Alojamiento</option>
+          <option value="ENTERTAINMENT">Entretenimiento</option>
+          <option value="SHOPPING">Compras</option>
+          <option value="OTHER">Otro</option>
+        </select>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="!activityForm.valid">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

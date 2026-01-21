@@ -55,7 +55,7 @@
             <span slot="description">{{ trip.description || 'Sin descripción' }}</span>
 
             <!-- Dates slot -->
-            <span slot="dates">{{ trip.startDate | date: 'dd/MM/yyyy' }} - {{ trip.endDate | date: 'dd/MM/yyyy' }}</span>
+            <span slot="dates">{{ formatTripDates(trip.startDate, trip.endDate) }}</span>
 
             <!-- Footer slot with button -->
             <div slot="footer" class="trip-card__button-wrapper">

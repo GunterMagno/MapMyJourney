@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { ButtonComponent } from '../../shared/button/button';
 import { CardComponent } from '../../shared/card/card';
 import { FormSelectComponent } from '../../shared/form-select/form-select';
 import { FormInputComponent } from '../../shared/form-input/form-input';
+import { DateFormatService } from '../../../core/services/date-format.service';
 
 // Importar modelos (ajustar la ruta según tu estructura)
 interface Trip {
@@ -65,6 +66,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   totalParticipants = 0;
 
   private destroy$ = new Subject<void>();
+  private dateFormatService = inject(DateFormatService);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -212,6 +214,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
    */
   onCreateTrip(): void {
     this.router.navigate(['/trip/new']);
+  }
+
+  /**
+   * Formatea las fechas de un viaje en formato DD-MM-YYYY
+   */
+  formatTripDates(startDate: Date, endDate: Date): string {
+    const start = this.dateFormatService.formatDisplayDate(startDate.toString());
+    const end = this.dateFormatService.formatDisplayDate(endDate.toString());
+    return `${start} - ${end}`;
   }
 
   /**

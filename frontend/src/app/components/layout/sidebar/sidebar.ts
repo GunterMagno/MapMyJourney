@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AutoSaveStateService } from '../../../core/services/auto-save-state.service';
+import { DateFormatService } from '../../../core/services/date-format.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -46,6 +47,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isAutoSaving = false;
 
   private destroy$ = new Subject<void>();
+  private dateFormatService = inject(DateFormatService);
 
   constructor(
     private router: Router,
@@ -145,8 +147,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Formatea las fechas para mostrar en formato corto
-   * @example "Feb 18 - Jun 04"
+   * Formatea las fechas para mostrar en formato DD-MM-YYYY
+   * @example "18-02-2026 - 04-06-2026"
    */
   getFormattedDates(): string {
     if (!this.tripInfo) return '';
@@ -154,10 +156,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const start = new Date(this.tripInfo.startDate);
     const end = new Date(this.tripInfo.endDate);
     
-    const formatDate = (date: Date) => {
-      const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 
-                      'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-      return `${months[date.getMonth()]} ${date.getDate()}`;
+    const formatDate = (date: Date): string => {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
     };
     
     return `${formatDate(start)} - ${formatDate(end)}`;

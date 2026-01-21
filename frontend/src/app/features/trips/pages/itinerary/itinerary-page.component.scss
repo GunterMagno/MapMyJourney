@@ -1,0 +1,615 @@
+// =============================================
+// ITINERARY PAGE COMPONENT STYLES
+// =============================================
+
+.itinerary-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding: var(--spacing-6) 0;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-4);
+  }
+}
+
+// =============================================
+// HEADER RESUMEN
+// =============================================
+.itinerary-header {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow-sm);
+  border-left: 6px solid var(--principal-color);
+
+  &__title {
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-4) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+
+    .icon {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__info {
+    display: flex;
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-4);
+    flex-wrap: wrap;
+  }
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+
+  .label {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--spacing-2);
+
+  @media (max-width: 640px) {
+    width: 100%;
+
+    .btn-add-activity {
+      flex: 1;
+    }
+  }
+}
+
+// =============================================
+// DATE SELECTOR (Similar to Expenses)
+// =============================================
+.date-selector-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+
+  .date-selector-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .no-dates {
+    color: var(--text-tertiary);
+    font-size: 0.95rem;
+    padding: var(--spacing-4);
+    text-align: center;
+  }
+}
+
+.date-selector {
+  display: flex;
+  gap: var(--spacing-3);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: var(--spacing-2);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .date-card {
+    flex-shrink: 0;
+    width: 110px;
+    aspect-ratio: 1;
+    border: 2px solid var(--border-color);
+    background-color: white;
+    border-radius: 16px;
+    padding: var(--spacing-3);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-1);
+    border-top: 4px solid var(--day-border-color, var(--principal-color));
+
+    &:hover {
+      border-color: var(--day-border-color, var(--principal-color));
+      box-shadow: var(--shadow-sm);
+    }
+
+    &.selected {
+      border: 3px solid var(--day-border-color, var(--principal-color));
+      background: linear-gradient(135deg, rgba(207, 142, 255, 0.1), white);
+      box-shadow: var(--shadow-md);
+    }
+
+    .day {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .month {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-top: var(--spacing-1);
+    }
+
+    .total {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--principal-color);
+    }
+  }
+}
+
+// =============================================
+// CURRENT DAY HEADER
+// =============================================
+.current-day {
+  margin-top: var(--spacing-4);
+
+  &__title {
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-1) 0;
+  }
+
+  &__subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+// =============================================
+// ACTIVITIES SECTION
+// =============================================
+.activities-section {
+  min-height: 300px;
+}
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+// =============================================
+// ACTIVITY CARD
+// =============================================
+.activity-card {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: var(--spacing-3);
+  align-items: stretch;
+  background: white;
+  border-radius: var(--border-radius-md);
+  border-left: 6px solid var(--day-color, var(--principal-color));
+  padding: var(--spacing-4);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  &.completed {
+    opacity: 0.6;
+
+    .title {
+      text-decoration: line-through;
+      color: var(--text-tertiary);
+    }
+  }
+
+  .drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    color: var(--text-tertiary);
+    font-size: 1.2rem;
+    padding: var(--spacing-2);
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    .icon {
+      letter-spacing: -2px;
+    }
+  }
+}
+
+.activity-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  justify-content: center;
+
+  .activity-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+
+    .time {
+      font-weight: 700;
+      color: var(--principal-color);
+      font-size: 0.95rem;
+      min-width: 50px;
+    }
+
+    .title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+  }
+
+  .badges {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background-color: var(--quinary-color-disabled);
+      color: var(--text-primary);
+
+      &--duration {
+        background-color: rgba(255, 193, 7, 0.15);
+        color: #f57c00;
+      }
+
+      &--category {
+        background-color: rgba(76, 175, 80, 0.15);
+        color: #2e7d32;
+      }
+    }
+  }
+
+  .location {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+
+    .icon {
+      font-size: 1rem;
+    }
+  }
+
+  .notes {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.4;
+    max-width: 600px;
+  }
+}
+
+.activity-actions {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+// =============================================
+// ACTIVITY ACTION BUTTONS
+// =============================================
+.btn-complete,
+.btn-delete,
+.btn-edit {
+  background: none;
+  border: none;
+  padding: var(--spacing-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.btn-complete {
+  &.completed {
+    color: var(--principal-color);
+    background-color: rgba(207, 142, 255, 0.1);
+  }
+}
+
+.btn-delete {
+  color: #c62828;
+
+  &:hover {
+    background-color: rgba(198, 40, 40, 0.1);
+  }
+}
+
+// =============================================
+// TRANSITION CARD
+// =============================================
+.transition-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 2px dashed var(--text-secondary);
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  gap: var(--spacing-3);
+
+  .transition-content {
+    flex: 1;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+
+// =============================================
+// EMPTY STATE
+// =============================================
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-8) var(--spacing-4);
+  background: white;
+  border-radius: var(--border-radius-md);
+  border: 2px dashed var(--border-color);
+
+  p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: var(--spacing-3) 0 var(--spacing-4);
+  }
+}
+
+// =============================================
+// BUTTONS
+// =============================================
+.btn-add-activity {
+  padding: var(--spacing-3) var(--spacing-6);
+  background-color: var(--quaternary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  &:hover {
+    background-color: #00acc1;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-add-activity-small {
+  padding: var(--spacing-2) var(--spacing-4);
+  background-color: var(--quaternary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #00acc1;
+  }
+}
+
+.btn-add-floating {
+  position: fixed;
+  bottom: var(--spacing-6);
+  right: var(--spacing-6);
+  width: 60px;
+  height: 60px;
+  background-color: var(--quaternary-color);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+  z-index: 50;
+
+  &:hover {
+    background-color: #00acc1;
+    transform: scale(1.1);
+    box-shadow: var(--shadow-xl);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .icon {
+    font-size: 1.8rem;
+  }
+
+  @media (max-width: 768px) {
+    bottom: var(--spacing-4);
+    right: var(--spacing-4);
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}
+
+// =============================================
+// LOADING STATE
+// =============================================
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: var(--spacing-4);
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--quaternary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =============================================
+// RESPONSIVE
+// =============================================
+@media (max-width: 768px) {
+  .itinerary-page__container {
+    padding: 0 var(--spacing-3);
+  }
+
+  .activity-card {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+
+    .drag-handle {
+      display: none;
+    }
+
+    .activity-actions {
+      justify-content: flex-start;
+    }
+  }
+
+  .date-card {
+    width: 95px !important;
+    padding: var(--spacing-2) !important;
+
+    .day {
+      font-size: 1.5rem;
+    }
+
+    .month {
+      font-size: 0.65rem;
+    }
+
+    .total {
+      font-size: 0.85rem;
+    }
+  }
+
+  .itinerary-header {
+    padding: var(--spacing-4);
+
+    &__title {
+      font-size: var(--font-size-h3);
+    }
+
+    &__info {
+      gap: var(--spacing-4);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .activity-card {
+    padding: var(--spacing-2);
+    border-left-width: 4px;
+  }
+
+  .activity-content .activity-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-1);
+
+    .title {
+      font-size: 1rem;
+    }
+  }
+
+  .activity-actions {
+    flex-wrap: wrap;
+    gap: var(--spacing-1);
+  }
+
+  .btn-add-activity {
+    width: 100%;
+    justify-content: center;
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+}

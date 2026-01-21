@@ -65,6 +65,7 @@
             class="create-trip-form__input"
             [(ngModel)]="tripForm.startDate"
             name="startDate"
+            placeholder="DD-MM-YYYY"
             (change)="validateDates()"
             required
           />
@@ -77,6 +78,7 @@
             class="create-trip-form__input"
             [(ngModel)]="tripForm.endDate"
             name="endDate"
+            placeholder="DD-MM-YYYY"
             (change)="validateDates()"
             required
           />
@@ -85,9 +87,9 @@
       
       <span *ngIf="dateError" class="create-trip-form__error">{{ dateError }}</span>
 
-      <!-- Presupuesto viaje (opcional) -->
+      <!-- Presupuesto viaje (obligatorio) -->
       <label class="create-trip-form__field">
-        <span class="create-trip-form__label">Presupuesto viaje (opcional):</span>
+        <span class="create-trip-form__label">Presupuesto viaje *:</span>
         <span class="create-trip-form__budget-input">
           <input 
             type="number" 
@@ -97,10 +99,15 @@
             placeholder="0.00"
             min="0"
             step="0.01"
+            (blur)="validateBudget()"
             (input)="preventNegative($event)"
+            [class.input-error]="budgetError"
           />
           <span class="create-trip-form__euro">€</span>
         </span>
+        @if (budgetError) {
+          <span class="create-trip-form__error">{{ budgetError }}</span>
+        }
       </label>
 
       <!-- Botón de submit -->

@@ -5,6 +5,19 @@
       <div class="summary-stats">
         <h1 class="total-amount">{{ totalExpenses() | number: '1.2-2' }} €</h1>
         <p class="summary-label">Gasto total del viaje</p>
+        
+        <!-- Presupuesto y restante -->
+        @if (tripBudget() > 0) {
+          <div class="budget-info">
+            <p class="budget-text">Presupuesto: {{ tripBudget() | number: '1.2-2' }} €</p>
+            <p class="remaining-text" [class.over-budget]="remainingBudget() < 0">
+              Restante: {{ remainingBudget() | number: '1.2-2' }} €
+            </p>
+            <div class="budget-bar">
+              <div class="budget-progress" [style.width.%]="budgetPercentage()"></div>
+            </div>
+          </div>
+        }
       </div>
       
       <div class="summary-details">
@@ -60,7 +73,7 @@
 
   <!-- LISTA DETALLADA -->
   <section class="expenses-list">
-    <h2 class="date-title">Día {{ formatDateForSelector(selectedDate()).day }} de {{ formatDateForSelector(selectedDate()).month }}</h2>
+    <h2 class="date-title">{{ formatDateComplete(selectedDate()) }}</h2>
     
     <div class="expenses-list-info">
       <span class="total-label">Total:</span>
@@ -137,6 +150,8 @@
     [participants]="participants()"
     [currentUserId]="currentUserId()"
     [currentUserName]="currentUserName()"
+    [tripStartDate]="tripDateBounds().start"
+    [tripEndDate]="tripDateBounds().end"
     (close)="closeAddExpenseModal()">
   </app-add-expense-modal>
 }

@@ -43,7 +43,7 @@ export const TRIPS_ROUTES: Routes = [
       {
         path: 'itinerario',
         loadComponent: () => 
-          import('./pages/itinerary/itinerary.component').then(m => m.ItineraryComponent),
+          import('./pages/itinerary/itinerary-page.component').then(m => m.ItineraryPageComponent),
         data: { breadcrumb: 'Itinerario' }
       },
       {

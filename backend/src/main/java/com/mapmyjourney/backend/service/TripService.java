@@ -51,8 +51,8 @@ public class TripService {
         trip.setDescription(request.getDescription());
         trip.setStartDate(request.getStartDate());
         trip.setEndDate(request.getEndDate());
-        // Si budget es null, establecer 1.00 como valor por defecto (debe ser > 0)
-        trip.setBudget(request.getBudget() != null ? request.getBudget() : new java.math.BigDecimal("1.00"));
+        // El presupuesto ahora es obligatorio (validado en DTO)
+        trip.setBudget(request.getBudget());
         trip.setTripCode(generateTripCode());
 
         Trip savedTrip = tripRepository.save(trip);
@@ -191,8 +191,8 @@ public class TripService {
         trip.setDescription(request.getDescription());
         trip.setStartDate(request.getStartDate());
         trip.setEndDate(request.getEndDate());
-        // Si budget es null, establecer 1.00 (debe ser > 0)
-        trip.setBudget(request.getBudget() != null ? request.getBudget() : new java.math.BigDecimal("1.00"));
+        // El presupuesto ahora es obligatorio (validado en DTO)
+        trip.setBudget(request.getBudget());
 
         Trip updatedTrip = tripRepository.save(trip);
         return mapToDTO(updatedTrip);

@@ -78,7 +78,7 @@
       <h3>Información del Viaje</h3>
       <dl class="trip-detail__info-list">
         <dt>Fechas</dt>
-        <dd>{{ tripStartDate() | date: 'medium' }} - {{ tripEndDate() | date: 'medium' }}</dd>
+        <dd>{{ formatTripDateRange() }}</dd>
         
         <dt>Ubicación</dt>
         <dd>{{ tripLocation() }}</dd>
@@ -118,7 +118,7 @@
           *ngFor="let day of itineraryDays; let i = index">
           <header class="trip-detail__timeline-date">
             <span class="trip-detail__timeline-day">Día {{ i + 1 }}</span>
-            <span class="trip-detail__timeline-date-text">{{ day.date | date: 'short' }}</span>
+            <span class="trip-detail__timeline-date-text">{{ formatDate(day.date) }}</span>
           </header>
           
           <article class="trip-detail__timeline-content">
@@ -189,7 +189,7 @@
           <span class="trip-detail__document-icon" aria-hidden="true">{{ getDocumentIcon(doc.type) }}</span>
           <article class="trip-detail__document-info">
             <h3 class="trip-detail__document-name">{{ doc.name }}</h3>
-            <p class="trip-detail__document-meta">{{ doc.uploadedBy }} • {{ doc.date | date: 'short' }}</p>
+            <p class="trip-detail__document-meta">{{ doc.uploadedBy }} • {{ formatDate(doc.date) }}</p>
           </article>
           <button 
             class="trip-detail__document-download"
@@ -284,7 +284,7 @@
               
               <footer class="trip-detail__expense-meta">
                 <span class="trip-detail__expense-payer">{{ expense.payer.name }}</span>
-                <span class="trip-detail__expense-date">{{ expense.date | date: 'short' }}</span>
+                <span class="trip-detail__expense-date">{{ formatDate(expense.date) }}</span>
                 <button 
                   class="trip-detail__expense-delete"
                   (click)="deleteExpense(expense.id)"

@@ -7,6 +7,7 @@ import {
   Validators
 } from '@angular/forms';
 import { ExpenseStore, Participant, CreateExpenseDto } from '../../../../../core';
+import { DateFormatService } from '../../../../../core/services/date-format.service';
 
 @Component({
   selector: 'app-add-expense-modal',
@@ -20,10 +21,13 @@ export class AddExpenseModalComponent implements OnInit {
   @Input() participants: Participant[] = [];
   @Input() currentUserId: string = ''; // Usuario actual
   @Input() currentUserName: string = ''; // Nombre del usuario actual
+  @Input() tripStartDate: string = '';
+  @Input() tripEndDate: string = '';
   @Output() close = new EventEmitter<void>();
 
   private readonly fb = inject(FormBuilder);
   private readonly expenseStore = inject(ExpenseStore);
+  private readonly dateFormatService = inject(DateFormatService);
 
   expenseForm!: FormGroup;
   loading = false;
@@ -93,7 +97,11 @@ export class AddExpenseModalComponent implements OnInit {
    * Inicializar formulario reactivo
    */
   private initForm(): void {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const start = this.tripStartDate ? new Date(this.tripStartDate) : today;
+    const end = this.tripEndDate ? new Date(this.tripEndDate) : today;
+    const clampedDate = this.clampDate(today, start, end);
+    const normalizedDate = this.dateFormatService.normalizeDate(clampedDate);
 
     // Usar el usuario actual como pagador por defecto
     const defaultPayer = this.currentUserId || (this.availableParticipants()[0]?.id || '');
@@ -103,7 +111,7 @@ export class AddExpenseModalComponent implements OnInit {
       amount: ['', [Validators.required, Validators.min(0.01)]],
       payerId: [defaultPayer, Validators.required],
       category: ['FOOD', Validators.required],
-      date: [today, Validators.required],
+      date: [normalizedDate, Validators.required],
       participants: [[], Validators.required]
     });
   }
@@ -154,6 +162,13 @@ export class AddExpenseModalComponent implements OnInit {
       return;
     }
 
+    const dateControl = this.expenseForm.get('date');
+    if (dateControl && !this.isDateWithinBounds(dateControl.value)) {
+      this.error = 'La fecha debe estar dentro de las fechas del viaje';
+      dateControl.markAsTouched();
+      return;
+    }
+
     if (this.expenseForm.get('participants')?.value?.length === 0) {
       this.error = 'Debes seleccionar al menos un participante';
       return;
@@ -176,14 +191,46 @@ export class AddExpenseModalComponent implements OnInit {
     this.expenseStore.addExpense(dto).subscribe({
       next: () => {
         this.loading = false;
+        this.error = null;
         this.closeModal();
       },
       error: (err: any) => {
         this.loading = false;
-        this.error = 'Error al crear el gasto. Inténtalo de nuevo.';
-        console.error('Error:', err);
+        
+        // Manejo de errores específicos del backend
+        if (err?.error?.message) {
+          this.error = err.error.message;
+        } else if (err?.status === 400) {
+          this.error = 'Datos inválidos. Verifica los campos.';
+        } else if (err?.status === 403) {
+          this.error = 'No tienes permisos para crear gastos.';
+        } else if (err?.status === 404) {
+          this.error = 'El viaje no existe.';
+        } else {
+          this.error = 'Error al crear el gasto. Inténtalo de nuevo.';
+        }
+        
+        console.error('Error al crear gasto:', err);
       }
     });
+  }
+
+  private isDateWithinBounds(date: string): boolean {
+    if (!date || !this.tripStartDate || !this.tripEndDate) return true;
+    const value = new Date(date);
+    const start = new Date(this.tripStartDate);
+    const end = new Date(this.tripEndDate);
+    return value >= start && value <= end;
+  }
+
+  private clampDate(date: Date, start: Date, end: Date): Date {
+    if (date < start) return start;
+    if (date > end) return end;
+    return date;
+  }
+
+  private formatDate(date: Date): string {
+    return this.dateFormatService.normalizeDate(date);
   }
 
   /**

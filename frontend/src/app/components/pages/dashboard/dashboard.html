@@ -66,10 +66,10 @@
             [image]="trip.image">
             <article class="trip-card__meta">
               <span class="trip-card__duration">
-                📅 {{ trip.startDate | date: 'short' }} - {{ trip.endDate | date: 'short' }}
+                {{ formatTripDates(trip.startDate, trip.endDate) }}
               </span>
               <span class="trip-card__participants">
-                👥 {{ trip.participants.length }} participantes
+                {{ trip.participants.length }} participantes
               </span>
             </article>
             <app-button

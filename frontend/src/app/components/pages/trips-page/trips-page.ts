@@ -12,6 +12,7 @@ import { CreateTripModalComponent } from '../home/create-trip-modal/create-trip-
 import { AuthService } from '../../../services/auth.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { DateFormatService } from '../../../core/services/date-format.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { TripFormData } from '../../../services/trip.service';
 import { TripService } from '../../../core/services/trip.service';
@@ -50,6 +51,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private tripService = inject(TripService);
   private toastService = inject(ToastService);
+  private dateFormatService = inject(DateFormatService);
   private communicationService = inject(CommunicationService);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
@@ -362,5 +364,14 @@ export class TripsPageComponent implements OnInit, OnDestroy {
         console.log('📦 State desde history.state:', historyState);
       }
     }
+  }
+
+  /**
+   * Formatea las fechas de un viaje en formato DD-MM-YYYY
+   */
+  formatTripDates(startDate: Date | string, endDate: Date | string): string {
+    const start = this.dateFormatService.formatDisplayDate(startDate);
+    const end = this.dateFormatService.formatDisplayDate(endDate);
+    return `${start} - ${end}`;
   }
 }

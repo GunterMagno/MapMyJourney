@@ -3,6 +3,7 @@ package com.mapmyjourney.backend.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.DecimalMin;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,6 +35,8 @@ public class TripCreateRequestDTO {
     @JsonProperty("endDate")
     private LocalDate endDate;
 
+    @NotNull(message = "El presupuesto es obligatorio")
+    @DecimalMin(value = "0.01", message = "El presupuesto debe ser mayor a 0")
     @JsonProperty("budget")
     private BigDecimal budget;
     

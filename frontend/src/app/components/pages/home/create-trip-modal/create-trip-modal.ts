@@ -1,8 +1,9 @@
-import { Component, Output, EventEmitter, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../../../shared/modal/modal';
 import { CommunicationService } from '../../../../services/communication.service';
+import { DateFormatService } from '../../../../core/services/date-format.service';
 import { TripFormData } from '../../../../services/trip.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -32,6 +33,8 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
   @ViewChild('modal') modal!: ModalComponent;
 
   private destroy$ = new Subject<void>();
+  private dateFormatService = inject(DateFormatService);
+  private communicationService = inject(CommunicationService);
 
   tripForm: TripFormDataLocal = {
     title: '',
@@ -44,8 +47,7 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
 
   isSubmitting = false;
   dateError: string = '';
-
-  constructor(private communicationService: CommunicationService) {}
+  budgetError: string = '';
 
   ngOnInit(): void {
     // Listen to modal open events
@@ -85,9 +87,11 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.validateDates();
+    this.validateBudget();
     
-    if (this.isValidForm() && !this.dateError) {
+    if (this.isValidForm() && !this.dateError && !this.budgetError) {
       this.isSubmitting = true;
+      const budgetNumber = parseFloat(this.tripForm.budget);
       
       // Convertir datos del formulario al tipo correcto (budget como número)
       const tripData: TripFormData = {
@@ -96,7 +100,7 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
         description: this.tripForm.description || undefined,
         startDate: this.tripForm.startDate,
         endDate: this.tripForm.endDate,
-        budget: this.tripForm.budget ? parseFloat(this.tripForm.budget) : undefined
+        budget: budgetNumber
       };
       
       // Emitir el evento con los datos convertidos
@@ -114,7 +118,9 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
       this.tripForm.destination.trim() !== '' &&
       this.tripForm.startDate !== '' &&
       this.tripForm.endDate !== '' &&
-      !this.dateError
+      !this.dateError &&
+      !this.budgetError &&
+      this.isBudgetValid()
     );
   }
 
@@ -128,6 +134,7 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
       budget: ''
     };
     this.dateError = '';
+    this.budgetError = '';
   }
 
   openModal(): void {
@@ -148,5 +155,19 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
       input.value = '0';
       this.tripForm.budget = '';
     }
+    this.validateBudget();
+  }
+
+  validateBudget(): void {
+    this.budgetError = '';
+    const budgetNumber = parseFloat(this.tripForm.budget);
+    if (isNaN(budgetNumber) || budgetNumber <= 0) {
+      this.budgetError = 'El presupuesto es obligatorio y debe ser mayor a 0';
+    }
+  }
+
+  private isBudgetValid(): boolean {
+    const budgetNumber = parseFloat(this.tripForm.budget);
+    return !isNaN(budgetNumber) && budgetNumber > 0;
   }
 }
