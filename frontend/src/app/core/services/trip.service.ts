@@ -32,7 +32,7 @@ export class TripService {
    */
   getMyTrips(page: number = 1, pageSize: number = 10): Observable<ApiPaginatedResponse<Trip>> {
     return this.api.get<ApiPaginatedResponse<Trip>>(
-      this.endpoint,
+      `${this.endpoint}/my-trips`,
       { page, pageSize }
     );
   }

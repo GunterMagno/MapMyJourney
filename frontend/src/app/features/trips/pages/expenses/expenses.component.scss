@@ -1,105 +1,169 @@
 @use '../../../../../styles/00-settings/variables' as vars;
 
+// ============================================================================
+// CONTAINER
+// ============================================================================
 .expenses-container {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem;
+  min-height: 100vh;
 }
 
 // ============================================================================
-// HEADER RESUMEN
+// SECCIÓN 1: RESUMEN DE GASTOS DEL VIAJE
 // ============================================================================
-.expenses-summary {
-  background-color: var(--principal-color-disabled);
-  border-radius: 20px;
+.expenses-summary-card {
+  background-color: #ffc0e0; // Light pink
+  border-radius: 24px;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
 
   .summary-header {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-    justify-content: space-between;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-  }
-
-  .summary-stats {
-    flex: 0 0 auto;
     text-align: center;
 
     .total-amount {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 700;
-      color: var(--principal-color);
+      color: var(--text-primary);
       margin: 0;
-      letter-spacing: -1px;
+      letter-spacing: -0.5px;
     }
 
     .summary-label {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
+      font-size: 0.95rem;
+      color: #666;
       margin: 0.5rem 0 0 0;
       font-weight: 500;
     }
-  }
 
-  .summary-details {
-    flex: 1;
-
-    .subtitle {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin: 0 0 1rem 0;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-
-      &.empty {
-        color: var(--text-tertiary);
-      }
-    }
-
-    .recent-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    .budget-info {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
 
-      li {
-        font-size: 0.95rem;
-        color: var(--text-secondary);
-        font-weight: 500;
+      .budget-item {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 0.75rem;
+        font-size: 0.95rem;
 
-        .expense-icon {
-          font-size: 1.2rem;
-          flex-shrink: 0;
-        }
-
-        .expense-desc {
-          flex: 1;
-        }
-
-        .expense-amt {
-          font-weight: 700;
+        .budget-label {
+          font-weight: 600;
           color: var(--text-primary);
-          flex-shrink: 0;
+        }
+
+        .budget-value {
+          font-weight: 700;
+          color: #5dd9c1;
+          font-size: 1.1rem;
+        }
+
+        .budget-remaining {
+          font-weight: 700;
+          color: #4bc9b2;
+          font-size: 1.1rem;
+
+          &.over-budget {
+            color: #ff6b6b;
+          }
         }
       }
+
+      .budget-bar {
+        width: 100%;
+        height: 8px;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 0.5rem 0;
+
+        .budget-used {
+          height: 100%;
+          background: linear-gradient(90deg, #5dd9c1, #4bc9b2);
+          border-radius: 4px;
+          transition: width 0.3s ease;
+        }
+      }
+
+      .budget-percentage {
+        font-size: 0.85rem;
+        color: #999;
+        margin: 0;
+        text-align: center;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .aggregated-expenses {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .aggregated-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .item-left {
+        flex: 1;
+
+        .expense-name {
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin: 0 0 0.25rem 0;
+        }
+
+        .expense-subtitle {
+          font-size: 0.8rem;
+          color: #999;
+          margin: 0 0 0.15rem 0;
+          font-weight: 500;
+        }
+
+        .expense-date {
+          font-size: 0.75rem;
+          color: #bbb;
+          margin: 0;
+        }
+      }
+
+      .item-right {
+        text-align: right;
+
+        .expense-amount {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+      }
+    }
+
+    .no-expenses-text {
+      text-align: center;
+      color: #999;
+      font-size: 0.9rem;
+      margin: 1rem 0;
     }
   }
 
@@ -107,260 +171,341 @@
     display: flex;
     justify-content: center;
     width: 100%;
-  }
 
-  .btn-add-expense {
-    background-color: var(--quaternary-color);
-    color: white;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    @media (max-width: 768px) {
-      width: 100%;
-    }
-
-    &:hover {
-      background-color: var(--quaternary-color);
-      filter: brightness(1.1);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-  }
-}
-
-// ============================================================================
-// SELECTOR DE DÍAS
-// ============================================================================
-.date-selector-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  .date-selector-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0;
-  }
-
-  .no-dates {
-    color: var(--text-tertiary);
-    font-size: 0.95rem;
-    padding: 1rem;
-    text-align: center;
-  }
-}
-
-.date-selector {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding-bottom: 1rem;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .date-card {
-    flex-shrink: 0;
-    width: 110px;
-    aspect-ratio: 1;
-    border: 2px solid var(--border-color);
-    background-color: white;
-    border-radius: 16px;
-    padding: 1rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-
-    &:hover {
-      border-color: var(--quinary-color);
-      box-shadow: var(--shadow-sm);
-    }
-
-    &.selected {
-      border: 3px solid var(--quinary-color);
-      background: linear-gradient(135deg, var(--quinary-color-disabled), white);
-      box-shadow: var(--shadow-md);
-    }
-
-    .day {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1;
-    }
-
-    .month {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
+    .btn-add-expense-pill {
+      background-color: #5dd9c1; // Turquoise/teal green
+      color: #333;
+      border: none;
+      padding: 0.75rem 2.5rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(93, 217, 193, 0.3);
 
-    .label {
-      font-size: 0.7rem;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-    }
+      &:hover {
+        background-color: #4bc9b2;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(93, 217, 193, 0.4);
+      }
 
-    .total {
-      font-size: 0.9rem;
-      color: var(--quaternary-color);
-      font-weight: 700;
+      &:active {
+        transform: translateY(0);
+      }
     }
   }
 }
 
 // ============================================================================
-// LISTA DETALLADA
+// SECCIÓN 2: CARRUSEL DE DÍAS
 // ============================================================================
-.expenses-list {
+.days-carousel-container {
+  background-color: #f5e8d8; // Beige/cream
+  border-radius: 20px;
+  padding: 1.5rem;
+  border: 3px solid #ffc0e0; // Pink border
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  .carousel-wrapper {
+    display: flex;
+    gap: 1.2rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    padding: 0.5rem 0;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    .day-card {
+      flex-shrink: 0;
+      width: 120px;
+      padding: 1.5rem 1rem;
+      background-color: #fff9f3;
+      border: 3px solid transparent;
+      border-radius: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      color: white;
+      font-weight: 600;
+
+      &:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      &.selected {
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-4px);
+      }
+
+      .day-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .day-month {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        opacity: 0.9;
+      }
+
+      .day-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 500;
+        opacity: 0.85;
+      }
+
+      .day-total {
+        font-size: 0.9rem;
+        font-weight: 700;
+        opacity: 1;
+      }
+    }
+
+    .no-dates-message {
+      color: #999;
+      font-size: 0.9rem;
+      padding: 1rem;
+    }
+  }
+}
+
+// ============================================================================
+// SECCIÓN 3: DETALLE DE GASTOS DEL DÍA
+// ============================================================================
+.daily-expenses-detail {
+  background-color: #fffacd; // Light yellow
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 
-  .date-title {
-    font-size: 1.3rem;
-    color: var(--text-primary);
-    margin: 0;
-    font-weight: 600;
-  }
-
-  .expenses-list-info {
-    background-color: var(--principal-color-disabled);
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
+  .detail-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .total-label {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      font-weight: 500;
-    }
-
-    .total-amount-day {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--quaternary-color);
-    }
-  }
-
-  .expenses-cards {
-    display: flex;
-    flex-direction: column;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 1rem;
+    flex-wrap: wrap;
     gap: 1rem;
-  }
 
-  .expense-card {
-    background-color: white;
-    border-radius: 12px;
-    padding: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-    border: 1px solid var(--border-color);
+    .detail-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+      flex: 1;
 
-    &:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-color);
-      transform: translateY(-2px);
+      .date-highlight {
+        font-weight: 700;
+        color: var(--text-primary);
+      }
     }
 
-    .expense-icon {
-      font-size: 2rem;
-      flex-shrink: 0;
-      width: 50px;
-      height: 50px;
+    .header-right {
       display: flex;
       align-items: center;
-      justify-content: center;
-      background-color: var(--principal-color-disabled);
-      border-radius: 10px;
-    }
+      gap: 1rem;
 
-    .expense-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      .description {
+      .daily-total {
         font-size: 1.1rem;
-        font-weight: 600;
+        font-weight: 700;
         color: var(--text-primary);
-        margin: 0;
       }
 
-      .payer-info {
+      .btn-add-day-expense {
+        background-color: #5dd9c1;
+        color: #333;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #4bc9b2;
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  .expenses-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1.5fr 2fr 1.5fr;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      .col-description,
+      .col-amount,
+      .col-payer,
+      .col-split,
+      .col-actions {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1.5fr 2fr 1.5fr;
+      gap: 1rem;
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      align-items: center;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+
+      &.paid {
+        border-left: 4px solid #5dd9c1;
+        background-color: rgba(93, 217, 193, 0.05);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .col-description {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .col-amount {
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .col-payer {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        font-size: 0.9rem;
-        color: var(--text-secondary);
 
-        .avatar {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
+        .participant-avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
           object-fit: cover;
-          border: 2px solid var(--border-color);
+          border: 2px solid rgba(0, 0, 0, 0.1);
         }
 
         .payer-name {
+          font-size: 0.9rem;
           font-weight: 500;
+          color: var(--text-primary);
         }
       }
-    }
 
-    .expense-amount {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--quaternary-color);
-      min-width: 80px;
-      text-align: right;
-    }
-
-    .btn-delete {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-
-      &:hover {
-        transform: scale(1.15);
-        filter: brightness(1.2);
+      .col-split {
+        font-size: 0.85rem;
+        color: #666;
       }
 
-      &:active {
-        transform: scale(0.95);
+      .col-actions {
+        display: flex;
+        gap: 0.75rem;
+
+        .btn-details-green {
+          background-color: #5dd9c1;
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: #4bc9b2;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(93, 217, 193, 0.3);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+
+        .btn-delete-pink {
+          background-color: #ff69b4;
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+
+          .delete-icon {
+            font-size: 0.9rem;
+          }
+
+          &:hover {
+            background-color: #ff1493;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(255, 105, 180, 0.3);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
       }
     }
   }
@@ -368,7 +513,7 @@
   .empty-state {
     text-align: center;
     padding: 3rem 1rem;
-    color: var(--text-tertiary);
+    color: #999;
     font-size: 1rem;
 
     p {
@@ -378,89 +523,77 @@
 }
 
 // ============================================================================
-// PAGOS PENDIENTES / DEUDAS
+// SECCIÓN 4: PAGOS PENDIENTES
 // ============================================================================
-.debts-section {
-  margin-top: 2rem;
+.pending-payments-card {
+  background-color: #ffc0e0; // Light pink
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
 
-  .debts-accordion {
-    background-color: var(--principal-color-disabled);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    overflow: hidden;
+  .payments-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+  }
 
-    .debts-title {
-      cursor: pointer;
-      padding: 1.25rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-primary);
+  .payments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .payment-item {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.75rem;
-      user-select: none;
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-      }
-
-      &::marker {
-        color: var(--quinary-color);
-      }
-    }
-
-    .debts-list {
-      padding: 1rem 1.25rem;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
+      padding: 1rem;
+      background-color: white;
+      border-radius: 12px;
       gap: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 
-      .debt-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1rem;
-        background-color: white;
-        border-radius: 10px;
-        border: 1px solid var(--border-color);
+      .payment-text {
+        flex: 1;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: var(--text-primary);
+        margin: 0;
 
-        .debt-text {
-          flex: 1;
-          font-size: 0.95rem;
-          line-height: 1.5;
+        strong {
           color: var(--text-primary);
+          font-weight: 600;
+        }
+      }
 
-          strong {
-            color: var(--quaternary-color);
-            font-weight: 600;
-          }
+      .btn-pay-pill {
+        background-color: #5dd9c1;
+        color: #333;
+        border: none;
+        padding: 0.6rem 1.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(93, 217, 193, 0.2);
+
+        &:hover {
+          background-color: #4bc9b2;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(93, 217, 193, 0.3);
         }
 
-        .btn-settle {
-          background-color: transparent;
-          border: 2px solid var(--quinary-color);
-          color: var(--quinary-color);
-          padding: 0.5rem 1.5rem;
-          border-radius: 20px;
-          font-size: 0.9rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          white-space: nowrap;
-          flex-shrink: 0;
-
-          &:hover {
-            background-color: var(--quinary-color);
-            color: white;
-            box-shadow: var(--shadow-sm);
-          }
-
-          &:active {
-            transform: scale(0.95);
-          }
+        &:active {
+          transform: translateY(0);
         }
       }
     }
@@ -472,64 +605,125 @@
 // ============================================================================
 @media (max-width: 768px) {
   .expenses-container {
-    padding: 1.5rem;
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .expenses-summary-card {
+    max-width: 100%;
+  }
+
+  .daily-expenses-detail {
+    .detail-header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    .expenses-table {
+      .table-header,
+      .table-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+
+        .col-description::before,
+        .col-amount::before,
+        .col-payer::before,
+        .col-split::before,
+        .col-actions::before {
+          content: attr(data-label);
+          font-weight: 600;
+          display: block;
+          margin-bottom: 0.25rem;
+        }
+      }
+
+      .table-header {
+        display: none;
+      }
+
+      .table-row {
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+
+        .col-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .pending-payments-card {
+    max-width: 100%;
+
+    .payments-list .payment-item {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .btn-pay-pill {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+
+  .days-carousel-container {
+    padding: 1rem;
+
+    .carousel-wrapper {
+      gap: 0.8rem;
+
+      .day-card {
+        width: 100px;
+        padding: 1.2rem 0.8rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .expenses-container {
+    padding: 0.75rem;
     gap: 1.5rem;
   }
 
-  .expenses-summary {
+  .expenses-summary-card {
     padding: 1.5rem;
+    border-radius: 16px;
 
-    .total-amount {
-      font-size: 2.5rem;
+    .summary-header .total-amount {
+      font-size: 2rem;
     }
 
-    .btn-add-expense {
-      width: 100%;
-    }
-  }
-
-  .date-selector {
-    gap: 0.75rem;
-
-    .date-card {
-      width: 90px;
+    .aggregated-expenses .aggregated-item {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 
-  .expense-card {
-    flex-wrap: wrap;
-    padding: 1rem;
-    gap: 0.75rem;
+  .daily-expenses-detail {
+    padding: 1.5rem;
+    border-radius: 16px;
 
-    .expense-content {
-      order: 2;
-      flex-basis: 100%;
-    }
-
-    .expense-icon {
-      order: 1;
-    }
-
-    .expense-amount {
-      order: 3;
-      flex-basis: 50%;
-      text-align: left;
-    }
-
-    .btn-delete {
-      order: 4;
-      flex-basis: 50%;
-      text-align: right;
+    .detail-header {
+      .detail-title {
+        font-size: 1.1rem;
+      }
     }
   }
 
-  .debts-section .debts-accordion .debts-list .debt-item {
-    flex-direction: column;
-    align-items: flex-start;
+  .pending-payments-card {
+    padding: 1.5rem;
+    border-radius: 16px;
 
-    .btn-settle {
-      width: 100%;
-      text-align: center;
+    .payments-title {
+      font-size: 1rem;
     }
   }
 }

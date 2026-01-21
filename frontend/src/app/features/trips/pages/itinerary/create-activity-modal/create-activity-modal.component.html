@@ -1,18 +1,17 @@
-<!-- Modal Overlay -->
-<div class="modal-overlay" *ngIf="isOpen()" (click)="closeModal()">
-  <!-- Modal Content -->
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <!-- Header -->
-    <header class="modal-header">
-      <h2 class="modal-title">Crear Actividad</h2>
-      <button class="modal-close" (click)="closeModal()">✕</button>
-    </header>
+<!-- Modal Content (sin overlay porque está dentro del padre) -->
+<!-- Modal Content -->
+<div class="modal-content" (click)="$event.stopPropagation()">
+  <!-- Header -->
+  <header class="modal-header">
+    <h2 class="modal-title">{{ isEditMode() ? 'Editar Actividad' : 'Crear Actividad' }}</h2>
+    <button class="modal-close" (click)="closeModal()">✕</button>
+  </header>
 
-    <!-- Form -->
-    <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="modal-form">
-      <!-- Nombre de la actividad -->
-      <div class="form-group">
-        <label for="title" class="form-label">Nombre de la actividad *</label>
+  <!-- Form -->
+  <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="modal-form">
+    <!-- Nombre de la actividad -->
+    <div class="form-group">
+      <label for="title" class="form-label">Nombre de la actividad *</label>
         <input
           id="title"
           type="text"
@@ -117,10 +116,10 @@
 
       <!-- Notas -->
       <div class="form-group">
-        <label for="notes" class="form-label">Notas</label>
+        <label for="description" class="form-label">Descripción</label>
         <textarea
-          id="notes"
-          formControlName="notes"
+          id="description"
+          formControlName="description"
           class="form-textarea"
           rows="4"
           placeholder="Añade detalles adicionales..."
@@ -153,4 +152,3 @@
       </div>
     </form>
   </div>
-</div>

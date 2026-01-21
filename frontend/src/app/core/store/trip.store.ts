@@ -31,6 +31,7 @@ import { Injectable, computed, signal, inject } from '@angular/core';
 import { TripService } from '../services/trip.service';
 import { ToastService } from '../services/toast.service';
 import { Trip, TripDetail, ApiPaginatedResponse } from '../models';
+import { finalize } from 'rxjs/operators';
 
 interface TripStoreState {
   trips: Trip[];
@@ -165,30 +166,28 @@ export class TripStore {
     this._setLoading(true);
     this._setError(null);
 
-    this.tripService.getMyTrips(1, this._state().pageSize).subscribe({
-      next: (response) => {
-        this._state.update(s => ({
-          ...s,
-          trips: response.items,
-          totalItems: response.total,
-          currentPage: 1,
-          hasMore: response.items.length < response.total,
-          loading: false
-        }));
-      },
-      error: (err) => {
-        // No guardar error persistente en el estado
-        // Solo mostrar en toast si NO es error de autenticación
-        const isAuthError = err.status === 401 || err.status === 403 || err.status === 500;
-        
-        if (!isAuthError) {
-          this.toastService.error('No se pudieron cargar los viajes');
+    this.tripService.getMyTrips(1, this._state().pageSize)
+      .pipe(
+        finalize(() => this._setLoading(false))
+      )
+      .subscribe({
+        next: (response) => {
+          this._state.update(s => ({
+            ...s,
+            trips: response.items,
+            totalItems: response.total,
+            currentPage: 1,
+            hasMore: response.items.length < response.total,
+            loading: false
+          }));
+        },
+        error: (err) => {
+          // No guardar error persistente en el estado
+          // El error interceptor ya muestra el toast para 500 errors
+          // Aquí solo registramos en consola
+          console.error('TripStore.loadTrips error:', err);
         }
-        
-        this._setLoading(false);
-        console.error('TripStore.loadTrips error:', err);
-      }
-    });
+      });
   }
 
   /**

@@ -21,12 +21,23 @@ export class ExpensesComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly dateFormatService = inject(DateFormatService);
 
+  // Colores cíclicos para los días
+  readonly DAY_COLORS = [
+    'var(--principal-color)',
+    'var(--secondary-color)',
+    'var(--quinary-color)',
+    'var(--quaternary-color)',
+    '#9C27B0'
+  ];
+
   // Signals
   tripId = signal<string>('');
   selectedDate = signal<string>('');
   showAddExpenseModal = signal<boolean>(false);
   currentUserId = signal<string>('');
   currentUserName = signal<string>('');
+  preselectedDate = signal<string>('');
+  settledPayments = signal<Set<string>>(new Set());
 
   // Computed signals
   expenses = this.expenseStore.expenses;
@@ -40,12 +51,46 @@ export class ExpensesComponent implements OnInit {
   });
 
   /**
-   * Últimos 3 gastos
+   * Gastos agregados por categoría (para la sección 1)
    */
-  recentExpenses = computed(() => {
-    return this.expenses()
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 3);
+  aggregatedExpenses = computed(() => {
+    const expensesByCategory = new Map<string, {
+      category: string;
+      description: string;
+      payerIds: string[];
+      total: number;
+      latestDate: string;
+    }>();
+
+    this.expenses().forEach(expense => {
+      const key = expense.category;
+      const existing = expensesByCategory.get(key);
+
+      if (existing) {
+        existing.total += expense.amount;
+        if (!existing.payerIds.includes(expense.payerId)) {
+          existing.payerIds.push(expense.payerId);
+        }
+        if (new Date(expense.date) > new Date(existing.latestDate)) {
+          existing.latestDate = expense.date;
+        }
+      } else {
+        expensesByCategory.set(key, {
+          category: expense.category,
+          description: this.getCategoryDescription(expense.category),
+          payerIds: [expense.payerId],
+          total: expense.amount,
+          latestDate: expense.date
+        });
+      }
+    });
+
+    return Array.from(expensesByCategory.values()).map(item => ({
+      ...item,
+      payerNames: item.payerIds
+        .map(id => this.getParticipantName(id))
+        .join(' / ')
+    }));
   });
 
   /**
@@ -167,6 +212,14 @@ export class ExpensesComponent implements OnInit {
   };
 
   /**
+   * Obtener color cíclico para un día según su índice
+   */
+  getDayColor = (date: string): string => {
+    const index = this.tripDateRange().indexOf(date);
+    return index >= 0 ? this.DAY_COLORS[index % this.DAY_COLORS.length] : 'var(--principal-color)';
+  };
+
+  /**
    * Mapping de categorías a emojis/iconos
    */
   categoryIcons: Record<string, string> = {
@@ -218,6 +271,20 @@ export class ExpensesComponent implements OnInit {
       
       return { debtor: debtorName, creditor: creditorName, amount };
     });
+  });
+
+  /**
+   * Pagos pendientes (para la sección 4)
+   */
+  pendingPayments = computed(() => {
+    return this.debts()
+      .filter(debt => !this.settledPayments().has(`${debt.debtor}|${debt.creditor}`))
+      .map((debt, index) => ({
+        id: `${debt.debtor}|${debt.creditor}|${index}`,
+        debtor: debt.debtor,
+        creditor: debt.creditor,
+        amount: debt.amount
+      }));
   });
 
   ngOnInit(): void {
@@ -319,5 +386,62 @@ export class ExpensesComponent implements OnInit {
   settleDebt(debtor: string, creditor: string): void {
     // Implementar lógica de pago
     console.log(`Saldando deuda de ${debtor} a ${creditor}`);
+  }
+
+  /**
+   * Obtener descripción de categoría
+   */
+  private getCategoryDescription(category: string): string {
+    const categoryMap: Record<string, string> = {
+      'TRANSPORT': 'Billetes del vuelo',
+      'ACCOMMODATION': 'Pago Alojamiento',
+      'FOOD': 'Comida',
+      'ACTIVITIES': 'Actividades',
+      'OTHER': 'Otros gastos'
+    };
+    return categoryMap[category] || category;
+  }
+
+  /**
+   * Obtener texto con participantes divididos
+   */
+  getSplitParticipantsText(participantIds: string[]): string {
+    return participantIds
+      .map(id => this.getParticipantName(id))
+      .join(', ');
+  }
+
+  /**
+   * Abrir modal para añadir gasto para una fecha específica
+   */
+  openAddExpenseModalForDate(date: string): void {
+    this.preselectedDate.set(date);
+    this.showAddExpenseModal.set(true);
+  }
+
+  /**
+   * Verificar si un gasto está marcado como pagado
+   */
+  isExpensePaid(expenseId: string): boolean {
+    // Aquí puedes implementar lógica para verificar si el gasto está pagado
+    // Por ahora retorna false, pero puede ser expandido
+    return false;
+  }
+
+  /**
+   * Abrir detalles de un gasto
+   */
+  openExpenseDetails(expense: Expense): void {
+    // Implementar modal o navegación para ver detalles del gasto
+    console.log('Abriendo detalles del gasto:', expense);
+  }
+
+  /**
+   * Marcar un pago como saldado
+   */
+  markPaymentAsSettled(paymentId: string): void {
+    const settled = new Set(this.settledPayments());
+    settled.add(paymentId);
+    this.settledPayments.set(settled);
   }
 }

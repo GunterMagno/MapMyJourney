@@ -1,0 +1,183 @@
+<div class="create-activity-modal">
+  <!-- HEADER -->
+  <div class="modal-header">
+    <h2 class="modal-title">Añadir Actividad</h2>
+    <button
+      class="btn-close"
+      (click)="onCancel()"
+      aria-label="Cerrar modal"
+      type="button"
+    >
+      ✕
+    </button>
+  </div>
+
+  <!-- CONTENIDO FORMULARIO -->
+  <div class="modal-content">
+    <form [formGroup]="activityForm" class="activity-form">
+      <!-- TIPO DE ACTIVIDAD: Radio Buttons -->
+      <div class="form-section">
+        <label class="section-label">Tipo</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input
+              type="radio"
+              value="ACTIVITY"
+              formControlName="type"
+              class="radio-input"
+            />
+            <span class="radio-label">🎯 Actividad</span>
+          </label>
+          <label class="radio-option">
+            <input
+              type="radio"
+              value="TRANSITION"
+              formControlName="type"
+              class="radio-input"
+            />
+            <span class="radio-label">🚗 Traslado</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- TÍTULO -->
+      <div class="form-section">
+        <label for="title" class="form-label">Título *</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="Ej: Visita a la Sagrada Familia"
+          class="form-input"
+          [class.form-input--error]="hasError('title')"
+        />
+        <div class="form-error" *ngIf="hasError('title')">
+          {{ getFieldError('title') }}
+        </div>
+      </div>
+
+      <!-- HORARIO -->
+      <div class="form-section">
+        <h3 class="subsection-label">Horario</h3>
+
+        <!-- Hora Inicio -->
+        <div class="form-row">
+          <div class="form-group form-group--half">
+            <label for="startTime" class="form-label">Hora de Inicio *</label>
+            <input
+              id="startTime"
+              type="time"
+              formControlName="startTime"
+              class="form-input"
+              [class.form-input--error]="hasError('startTime')"
+            />
+            <div class="form-error" *ngIf="hasError('startTime')">
+              {{ getFieldError('startTime') }}
+            </div>
+          </div>
+
+          <!-- Duración -->
+          <div class="form-group form-group--half">
+            <div class="duration-group">
+              <div class="duration-field">
+                <label for="duration" class="form-label">Duración *</label>
+                <input
+                  id="duration"
+                  type="number"
+                  formControlName="duration"
+                  min="1"
+                  placeholder="60"
+                  class="form-input"
+                  [class.form-input--error]="hasError('duration')"
+                />
+                <div class="form-error" *ngIf="hasError('duration')">
+                  {{ getFieldError('duration') }}
+                </div>
+              </div>
+
+              <div class="duration-field">
+                <label for="durationUnit" class="form-label">Unidad</label>
+                <select
+                  id="durationUnit"
+                  formControlName="durationUnit"
+                  class="form-input form-select"
+                >
+                  <option *ngFor="let unit of durationUnits" [value]="unit.value">
+                    {{ unit.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETALLES -->
+      <div class="form-section">
+        <h3 class="subsection-label">Detalles</h3>
+
+        <!-- Ubicación (solo para actividades) -->
+        <div class="form-group" *ngIf="activityForm.get('type')?.value !== 'TRANSITION'">
+          <label for="location" class="form-label">
+            <span class="location-icon">📍</span>
+            Ubicación
+          </label>
+          <input
+            id="location"
+            type="text"
+            formControlName="location"
+            placeholder="Ej: Sagrada Familia, Barcelona"
+            class="form-input"
+          />
+        </div>
+
+        <!-- Categoría (solo para actividades) -->
+        <div class="form-group" *ngIf="activityForm.get('type')?.value !== 'TRANSITION'">
+          <label for="category" class="form-label">Categoría</label>
+          <select
+            id="category"
+            formControlName="category"
+            class="form-input form-select"
+          >
+            <option *ngFor="let cat of activityCategories" [value]="cat.value">
+              {{ cat.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Notas -->
+        <div class="form-group">
+          <label for="notes" class="form-label">Notas</label>
+          <textarea
+            id="notes"
+            formControlName="notes"
+            rows="4"
+            placeholder="Añade detalles adicionales..."
+            class="form-input form-textarea"
+          ></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- FOOTER CON BOTONES -->
+  <div class="modal-footer">
+    <button
+      class="btn btn-cancel"
+      (click)="onCancel()"
+      [disabled]="isLoading"
+      type="button"
+    >
+      Cancelar
+    </button>
+    <button
+      class="btn btn-save"
+      (click)="onSave()"
+      [disabled]="activityForm.invalid || isLoading"
+      type="button"
+    >
+      <span *ngIf="!isLoading">➕ Añadir Actividad</span>
+      <span *ngIf="isLoading">⏳ Guardando...</span>
+    </button>
+  </div>
+</div>

@@ -1,7 +1,7 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateActivityDto } from '../../../models/itinerary.model';
+import { ItineraryItem } from '../../../../../core/models/itinerary.model';
 
 @Component({
   selector: 'app-create-activity-modal',
@@ -10,19 +10,28 @@ import { CreateActivityDto } from '../../../models/itinerary.model';
   templateUrl: './create-activity-modal.component.html',
   styleUrl: './create-activity-modal.component.scss'
 })
-export class CreateActivityModalComponent implements OnInit {
+export class CreateActivityModalComponent implements OnInit, OnChanges {
+  @Input() selectedDate: string = '';
+  @Input() editingItem: ItineraryItem | null = null;
+  @Output() close = new EventEmitter<void>();
+  @Output() activityAdded = new EventEmitter<ItineraryItem>();
+
   isOpen = signal(false);
   activityForm!: FormGroup;
   dayIndex: number = 0;
-  
-  // Outputs para padres
-  onActivityCreated: ((activity: CreateActivityDto) => void) | null = null;
-  onModalClosed: (() => void) | null = null;
+  isEditMode = signal(false);
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initializeForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['editingItem'] && changes['editingItem'].currentValue) {
+      // Si recibe un editingItem, abrirlo automáticamente
+      this.openModal(0, changes['editingItem'].currentValue);
+    }
   }
 
   private initializeForm(): void {
@@ -33,7 +42,7 @@ export class CreateActivityModalComponent implements OnInit {
       duration: [45, [Validators.required, Validators.min(1), Validators.max(1440)]],
       durationUnit: ['MIN'],
       location: [''],
-      notes: [''],
+      description: [''],
       category: ['']
     });
   }
@@ -51,39 +60,53 @@ export class CreateActivityModalComponent implements OnInit {
     return this.activityForm.get('duration')!;
   }
 
-  openModal(dayIndex: number): void {
+  openModal(dayIndex: number, editingItem?: ItineraryItem): void {
     this.dayIndex = dayIndex;
+    this.isEditMode.set(!!editingItem);
+    
+    if (editingItem) {
+      // Modo edición: rellenar el form con los datos del item
+      this.activityForm.patchValue({
+        title: editingItem.title,
+        type: editingItem.type,
+        startTime: editingItem.time,
+        duration: editingItem.duration,
+        location: editingItem.location || '',
+        description: editingItem.description || '',
+        category: editingItem.category || ''
+      });
+    } else {
+      // Modo creación: resetear el form
+      this.activityForm.reset({ type: 'ACTIVITY', duration: 45, durationUnit: 'MIN' });
+    }
+    
     this.isOpen.set(true);
   }
 
   closeModal(): void {
     this.isOpen.set(false);
     this.activityForm.reset({ type: 'ACTIVITY', duration: 45, durationUnit: 'MIN' });
-    if (this.onModalClosed) {
-      this.onModalClosed();
-    }
+    this.isEditMode.set(false);
+    this.close.emit();
   }
 
   onSubmit(): void {
     if (!this.activityForm.valid) return;
 
     const formValue = this.activityForm.value;
-    const activity: CreateActivityDto = {
+    const item: ItineraryItem = {
+      id: this.editingItem?.id || `temp-${Date.now()}`,
       title: formValue.title,
       type: formValue.type,
-      startTime: formValue.startTime,
+      time: formValue.startTime,
       duration: formValue.duration,
-      durationUnit: formValue.durationUnit,
       location: formValue.location || undefined,
-      notes: formValue.notes || undefined,
-      dayIndex: this.dayIndex,
-      category: formValue.category || undefined
+      description: formValue.description || undefined,
+      category: formValue.category || undefined,
+      isCompleted: this.editingItem?.isCompleted || false
     };
 
-    if (this.onActivityCreated) {
-      this.onActivityCreated(activity);
-    }
-
+    this.activityAdded.emit(item);
     this.closeModal();
   }
 }

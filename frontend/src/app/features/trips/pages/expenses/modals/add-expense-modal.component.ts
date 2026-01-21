@@ -23,6 +23,7 @@ export class AddExpenseModalComponent implements OnInit {
   @Input() currentUserName: string = ''; // Nombre del usuario actual
   @Input() tripStartDate: string = '';
   @Input() tripEndDate: string = '';
+  @Input() preselectedDate: string = ''; // Fecha preseleccionada para el gasto
   @Output() close = new EventEmitter<void>();
 
   private readonly fb = inject(FormBuilder);

@@ -1,185 +1,167 @@
 <div class="itinerary-page">
-  <!-- Loading State -->
-  <div *ngIf="isLoading()" class="loading-container">
-    <div class="spinner"></div>
-    <p>Cargando itinerario...</p>
-  </div>
+  <!-- Header -->
+  <header class="itinerary-header">
+  </header>
 
-  <!-- Main Content -->
-  <div *ngIf="!isLoading()" class="itinerary-page__container">
-    <!-- Header Resumen -->
-    <article class="itinerary-header">
-      <h1 class="itinerary-header__title">
-        <span class="icon">📍</span> {{ trip()?.destination }}
-      </h1>
-
-      <div class="itinerary-header__info">
-        <div class="info-item">
-          <span class="label">Duración</span>
-          <span class="value">{{ tripDateRange().length }} días</span>
-        </div>
-        <div class="info-item">
-          <span class="label">Actividades</span>
-          <span class="value">{{ activities().length }}</span>
-        </div>
-      </div>
-
-      <div class="button-container">
+  <!-- Selector de Días (Grid colorido) -->
+  <nav class="days-selector">
+    <div class="days-selector__list">
+      @for (day of days(); let i = $index; track day.dayIndex) {
         <button 
-          class="btn-add-activity" 
-          (click)="openAddActivityModal()"
-          aria-label="Añadir nueva actividad">
-          + Añadir Actividad
+          class="day-card"
+          [class.selected]="selectedDayIndex() === i"
+          [class.completed]="day.isCompleted"
+          (click)="selectDay(i)"
+          [attr.aria-pressed]="selectedDayIndex() === i"
+          [attr.aria-label]="'Seleccionar ' + (day.date | date: 'EEEE, d MMMM' : undefined : 'es-ES')">
+          <span class="day-card__day-name">{{ (day.date | date: 'EEE' : undefined : 'es-ES') }}</span>
+          <span class="day-card__number">{{ (day.date | date: 'dd') }}</span>
+          <span class="day-card__month">{{ capitalize((day.date | date: 'MMM' : undefined : 'es-ES')) }}</span>
         </button>
-      </div>
-    </article>
+      }
+    </div>
+  </nav>
 
-    <!-- SELECTOR DE DÍAS - Horizontal Scroll -->
-    <div class="date-selector-wrapper">
-      <h3 class="date-selector-title">Días del Viaje</h3>
-      <div class="date-selector">
-        @if (tripDateRange().length > 0) {
-          @for (date of tripDateRange(); let i = index; track date) {
-            <button 
-              class="date-card"
-              [class.selected]="selectedDate() === date"
-              (click)="selectDate(date)"
-              [attr.aria-pressed]="selectedDate() === date"
-              [style.--day-border-color]="getDayColor(i)">
-              <div class="day">{{ formatDateForSelector(date).day }}</div>
-              <div class="month">{{ formatDateForSelector(date).month }}</div>
-              <div class="label">Actividades</div>
-              <div class="total">{{ getTotalActivitiesForDate(date) }}</div>
-            </button>
-          }
-        } @else {
-          <p class="no-dates">No hay días disponibles en este viaje</p>
-        }
+  <!-- Contenido Principal: Lista de Actividades -->
+  <main class="itinerary-content">
+    <!-- Day Header -->
+    <div class="day-header">
+      <div>
+        <h1 class="day-title">{{ selectedDay()?.title }}</h1>
       </div>
+      
+      <!-- Badge de completado -->
+      <button
+        class="itinerary-widget__status-btn"
+        [class.itinerary-widget__status-btn--completed]="selectedDay()?.isCompleted"
+        (click)="toggleDayCompletion(); $event.stopPropagation()"
+        [title]="selectedDay()?.isCompleted ? 'Marcar como no completado' : 'Marcar como completado'"
+      >
+        <span class="itinerary-widget__status-text">
+          {{ selectedDay()?.isCompleted ? 'Completado' : 'No Completado' }}
+        </span>
+        <svg class="itinerary-widget__status-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path *ngIf="selectedDay()?.isCompleted" d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path *ngIf="!selectedDay()?.isCompleted" d="M18 6l-12 12M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
 
-    <!-- TÍTULO DEL DÍA SELECCIONADO -->
-    <div class="current-day" *ngIf="selectedDate()">
-      <h2 class="current-day__title">
-        {{ formatDateComplete(selectedDate()) }}
-      </h2>
-      <p class="current-day__subtitle">
-        {{ activitiesForSelectedDate().length > 0 ? activitiesForSelectedDate().length + ' actividades' : 'Sin actividades' }}
-      </p>
-    </div>
-
-    <!-- LISTA DE ACTIVIDADES Y TRANSICIONES (Drag & Drop) -->
-    <section class="activities-section">
-      @if (activitiesForSelectedDate().length > 0) {
-        <div 
-          class="activities-list"
-          cdkDropList
-          [cdkDropListData]="activitiesForSelectedDate()"
-          (cdkDropListDropped)="onDrop($event)">
-          
-          @for (activity of activitiesForSelectedDate(); let i = index; track activity.id) {
-            <!-- ACTIVIDAD NORMAL -->
-            @if (activity.type !== 'TRANSITION') {
-              <article 
-                class="activity-card"
-                cdkDrag
-                [style.--day-color]="getDayColor((tripDateRange().indexOf(selectedDate())) % 5)">
-                
-                <!-- Drag Handle -->
-                <div class="drag-handle" cdkDragHandle>
-                  <span class="icon">⋮⋮</span>
-                </div>
-
-                <!-- Contenido -->
-                <div class="activity-content">
-                  <!-- Hora y Título -->
-                  <div class="activity-header">
-                    <span class="time">{{ activity.startTime || '—' }}</span>
-                    <h3 class="title">{{ activity.name }}</h3>
-                  </div>
-
-                  <!-- Badges: Duración y Categoría -->
-                  <div class="badges">
-                    @if (activity.duration) {
-                      <span class="badge badge--duration">{{ activity.duration }}min</span>
-                    }
-                    @if (activity.category) {
-                      <span class="badge badge--category">{{ activity.category }}</span>
-                    }
-                  </div>
-
-                  <!-- Ubicación y Notas -->
-                  @if (activity.location) {
-                    <div class="location">
-                      <span class="icon">📍</span>
-                      <span>{{ activity.location }}</span>
-                    </div>
-                  }
-                  @if (activity.notes) {
-                    <p class="notes">{{ activity.notes }}</p>
-                  }
-                </div>
-
-                <!-- Acciones (Derecha) -->
-                <div class="activity-actions">
-                  <!-- Botón Completado -->
-                  <button
-                    class="btn-complete"
-                    [class.completed]="activity.completed"
-                    (click)="toggleActivityComplete(activity)"
-                    [attr.aria-label]="activity.completed ? 'Marcar como pendiente' : 'Marcar como completado'"
-                    [title]="activity.completed ? 'Completado' : 'Pendiente'">
-                    <span class="icon">✓</span>
-                  </button>
-
-                  <!-- Botón Eliminar -->
-                  <button
-                    class="btn-delete"
-                    (click)="deleteActivity(activity)"
-                    aria-label="Eliminar actividad">
-                    <span class="icon">🗑️</span>
-                  </button>
-                </div>
-              </article>
-            }
-
-            <!-- TRANSICIÓN (entre actividades) -->
-            @if (activity.type === 'TRANSITION') {
-              <div class="transition-card">
-                <div class="transition-content">
-                  <span>{{ activity.duration ? activity.duration + ' min de ' : '' }}{{ activity.name }}</span>
-                </div>
-              </div>
-            }
-          }
+    <!-- Lista de Actividades (Drag & Drop) -->
+    <section 
+      class="activities-container"
+      cdkDropList
+      #dropList="cdkDropList"
+      (cdkDropListDropped)="onDrop($event)"
+      [cdkDropListData]="selectedDayItems()"
+      cdkDropListSortingDisabled="false"
+      [attr.aria-label]="'Actividades del día ' + (selectedDayIndex() + 1)">
+      
+      @if (selectedDayItems().length === 0) {
+        <div class="empty-state">
+          <p class="empty-state__message">No hay actividades para este día</p>
+          <p class="empty-state__hint">Pulsa el botón <strong style="color: var(--quaternary-color);">"Añadir Actividad"</strong> para crear una nueva</p>
         </div>
       } @else {
-        <div class="empty-state">
-          <p>Sin actividades para este día</p>
-          <button 
-            class="btn-add-activity-small"
-            (click)="openAddActivityModal()">
-            + Añadir Actividad
-          </button>
+        <div class="activities-list">
+          @for (item of selectedDayItems(); let idx = $index; track item.id) {
+            <article 
+              class="activity-card"
+              cdkDrag
+              [cdkDragData]="item"
+              [class]="'activity-card--' + item.type.toLowerCase()"
+              [class.completed]="item.isCompleted"
+              [attr.data-activity-id]="item.id">
+              
+              <!-- Drag Handle -->
+              <div class="activity-card__drag-handle" cdkDragHandle aria-label="Arrastra para reordenar">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <circle cx="8" cy="6" r="2"></circle>
+                  <circle cx="8" cy="12" r="2"></circle>
+                  <circle cx="8" cy="18" r="2"></circle>
+                  <circle cx="16" cy="6" r="2"></circle>
+                  <circle cx="16" cy="12" r="2"></circle>
+                  <circle cx="16" cy="18" r="2"></circle>
+                </svg>
+              </div>
+
+              <!-- Main Content -->
+              <div class="activity-card__content">
+                <div class="activity-card__header">
+                  <h3 class="activity-card__title">{{ item.title }}</h3>
+                  <span class="activity-card__time-badge">{{ formatDuration(item.duration) }}</span>
+                  <span class="activity-card__start-time">{{ item.time }}</span>
+                </div>
+
+                <!-- Location -->
+                @if (item.location) {
+                  <div class="activity-card__location">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                      <!-- Map Pin Icon -->
+                      <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 13 8 13s8-7.75 8-13c0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+                    </svg>
+                    <span>{{ item.location }}</span>
+                  </div>
+                }
+
+                <!-- Description -->
+                @if (item.description) {
+                  <p class="activity-card__description">{{ item.description }}</p>
+                }
+              </div>
+
+              <!-- Actions -->
+              <div class="activity-card__actions">
+                <button 
+                  class="btn-icon"
+                  (click)="openEditActivityModal(item)"
+                  aria-label="Editar actividad"
+                  title="Editar">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+                <button 
+                  class="btn-icon btn-icon--danger"
+                  (click)="deleteActivity(item.id)"
+                  aria-label="Eliminar actividad"
+                  title="Eliminar">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </div>
+            </article>
+          }
         </div>
       }
+
+      <!-- Centered Add Activity Button -->
+      <div style="display: flex; justify-content: center; padding-top: 2rem; padding-bottom: 4rem;">
+        <button 
+          class="btn-add-activity"
+          (click)="openAddActivityModal()"
+          aria-label="Añadir nueva actividad">
+          Añadir actividad
+        </button>
+      </div>
     </section>
-
-    <!-- BOTÓN FLOTANTE PARA AÑADIR ACTIVIDAD -->
-    <button 
-      class="btn-add-floating" 
-      (click)="openAddActivityModal()"
-      aria-label="Añadir nueva actividad">
-      <span class="icon">+</span>
-    </button>
-  </div>
-
-  <!-- MODAL: Crear Actividad -->
-  @if (showAddActivityModal()) {
-    <app-create-activity-modal
-      [selectedDate]="selectedDate()"
-      (close)="closeAddActivityModal()"
-      (activityAdded)="onActivityAdded($event)">
-    </app-create-activity-modal>
-  }
+  </main>
 </div>
+
+<!-- Modal para Crear/Editar Actividad (Fuera del flujo principal) -->
+@if (showAddActivityModal()) {
+  <div class="modal-overlay" (click)="closeActivityModal(null)">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <app-create-activity-modal 
+        [editingItem]="activityToEdit()"
+        (close)="showAddActivityModal.set(false); activityToEdit.set(null)"
+        (activityAdded)="saveActivity($event)">
+      </app-create-activity-modal>
+    </div>
+  </div>
+}

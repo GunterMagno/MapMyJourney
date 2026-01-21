@@ -23,23 +23,29 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       const errorMessage = error.error?.message || 'Error desconocido';
       const isAuthRoute = req.url.includes('/users/login') || req.url.includes('/users/register');
 
+      // No mostrar toasts automáticos para rutas de autenticación
+      // (dejar que el componente maneje los errores específicos)
+      if (isAuthRoute) {
+        return throwError(() => error);
+      }
+
       switch (statusCode) {
         // Autenticación requerida
         case 401:
           localStorage.removeItem('auth_token');
           localStorage.removeItem('current_user');
-          toastService.error('Tu sesión ha expirado. Inicia sesión nuevamente.');
+          toastService.warning('Tu sesión ha expirado. Inicia sesión nuevamente.');
           router.navigate(['/auth/login']);
-          break;
+          return throwError(() => error); // Lanzar error para que los subscribers lo reciban
 
         // Acceso prohibido
         case 403:
           toastService.error('No tienes permisos para realizar esta acción.');
           // No redirigir si estamos en una ruta de autenticación
           if (!isAuthRoute) {
-            router.navigate(['/demo']);
+            router.navigate(['/home']);
           }
-          break;
+          return throwError(() => error);
 
         // No encontrado
         case 404:
@@ -51,7 +57,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         case 502:
         case 503:
         case 504:
-          toastService.error('Error en el servidor. Intenta más tarde.');
+          // Solo mostrar toast una vez para errores de servidor
+          if (statusCode === 500) {
+            toastService.error('Error en el servidor. Por favor, intenta más tarde.');
+          } else {
+            toastService.error(`Error del servidor (${statusCode}). Por favor, intenta más tarde.`);
+          }
           console.error('Server Error:', error);
           break;
 
@@ -63,10 +74,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         // Otros errores
         default:
           if (statusCode >= 400 && statusCode < 500) {
-            toastService.error(errorMessage);
-          } else if (statusCode >= 500) {
-            toastService.error('Ocurrió un error. Intenta más tarde.');
+            toastService.error(errorMessage || 'Error en la solicitud');
           }
+          // Los errores 5xx ya se han manejado arriba
       }
 
       return throwError(() => error);

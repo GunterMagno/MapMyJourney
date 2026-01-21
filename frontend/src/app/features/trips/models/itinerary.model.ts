@@ -8,13 +8,16 @@ export type DurationUnit = 'MIN' | 'HOUR';
 export interface Activity {
   id?: string;
   title: string;
+  name?: string; // Alias para title
   type: ActivityType;
   startTime: string; // HH:mm format
   duration: number; // en minutos
   location?: string;
   notes?: string;
   isCompleted?: boolean;
+  completed?: boolean; // Alias para isCompleted
   dayIndex: number;
+  date?: string; // Formato YYYY-MM-DD
   order?: number;
   category?: string; // Para actividades (ej: 'MUSEUM', 'RESTAURANT', 'TRANSPORT')
   createdAt?: string;

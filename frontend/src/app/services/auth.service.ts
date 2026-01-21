@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
+import { ToastService } from '../core/services/toast.service';
 import { User, AuthResponse } from '../core/models';
 
 @Injectable({
@@ -11,6 +12,7 @@ import { User, AuthResponse } from '../core/models';
 })
 export class AuthService {
   private api = inject(ApiService);
+  private toastService = inject(ToastService);
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'current_user';
 
@@ -82,6 +84,7 @@ export class AuthService {
     localStorage.removeItem(this.USER_KEY);
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
+    this.toastService.info('Sesión cerrada correctamente', 3000);
   }
 
   /**

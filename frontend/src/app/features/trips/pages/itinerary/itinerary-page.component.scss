@@ -1,615 +1,990 @@
-// =============================================
-// ITINERARY PAGE COMPONENT STYLES
-// =============================================
+/**
+ * Itinerary Page Component Styles
+qq * FASE 5: Drag & Drop Itinerary with Modern Travel Design
+ * BEM Methodology + SCSS Variables
+ */
+
+@use 'sass:color';
+
+// ============================================================================
+// COLOR PALETTE - Using CSS Variables from 00-settings/_variables.scss
+// All colors are defined as CSS custom properties in :root
+// ============================================================================
+// Examples: var(--principal-color), var(--secondary-color), var(--tertiary-color)
+//           var(--quaternary-color), var(--quinary-color)
+//           var(--text-main), var(--text-secondary), var(--border-color)
+
+// ============================================================================
+// MIXINS Y UTILIDADES
+// ============================================================================
+
+@mixin card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
+              0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 300ms ease-out;
+  
+  &:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15),
+                0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ============================================================================
+// MAIN CONTAINER & DECORATIVE BACKGROUND
+// ============================================================================
 
 .itinerary-page {
+  position: relative;
+  width: 100%;
   min-height: 100vh;
-  background: var(--bg-primary);
-  padding: var(--spacing-6) 0;
-
-  &__container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-6);
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-4);
+  overflow-x: hidden;
+  transition: background-color 300ms ease-out;
+  
+  // Decorative pattern background
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.08;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(239, 71, 111, 0.1) 1px, transparent 1px),
+      radial-gradient(circle at 80% 80%, rgba(243, 119, 72, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  // Contenido por encima del fondo
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  // Dark mode
+  [data-theme="dark"] & {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-body) 100%);
+    
+    &::before {
+      opacity: 0.05;
+    }
   }
 }
 
-// =============================================
-// HEADER RESUMEN
-// =============================================
+// ============================================================================
+// HEADER SECTION
+// ============================================================================
+
 .itinerary-header {
-  background: white;
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-6);
-  box-shadow: var(--shadow-sm);
-  border-left: 6px solid var(--principal-color);
-
-  &__title {
-    font-size: var(--font-size-h2);
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 var(--spacing-4) 0;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
-
-    .icon {
-      font-size: 1.5rem;
-    }
-  }
-
-  &__info {
-    display: flex;
-    gap: var(--spacing-6);
-    margin-bottom: var(--spacing-4);
-    flex-wrap: wrap;
-  }
-}
-
-.info-item {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-1);
-
-  .label {
-    font-size: 0.85rem;
-    color: var(--text-tertiary);
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-
-  .value {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-start;
-  gap: var(--spacing-2);
-
-  @media (max-width: 640px) {
-    width: 100%;
-
-    .btn-add-activity {
-      flex: 1;
-    }
-  }
-}
-
-// =============================================
-// DATE SELECTOR (Similar to Expenses)
-// =============================================
-.date-selector-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3);
-
-  .date-selector-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0;
-  }
-
-  .no-dates {
-    color: var(--text-tertiary);
-    font-size: 0.95rem;
-    padding: var(--spacing-4);
-    text-align: center;
-  }
-}
-
-.date-selector {
-  display: flex;
-  gap: var(--spacing-3);
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding-bottom: var(--spacing-2);
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .date-card {
-    flex-shrink: 0;
-    width: 110px;
-    aspect-ratio: 1;
-    border: 2px solid var(--border-color);
-    background-color: white;
-    border-radius: 16px;
-    padding: var(--spacing-3);
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-1);
-    border-top: 4px solid var(--day-border-color, var(--principal-color));
-
-    &:hover {
-      border-color: var(--day-border-color, var(--principal-color));
-      box-shadow: var(--shadow-sm);
-    }
-
-    &.selected {
-      border: 3px solid var(--day-border-color, var(--principal-color));
-      background: linear-gradient(135deg, rgba(207, 142, 255, 0.1), white);
-      box-shadow: var(--shadow-md);
-    }
-
-    .day {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1;
-    }
-
-    .month {
-      font-size: 0.75rem;
-      color: var(--text-tertiary);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .label {
-      font-size: 0.7rem;
-      color: var(--text-secondary);
-      margin-top: var(--spacing-1);
-    }
-
-    .total {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--principal-color);
-    }
-  }
-}
-
-// =============================================
-// CURRENT DAY HEADER
-// =============================================
-.current-day {
-  margin-top: var(--spacing-4);
-
-  &__title {
-    font-size: var(--font-size-h2);
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 var(--spacing-1) 0;
-  }
-
-  &__subtitle {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    margin: 0;
-  }
-}
-
-// =============================================
-// ACTIVITIES SECTION
-// =============================================
-.activities-section {
-  min-height: 300px;
-}
-
-.activities-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3);
-}
-
-// =============================================
-// ACTIVITY CARD
-// =============================================
-.activity-card {
-  display: grid;
-  grid-template-columns: 40px 1fr auto;
-  gap: var(--spacing-3);
-  align-items: stretch;
-  background: white;
-  border-radius: var(--border-radius-md);
-  border-left: 6px solid var(--day-color, var(--principal-color));
-  padding: var(--spacing-4);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
-
-  &:hover {
-    box-shadow: var(--shadow-md);
-  }
-
-  &.completed {
-    opacity: 0.6;
-
-    .title {
-      text-decoration: line-through;
-      color: var(--text-tertiary);
-    }
-  }
-
-  .drag-handle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: grab;
-    color: var(--text-tertiary);
-    font-size: 1.2rem;
-    padding: var(--spacing-2);
-
-    &:hover {
-      color: var(--text-primary);
-    }
-
-    .icon {
-      letter-spacing: -2px;
-    }
-  }
-}
-
-.activity-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-  justify-content: center;
-
-  .activity-header {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
-
-    .time {
-      font-weight: 700;
-      color: var(--principal-color);
-      font-size: 0.95rem;
-      min-width: 50px;
-    }
-
-    .title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin: 0;
-    }
-  }
-
-  .badges {
-    display: flex;
-    gap: var(--spacing-2);
-    flex-wrap: wrap;
-
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      background-color: var(--quinary-color-disabled);
-      color: var(--text-primary);
-
-      &--duration {
-        background-color: rgba(255, 193, 7, 0.15);
-        color: #f57c00;
-      }
-
-      &--category {
-        background-color: rgba(76, 175, 80, 0.15);
-        color: #2e7d32;
-      }
-    }
-  }
-
-  .location {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-1);
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-
-    .icon {
-      font-size: 1rem;
-    }
-  }
-
-  .notes {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin: 0;
-    line-height: 1.4;
-    max-width: 600px;
-  }
-}
-
-.activity-actions {
-  display: flex;
-  gap: var(--spacing-2);
-  align-items: center;
   justify-content: flex-end;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: transparent;
+  position: relative;
+  z-index: 10;
+  
+  @media (max-width: 768px) {
+    padding: 1rem 1rem;
+  }
 }
 
-// =============================================
-// ACTIVITY ACTION BUTTONS
-// =============================================
-.btn-complete,
-.btn-delete,
-.btn-edit {
-  background: none;
+// Botón de dark mode
+.btn-dark-mode {
+  width: 44px;
+  height: 44px;
+  @include flex-center;
+  background: rgba(255, 255, 255, 0.2);
   border: none;
-  padding: var(--spacing-2);
+  border-radius: 50%;
   cursor: pointer;
+  transition: all 300ms ease-out;
+  color: var(--text-main);
+  font-size: 1.5rem;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+  
+  [data-theme="dark"] & {
+    color: var(--text-main);
+    background: rgba(0, 0, 0, 0.2);
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+// ============================================================================
+// DAYS SELECTOR NAV - Grid colorido (cuadraditos pequeños)
+// ============================================================================
+
+.days-selector {
+  padding: 3rem 1.5rem;
+  background: transparent;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  overflow: visible;
+  
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(95px, 1fr));
+    grid-auto-rows: 140px;
+    gap: 1.5rem 2rem;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 2rem 1rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    
+    // Allow items to wrap to 2 rows max
+    grid-auto-flow: row;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(10, minmax(90px, 1fr));
+      grid-auto-rows: 105px;
+      gap: 0.9rem;
+    }
+    
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(6, minmax(80px, 1fr));
+      grid-auto-rows: 100px;
+      gap: 0.7rem;
+    }
+  }
+}
+
+.day-card {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: var(--border-radius-sm);
-  transition: all 0.3s ease;
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-
+  width: 90px;
+  height: 125px;
+  padding: 1rem;
+  border: 4px solid transparent;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: white;
+  transition: all 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  
+  // Colores cíclicos con modulo - asegura que todos los días tengan color
+  &:nth-child(5n+1) { background-color: var(--principal-color); }
+  &:nth-child(5n+2) { background-color: var(--secondary-color); }
+  &:nth-child(5n+3) { background-color: var(--tertiary-color); }
+  &:nth-child(5n+4) { background-color: var(--quaternary-color); }
+  &:nth-child(5n) { background-color: var(--quinary-color); }
+  
   &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: var(--text-primary);
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
   }
-
+  
+  &.selected {
+    transform: scale(1.1);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+    border-color: var(--principal-color) !important;
+  }
+  
+  &.completed {
+    border-color: var(--quaternary-color) !important;
+  }
+  
   &:active {
     transform: scale(0.95);
   }
-}
-
-.btn-complete {
-  &.completed {
-    color: var(--principal-color);
-    background-color: rgba(207, 142, 255, 0.1);
+  
+  &__day-name {
+    font-size: 0.65rem;
+    opacity: 0.92;
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
+    text-transform: capitalize;
+  }
+  
+  &__number {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+  }
+  
+  &__month {
+    font-size: 0.55rem;
+    opacity: 0.88;
+    margin-top: 0.2rem;
+    line-height: 1.2;
+    text-transform: capitalize;
   }
 }
 
-.btn-delete {
-  color: #c62828;
+// ============================================================================
+// MAIN CONTENT
+// ============================================================================
 
-  &:hover {
-    background-color: rgba(198, 40, 40, 0.1);
+.itinerary-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
   }
 }
 
-// =============================================
-// TRANSITION CARD
-// =============================================
-.transition-card {
+// Day header con título y badge de completado
+.day-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+  
+  .day-title {
+    margin: 0;
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    
+    [data-theme="dark"] & {
+      color: var(--text-main);
+    }
+  }
+  
+  .day-date {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    
+    [data-theme="dark"] & {
+      color: var(--text-secondary);
+    }
+  }
+}
+
+// Status Button (Botón de Completado)
+.itinerary-widget__status-btn {
+  width: auto;
+  height: 36px;
+  border-radius: 8px;
+  background-color: #EF476F;
+  color: white;
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-3) var(--spacing-4);
-  border: 2px dashed var(--text-secondary);
-  border-radius: var(--border-radius-md);
-  background: transparent;
-  gap: var(--spacing-3);
-
-  .transition-content {
-    flex: 1;
-    text-align: center;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    font-weight: 500;
-  }
-}
-
-// =============================================
-// EMPTY STATE
-// =============================================
-.empty-state {
-  text-align: center;
-  padding: var(--spacing-8) var(--spacing-4);
-  background: white;
-  border-radius: var(--border-radius-md);
-  border: 2px dashed var(--border-color);
-
-  p {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin: var(--spacing-3) 0 var(--spacing-4);
-  }
-}
-
-// =============================================
-// BUTTONS
-// =============================================
-.btn-add-activity {
-  padding: var(--spacing-3) var(--spacing-6);
-  background-color: var(--quaternary-color);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
   gap: var(--spacing-2);
+  padding: 0 var(--spacing-3);
 
   &:hover {
-    background-color: #00acc1;
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 12px rgba(239, 71, 111, 0.3);
+    opacity: 0.95;
   }
 
   &:active {
     transform: translateY(0);
   }
-}
 
-.btn-add-activity-small {
-  padding: var(--spacing-2) var(--spacing-4);
-  background-color: var(--quaternary-color);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  &--completed {
+    background-color: var(--quaternary-color);
 
-  &:hover {
-    background-color: #00acc1;
+    &:hover {
+      box-shadow: 0 4px 12px rgba(139, 204, 82, 0.3);
+    }
   }
 }
 
-.btn-add-floating {
-  position: fixed;
-  bottom: var(--spacing-6);
-  right: var(--spacing-6);
-  width: 60px;
-  height: 60px;
-  background-color: var(--quaternary-color);
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 1.5rem;
+.itinerary-widget__status-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.itinerary-widget__status-text {
+  line-height: 1;
+  flex: 1;
+  text-align: left;
+}
+
+// Barra de progreso
+.day-progress {
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: var(--shadow-lg);
-  transition: all 0.3s ease;
-  z-index: 50;
-
-  &:hover {
-    background-color: #00acc1;
-    transform: scale(1.1);
-    box-shadow: var(--shadow-xl);
+  gap: 1rem;
+  margin-top: 1rem;
+  
+  @media (max-width: 480px) {
+    width: 100%;
   }
-
-  &:active {
-    transform: scale(0.95);
+  
+  .progress-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+    
+    [data-theme="dark"] & {
+      color: var(--text-secondary);
+    }
   }
-
-  .icon {
-    font-size: 1.8rem;
+  
+  .progress-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 150px;
   }
-
-  @media (max-width: 768px) {
-    bottom: var(--spacing-4);
-    right: var(--spacing-4);
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--quaternary-color) 0%, var(--quinary-color) 100%);
+    border-radius: 4px;
+    transition: width 300ms ease-out;
+  }
+  
+  .progress-percentage {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--quaternary-color);
+    min-width: 45px;
+    text-align: right;
   }
 }
 
-// =============================================
-// LOADING STATE
-// =============================================
-.loading-container {
+// ============================================================================
+// ACTIVITIES SECTION (DRAG & DROP)
+// ============================================================================
+
+.activities-container {
+  min-height: 300px;
+  margin-bottom: 2rem;
+}
+
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  gap: var(--spacing-4);
-
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid var(--border-color);
-    border-top-color: var(--quaternary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: var(--principal-color-disabled);
+  border: 4px dashed var(--secondary-color-disabled);
+  border-radius: 1.5rem;
+  min-height: 300px;
+  
+  [data-theme="dark"] & {
+    background: linear-gradient(135deg, rgba(62, 203, 166, 0.1) 0%, rgba(239, 71, 111, 0.1) 100%);
+    border-color: var(--border-color);
   }
-
-  p {
+  
+  .empty-state__message {
+    margin: 0 0 1rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  
+  .empty-state__hint {
+    margin: 0;
+    font-size: 0.95rem;
     color: var(--text-secondary);
-    font-size: 1rem;
+    line-height: 1.5;
+    
+    strong {
+      color: var(--quaternary-color);
+      font-weight: 600;
+    }
   }
 }
 
-@keyframes spin {
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// ============================================================================
+// ACTIVITY CARDS - Coloridas y modernas
+// ============================================================================
+
+.activity-card {
+  display: flex;
+  gap: 0.8rem;
+  align-items: stretch;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.25rem;
+  border: 2px solid transparent;
+  transition: all 250ms ease-out;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  
+  [data-theme="dark"] & {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    
+    .activity-card__drag-handle {
+      opacity: 1;
+      color: #666;
+    }
+  }
+  
+  // Colores por tipo
+  &--activity {
+    background: var(--principal-color-disabled);
+    
+    [data-theme="dark"] & {
+      background: rgba(239, 71, 111, 0.7);
+    }
+  }
+  
+  &--transition {
+    background: var(--tertiary-color-disabled);
+    border: 2px dashed var(--tertiary-color) !important;
+    opacity: 0.9;
+    
+    [data-theme="dark"] & {
+      background: var(--tertiary-color-disabled);
+      border: 2px dashed var(--tertiary-color) !important;
+    }
+  }
+  
+  &.completed {
+    opacity: 0.6;
+    
+    .activity-card__title {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+  }
+  
+  // Drag handle
+  &__drag-handle {
+    @include flex-center;
+    width: 28px;
+    flex-shrink: 0;
+    cursor: grab;
+    color: #ccc;
+    font-size: 1.1rem;
+    user-select: none;
+    transition: all 250ms ease-out;
+    opacity: 0.7;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+    
+    .material-icons-outlined {
+      font-size: 1.1rem;
+    }
+    
+    &:active {
+      cursor: grabbing;
+    }
+  }
+  
+  // Content area
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  
+  &__title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    
+    [data-theme="dark"] & {
+      color: var(--text-main);
+    }
+  }
+  
+  // Time badge
+  &__time-badge {
+    background: var(--tertiary-color);
+    color: var(--text-main);
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  
+  &__start-time {
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.9rem;
+    
+    [data-theme="dark"] & {
+      color: var(--text-main);
+    }
+  }
+  
+  &__location {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin: 0.3rem 0 0 0;
+    
+    [data-theme="dark"] & {
+      color: #aaa;
+    }
+    
+    .icon {
+      font-size: 1rem;
+    }
+  }
+  
+  &__description {
+    margin: 0.3rem 0 0 0;
+    font-size: 0.8rem;
+    color: #555;
+    font-style: italic;
+    line-height: 1.3;
+    
+    [data-theme="dark"] & {
+      color: #999;
+    }
+  }
+  
+  // Actions
+  &__actions {
+    display: flex;
+    gap: 0.4rem;
+    align-items: flex-start;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 250ms ease-out;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Action buttons
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  color: #666;
+  font-size: 1.2rem;
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  
+  [data-theme="dark"] & {
+    color: #ccc;
+  }
+  
+  &:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.08);
+    
+    [data-theme="dark"] & {
+      background: rgba(255, 255, 255, 0.12);
+    }
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  &--danger {
+    color: #999;
+  }
+  
+  &--danger:hover {
+    color: var(--principal-color);
+    background: var(--principal-color-disabled);
+    transform: scale(1.1);
+  }
+}
+
+// ============================================================================
+// FLOATING BUTTON - "Añadir actividad"
+// ============================================================================
+
+.btn-floating {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  @include flex-center;
+  background: var(--quaternary-color);
+  border: none;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(62, 203, 166, 0.4),
+              0 8px 32px rgba(62, 203, 166, 0.2);
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: white;
+  z-index: 50;
+  font-weight: bold;
+  
+  @media (max-width: 768px) {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 48px;
+    height: 48px;
+    font-size: 1.4rem;
+  }
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 24px rgba(62, 203, 166, 0.5),
+                0 12px 40px rgba(62, 203, 166, 0.3);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Botón "Añadir actividad" en centro
+.btn-add-activity {
+  background: var(--quaternary-color);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 1.5rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(69, 196, 160, 0.3);
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(69, 196, 160, 0.4);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  .icon {
+    font-size: 1.5rem;
+  }
+}
+
+// ============================================================================
+// GENERIC BUTTONS
+// ============================================================================
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 300ms ease-out;
+  font-size: 1rem;
+  
+  &--primary {
+    background: var(--quaternary-color);
+    color: var(--text-inverse);
+    
+    &:hover {
+      background: var(--quaternary-color-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(var(--quaternary-color), 0.3);
+    }
+  }
+  
+  &--secondary {
+    background: transparent;
+    border: 2px solid var(--quaternary-color);
+    color: var(--quaternary-color);
+    
+    &:hover {
+      background: rgba(var(--quaternary-color), 0.05);
+      border-color: var(--quaternary-color-hover);
+    }
+  }
+}
+
+// ============================================================================
+// CDK DRAG & DROP STYLES
+// ============================================================================
+
+.cdk-drop-list-dragging {
+  .activity-card:not(.cdk-drop-list-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.cdk-drag-placeholder {
+  background: var(--quaternary-color-disabled);
+  border: 2px dashed var(--quaternary-color);
+  border-radius: 1.5rem;
+  min-height: 88px;
+  opacity: 0.6;
+  margin-bottom: 1rem;
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3),
+              0 15px 40px rgba(0, 0, 0, 0.2);
+  border-radius: 1.5rem;
+  opacity: 0.95;
+  
+  /* Preservar el color de fondo original de la actividad */
+  background: inherit !important;
+  
+  [data-theme="dark"] & {
+    background: inherit !important;
+  }
+}
+
+// ============================================================================
+// ANIMATIONS
+// ============================================================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-// =============================================
-// RESPONSIVE
-// =============================================
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.activity-card {
+  animation: fadeIn 0.4s ease-out;
+}
+
+// ============================================================================
+// RESPONSIVE DESIGN
+// ============================================================================
+
 @media (max-width: 768px) {
-  .itinerary-page__container {
-    padding: 0 var(--spacing-3);
+  .itinerary-content {
+    padding: 1.5rem;
   }
-
-  .activity-card {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-2);
-
-    .drag-handle {
-      display: none;
+  
+  .day-card {
+    padding: 1rem 0.75rem;
+    min-width: 90px;
+    
+    &__day-name {
+      font-size: 0.7rem;
     }
-
-    .activity-actions {
-      justify-content: flex-start;
-    }
-  }
-
-  .date-card {
-    width: 95px !important;
-    padding: var(--spacing-2) !important;
-
-    .day {
+    
+    &__number {
       font-size: 1.5rem;
     }
-
-    .month {
-      font-size: 0.65rem;
-    }
-
-    .total {
-      font-size: 0.85rem;
+    
+    &__month {
+      font-size: 0.6rem;
     }
   }
-
-  .itinerary-header {
-    padding: var(--spacing-4);
-
-    &__title {
-      font-size: var(--font-size-h3);
+  
+  .activity-card {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    
+    &__drag-handle {
+      order: -1;
+      opacity: 1;
+      width: 100%;
+      height: auto;
+      padding: 0.5rem 0;
+      text-align: center;
     }
-
-    &__info {
-      gap: var(--spacing-4);
+    
+    &__actions {
+      width: 100%;
+      justify-content: flex-end;
+      opacity: 1;
     }
   }
 }
 
 @media (max-width: 480px) {
-  .activity-card {
-    padding: var(--spacing-2);
-    border-left-width: 4px;
+  .days-selector {
+    padding: 2rem 1rem;
   }
-
-  .activity-content .activity-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-1);
-
-    .title {
-      font-size: 1rem;
+  
+  .day-header {
+    .day-title {
+      font-size: 1.5rem;
     }
   }
-
-  .activity-actions {
-    flex-wrap: wrap;
-    gap: var(--spacing-1);
+  
+  .activity-card {
+    gap: 0.5rem;
+    padding: 0.75rem;
+    
+    &__title {
+      font-size: 1rem;
+    }
+    
+    &__location {
+      font-size: 0.8rem;
+    }
+    
+    &__description {
+      font-size: 0.75rem;
+    }
   }
+  
+  .btn-floating {
+    bottom: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+}
 
-  .btn-add-activity {
+// ============================================================================
+// DARK MODE
+// ============================================================================
+
+[data-theme="dark"] {  
+  .activity-card {
+    &--activity {
+      background: rgba(var(--principal-color), 0.3);
+      color: var(--text-inverse);
+      
+      .activity-card__title {
+        color: var(--text-inverse);
+      }
+    }
+    
+    &--transition {
+      background: var(--tertiary-color-disabled);
+      color: var(--text-main);
+      border: 2px dashed var(--tertiary-color) !important;
+      
+      .activity-card__title {
+        color: var(--text-main);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// MODAL OVERLAY & CONTAINER
+// ============================================================================
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+  backdrop-filter: blur(2px);
+  
+  @media (max-width: 480px) {
+    align-items: flex-end;
+  }
+}
+
+.modal-container {
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+  
+  @media (max-width: 480px) {
     width: 100%;
-    justify-content: center;
-    padding: var(--spacing-2) var(--spacing-3);
+    max-height: 95vh;
+    border-radius: 1rem 1rem 0 0;
   }
 }

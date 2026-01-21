@@ -44,7 +44,7 @@ export class ItineraryService {
           this.activities.set(data.activities);
           this.isLoading.set(false);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error.set('Error al cargar el itinerario');
           this.isLoading.set(false);
         }
@@ -54,60 +54,25 @@ export class ItineraryService {
   /**
    * Crear nueva actividad
    */
-  createActivity(tripId: number, dto: CreateActivityDto): void {
-    this.http
-      .post<Activity>(`${this.apiUrl}/${tripId}/activities`, dto)
-      .subscribe({
-        next: (newActivity) => {
-          const current = this.activities();
-          this.activities.set([...current, newActivity]);
-          this.activitiesUpdated$.next(this.activities());
-        },
-        error: (err) => {
-          this.error.set('Error al crear la actividad');
-        }
-      });
+  createActivity(tripId: number, dto: CreateActivityDto) {
+    return this.http
+      .post<Activity>(`${this.apiUrl}/${tripId}/activities`, dto);
   }
 
   /**
    * Eliminar actividad
    */
-  deleteActivity(tripId: number, activityId: string): void {
-    this.http
-      .delete(`${this.apiUrl}/${tripId}/activities/${activityId}`)
-      .subscribe({
-        next: () => {
-          const current = this.activities();
-          this.activities.set(current.filter(a => a.id !== activityId));
-          this.activitiesUpdated$.next(this.activities());
-        },
-        error: (err) => {
-          this.error.set('Error al eliminar la actividad');
-        }
-      });
+  deleteActivity(tripId: number, activityId: string) {
+    return this.http
+      .delete(`${this.apiUrl}/${tripId}/activities/${activityId}`);
   }
 
   /**
    * Actualizar actividad
    */
-  updateActivity(tripId: number, activityId: string, updates: Partial<Activity>): void {
-    this.http
-      .put<Activity>(`${this.apiUrl}/${tripId}/activities/${activityId}`, updates)
-      .subscribe({
-        next: (updated) => {
-          const current = this.activities();
-          const index = current.findIndex(a => a.id === activityId);
-          if (index >= 0) {
-            const newActivities = [...current];
-            newActivities[index] = updated;
-            this.activities.set(newActivities);
-            this.activitiesUpdated$.next(this.activities());
-          }
-        },
-        error: (err) => {
-          this.error.set('Error al actualizar la actividad');
-        }
-      });
+  updateActivity(tripId: number, activityId: string, updates: Partial<Activity>) {
+    return this.http
+      .put<Activity>(`${this.apiUrl}/${tripId}/activities/${activityId}`, updates);
   }
 
   /**
@@ -130,7 +95,7 @@ export class ItineraryService {
           this.activities.set(reorderedActivities);
           this.activitiesUpdated$.next(reorderedActivities);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error.set('Error al reordenar las actividades');
         }
       });
@@ -151,12 +116,10 @@ export class ItineraryService {
   }
 
   /**
-   * Obtener actividades del día seleccionado
+   * Obtener actividades por viaje
    */
-  getActivitiesByDay(dayIndex: number): Activity[] {
-    return this.activities()
-      .filter(a => a.dayIndex === dayIndex)
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  getActivitiesByTrip(tripId: number) {
+    return this.http.get<Activity[]>(`${this.apiUrl}/${tripId}/activities`);
   }
 
   /**
