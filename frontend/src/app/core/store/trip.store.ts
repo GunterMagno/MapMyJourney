@@ -30,7 +30,7 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { TripService } from '../services/trip.service';
 import { ToastService } from '../services/toast.service';
-import { Trip, ApiPaginatedResponse } from '../models';
+import { Trip, TripDetail, ApiPaginatedResponse } from '../models';
 
 interface TripStoreState {
   trips: Trip[];
@@ -40,6 +40,8 @@ interface TripStoreState {
   pageSize: number;
   totalItems: number;
   hasMore: boolean;
+  tripDetail: TripDetail | null;
+  tripDetailLoading: boolean;
 }
 
 @Injectable({
@@ -57,7 +59,9 @@ export class TripStore {
     currentPage: 1,
     pageSize: 10,
     totalItems: 0,
-    hasMore: true
+    hasMore: true,
+    tripDetail: null,
+    tripDetailLoading: false
   };
 
   private _state = signal<TripStoreState>(this.initialState);
@@ -93,6 +97,16 @@ export class TripStore {
    * Indica si hay más datos para cargar (para infinite scroll)
    */
   hasMore = computed(() => this._state().hasMore);
+
+  /**
+   * Detalles del viaje actual
+   */
+  tripDetail = computed(() => this._state().tripDetail);
+
+  /**
+   * Estado de carga de detalles del viaje
+   */
+  tripDetailLoading = computed(() => this._state().tripDetailLoading);
 
   // ============================================================================
   // COMPUTED SIGNALS (DERIVADAS)
@@ -304,6 +318,33 @@ export class TripStore {
   reloadTrips(): void {
     this.reset();
     this.loadTrips();
+  }
+
+  /**
+   * Cargar detalles completos de un viaje específico
+   * Incluye participantes y todos los datos relacionados
+   *
+   * @param tripId ID del viaje a cargar
+   */
+  loadTripDetail(tripId: string): void {
+    this._state.update(s => ({ ...s, tripDetailLoading: true }));
+
+    this.tripService.getTripDetails(tripId).subscribe({
+      next: (tripDetail) => {
+        this._state.update(s => ({
+          ...s,
+          tripDetail,
+          tripDetailLoading: false
+        }));
+      },
+      error: (err) => {
+        this._state.update(s => ({
+          ...s,
+          tripDetailLoading: false
+        }));
+        console.error('TripStore.loadTripDetail error:', err);
+      }
+    });
   }
 
   // ============================================================================

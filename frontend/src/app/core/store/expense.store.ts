@@ -22,7 +22,9 @@
 
 import { Injectable, computed, signal } from '@angular/core';
 import { ExpenseService } from '../services/expense.service';
-import { Expense, ExpenseWithDetails, ApiPaginatedResponse } from '../models';
+import { Expense, ExpenseWithDetails, CreateExpenseDto, ApiPaginatedResponse } from '../models';
+import { tap, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 interface ExpenseStoreState {
   expenses: ExpenseWithDetails[];
@@ -249,25 +251,100 @@ export class ExpenseStore {
 
   /**
    * Agregar un nuevo gasto (Optimistic UI)
-   * Actualiza la UI inmediatamente
+   * Actualiza la UI inmediatamente y hace la llamada a API
    *
-   * @param expense Gasto a agregar (debe tener los detalles del pagador)
+   * @param dto Datos para crear el gasto
+   * @returns Observable que completa cuando se crea el gasto
    *
    * @example
-   * const newExpense: ExpenseWithDetails = {
-   *   id: 'new',
+   * const dto: CreateExpenseDto = {
+   *   tripId: 'trip-123',
+   *   payerId: 'user-456',
    *   amount: 50,
-   *   // ... resto de datos
+   *   description: 'Cena',
+   *   category: 'FOOD',
+   *   date: '2024-01-21',
+   *   participants: ['user-456', 'user-789']
    * };
-   * this.expenseStore.addExpense(newExpense);
-   * // totalBudgetUsed() se actualiza automáticamente
+   * this.expenseStore.addExpense(dto).subscribe({
+   *   next: () => console.log('Gasto creado'),
+   *   error: (err) => console.error('Error', err)
+   * });
+   * // La UI se actualiza inmediatamente (optimistic)
+   * // Al recibir respuesta del API, se actualiza con datos completos
    */
-  addExpense(expense: ExpenseWithDetails): void {
+  addExpense(dto: CreateExpenseDto) {
+    // Actualización optimista: crear objeto temporal
+    const tempId = 'temp-' + Date.now();
+    const tempExpense: ExpenseWithDetails = {
+      id: tempId,
+      tripId: dto.tripId,
+      payerId: dto.payerId,
+      amount: dto.amount,
+      description: dto.description,
+      category: dto.category,
+      date: dto.date,
+      participants: dto.participants,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      payer: {
+        id: dto.payerId,
+        name: 'Cargando...',
+        email: '',
+        avatar: undefined
+      },
+      participantDetails: dto.participants.map(id => ({
+        id,
+        name: '',
+        email: '',
+        shareAmount: dto.amount / dto.participants.length
+      }))
+    };
+
+    // Actualizar estado inmediatamente
     this._state.update(s => ({
       ...s,
-      expenses: [expense, ...s.expenses],
+      expenses: [tempExpense, ...s.expenses],
       totalItems: s.totalItems + 1
     }));
+
+    // Hacer la llamada a API y actualizar cuando la respuesta llegue
+    return this.expenseService.addExpense(dto).pipe(
+      tap((newExpense: Expense) => {
+        // Convertir a ExpenseWithDetails (sin detalles completos, pero se actualiza después)
+        const expense: ExpenseWithDetails = {
+          id: newExpense.id,
+          tripId: newExpense.tripId,
+          payerId: newExpense.payerId,
+          amount: newExpense.amount,
+          description: newExpense.description,
+          category: newExpense.category,
+          date: newExpense.date,
+          participants: newExpense.participants,
+          createdAt: newExpense.createdAt,
+          updatedAt: newExpense.updatedAt,
+          payer: {
+            id: newExpense.payerId,
+            name: 'Cargando...',
+            email: '',
+            avatar: undefined
+          },
+          participantDetails: newExpense.participants.map(id => ({
+            id,
+            name: '',
+            email: '',
+            shareAmount: newExpense.amount / newExpense.participants.length
+          }))
+        };
+
+        this._state.update(s => ({
+          ...s,
+          expenses: s.expenses.map(expense =>
+            expense.id === tempId ? expense : expense
+          )
+        }));
+      })
+    );
   }
 
   /**
@@ -292,20 +369,53 @@ export class ExpenseStore {
 
   /**
    * Eliminar un gasto
-   * Filtra la lista inmutablemente
+   * Filtra la lista inmutablemente y hace llamada a API
    *
    * @param id ID del gasto a eliminar
+   * @returns Observable que completa cuando se elimina el gasto
    *
    * @example
-   * this.expenseStore.removeExpense('exp-123');
-   * // totalBudgetUsed() se actualiza automáticamente (suma anterior - monto eliminado)
+   * this.expenseStore.deleteExpense('exp-123').subscribe({
+   *   next: () => console.log('Gasto eliminado'),
+   *   error: (err) => console.error('Error', err)
+   * });
+   * // La UI se actualiza inmediatamente (optimistic)
    */
-  removeExpense(id: string): void {
+  deleteExpense(id: string) {
+    // Guardar el gasto por si hay que hacer rollback
+    const deletedExpense = this.expenses().find(e => e.id === id);
+
+    // Actualización optimista
     this._state.update(s => ({
       ...s,
       expenses: s.expenses.filter(expense => expense.id !== id),
       totalItems: Math.max(0, s.totalItems - 1)
     }));
+
+    // Hacer la llamada a API
+    return this.expenseService.deleteExpense(id).pipe(
+      catchError((error) => {
+        // Rollback si hay error
+        if (deletedExpense) {
+          this._state.update(s => ({
+            ...s,
+            expenses: [deletedExpense, ...s.expenses],
+            totalItems: s.totalItems + 1
+          }));
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Alias para deleteExpense (mantener compatibilidad con código existente)
+   *
+   * @param id ID del gasto a eliminar
+   * @returns Observable que completa cuando se elimina el gasto
+   */
+  removeExpense(id: string) {
+    return this.deleteExpense(id);
   }
 
   /**

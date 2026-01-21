@@ -1,0 +1,372 @@
+@use '../../../../../../styles/00-settings/variables' as vars;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+  border: 2px solid var(--quinary-color);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// ============================================================================
+// HEADER
+// ============================================================================
+.modal-header {
+  background-color: var(--quinary-color-disabled);
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--quinary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-primary);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}
+
+// ============================================================================
+// FORMULARIO
+// ============================================================================
+.expense-form {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+
+    &:required::after {
+      content: ' *';
+      color: var(--quaternary-color);
+    }
+  }
+
+  .label-hint {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+    margin-top: -0.25rem;
+  }
+
+  input,
+  select {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    background-color: white;
+    color: var(--text-primary);
+
+    &:focus {
+      outline: none;
+      border-color: var(--quinary-color);
+      box-shadow: 0 0 0 3px rgba(var(--quinary-color-rgb), 0.1);
+    }
+
+    &:disabled {
+      background-color: var(--principal-color-disabled);
+      color: var(--text-tertiary);
+      cursor: not-allowed;
+    }
+
+    &.input-error {
+      border-color: var(--quaternary-color);
+      background-color: rgba(255, 0, 0, 0.02);
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+      }
+    }
+  }
+
+  select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+    padding-right: 2.5rem;
+  }
+
+  .error-message {
+    font-size: 0.8rem;
+    color: var(--quaternary-color);
+    font-weight: 500;
+    margin-top: 0.25rem;
+  }
+}
+
+// ============================================================================
+// PARTICIPANTES GRID
+// ============================================================================
+.participants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.participant-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+
+  .checkbox-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--quinary-color);
+  }
+
+  .participant-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+
+    .participant-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  &:has(.checkbox-input:checked) {
+    background-color: var(--quinary-color-disabled);
+    border-color: var(--quinary-color);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &:hover {
+    border-color: var(--quinary-color);
+  }
+}
+
+// ============================================================================
+// ALERTAS
+// ============================================================================
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border-left: 4px solid;
+
+  &.alert-error {
+    background-color: rgba(255, 0, 0, 0.05);
+    color: var(--quaternary-color);
+    border-left-color: var(--quaternary-color);
+  }
+
+  &.alert-success {
+    background-color: rgba(0, 200, 100, 0.05);
+    color: var(--quinary-color);
+    border-left-color: var(--quinary-color);
+  }
+}
+
+// ============================================================================
+// BOTONES DE ACCIÓN
+// ============================================================================
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &.btn-cancel {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+
+    &:hover:not(:disabled) {
+      background-color: var(--principal-color-disabled);
+      border-color: var(--text-secondary);
+    }
+  }
+
+  &.btn-submit {
+    background-color: var(--quinary-color);
+    color: white;
+    min-width: 150px;
+
+    &:hover:not(:disabled) {
+      background-color: var(--quinary-color);
+      filter: brightness(1.1);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// ============================================================================
+// LOADING SPINNER
+// ============================================================================
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================================================
+// RESPONSIVE
+// ============================================================================
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 0;
+  }
+
+  .modal-content {
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    max-height: 95vh;
+  }
+
+  .expense-form {
+    padding: 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .participants-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}

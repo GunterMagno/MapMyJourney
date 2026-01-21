@@ -3,7 +3,7 @@
  * Simplifica los imports en app.routes.ts
  */
 
-export { tripResolver, productResolver, type Trip, type Product } from './trip.resolver';
-export { searchResolver, type SearchResult } from './search.resolver';
+export { tripResolver, productResolver } from './trip.resolver';
+export { searchResolver } from './search.resolver';
 
 

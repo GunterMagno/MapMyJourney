@@ -1,0 +1,156 @@
+<div class="modal-overlay" (click)="closeOnOverlay($event)">
+  <div class="modal-content">
+    <!-- HEADER -->
+    <div class="modal-header">
+      <h2>Añadir Nuevo Gasto</h2>
+      <button 
+        class="btn-close" 
+        (click)="closeModal()"
+        aria-label="Cerrar modal">
+        ✕
+      </button>
+    </div>
+
+    <!-- FORMULARIO -->
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="expense-form">
+      <!-- DESCRIPCIÓN -->
+      <div class="form-group">
+        <label for="description">Descripción *</label>
+        <input
+          id="description"
+          type="text"
+          formControlName="description"
+          placeholder="Ej: Entrada a museo, cena en restaurante..."
+          [class.input-error]="hasError('description', 'required') || hasError('description', 'minlength')">
+        @if (hasError('description', 'required')) {
+          <span class="error-message">La descripción es requerida</span>
+        }
+        @if (hasError('description', 'minlength')) {
+          <span class="error-message">La descripción debe tener al menos 3 caracteres</span>
+        }
+      </div>
+
+      <!-- MONTO -->
+      <div class="form-group">
+        <label for="amount">Monto (€) *</label>
+        <input
+          id="amount"
+          type="number"
+          step="0.01"
+          formControlName="amount"
+          placeholder="0.00"
+          min="0"
+          [class.input-error]="hasError('amount', 'required') || hasError('amount', 'min')">
+        @if (hasError('amount', 'required')) {
+          <span class="error-message">El monto es requerido</span>
+        }
+        @if (hasError('amount', 'min')) {
+          <span class="error-message">El monto debe ser mayor a 0</span>
+        }
+      </div>
+
+      <!-- PAGADO POR -->
+      <div class="form-group">
+        <label for="payerId">Pagado Por *</label>
+        <select
+          id="payerId"
+          formControlName="payerId"
+          [class.input-error]="hasError('payerId', 'required')">
+          <option value="" disabled>Selecciona un participante</option>
+          @for (participant of payerParticipants(); track participant.id) {
+            <option [value]="participant.id">{{ participant.name }}</option>
+          }
+        </select>
+        @if (hasError('payerId', 'required')) {
+          <span class="error-message">Debes seleccionar quién pagó</span>
+        }
+      </div>
+
+      <!-- CATEGORÍA -->
+      <div class="form-group">
+        <label for="category">Categoría *</label>
+        <select
+          id="category"
+          formControlName="category"
+          [class.input-error]="hasError('category', 'required')">
+          @for (cat of categories; track cat.value) {
+            <option [value]="cat.value">{{ cat.label }}</option>
+          }
+        </select>
+        @if (hasError('category', 'required')) {
+          <span class="error-message">Debes seleccionar una categoría</span>
+        }
+      </div>
+
+      <!-- FECHA -->
+      <div class="form-group">
+        <label for="date">Fecha *</label>
+        <input
+          id="date"
+          type="date"
+          formControlName="date"
+          [class.input-error]="hasError('date', 'required')">
+        @if (hasError('date', 'required')) {
+          <span class="error-message">La fecha es requerida</span>
+        }
+      </div>
+
+      <!-- DIVIDIR ENTRE (MULTI-SELECT) -->
+      <div class="form-group full-width">
+        <label>Dividir Entre (Participantes) *</label>
+        <p class="label-hint">Selecciona entre quiénes se divide este gasto</p>
+        
+        <div class="participants-grid">
+          @for (participant of availableParticipants(); track participant.id) {
+            <label class="participant-checkbox">
+              <input
+                type="checkbox"
+                [checked]="isParticipantSelected(participant.id)"
+                (change)="toggleParticipant(participant.id)"
+                class="checkbox-input">
+              <span class="participant-label">
+                @if (participant.avatar) {
+                  <img [src]="participant.avatar" [alt]="participant.name" class="participant-avatar">
+                }
+                {{ participant.name }}
+              </span>
+            </label>
+          }
+        </div>
+
+        @if (expenseForm.get('participants')?.touched && expenseForm.get('participants')?.value?.length === 0) {
+          <span class="error-message">Debes seleccionar al menos un participante</span>
+        }
+      </div>
+
+      <!-- MENSAJE DE ERROR GENERAL -->
+      @if (error) {
+        <div class="alert alert-error">
+          {{ error }}
+        </div>
+      }
+
+      <!-- BOTONES DE ACCIÓN -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn btn-cancel"
+          (click)="closeModal()"
+          [disabled]="loading">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-submit"
+          [disabled]="loading || !expenseForm.valid">
+          @if (loading) {
+            <span class="loading-spinner"></span>
+            Guardando...
+          } @else {
+            Guardar Gasto
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

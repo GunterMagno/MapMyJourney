@@ -1,0 +1,142 @@
+<div class="expenses-container">
+  <!-- HEADER RESUMEN - SIMILAR AL DASHBOARD -->
+  <article class="expenses-summary">
+    <div class="summary-header">
+      <div class="summary-stats">
+        <h1 class="total-amount">{{ totalExpenses() | number: '1.2-2' }} €</h1>
+        <p class="summary-label">Gasto total del viaje</p>
+      </div>
+      
+      <div class="summary-details">
+        @if (recentExpenses().length > 0) {
+          <p class="subtitle">Últimos gastos</p>
+          <ul class="recent-list">
+            @for (expense of recentExpenses(); track expense.id) {
+              <li>
+                <span class="expense-icon">{{ categoryIcons[expense.category] }}</span>
+                <span class="expense-desc">{{ expense.description }}</span>
+                <span class="expense-amt">{{ expense.amount | number: '1.2-2' }} €</span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="subtitle empty">Sin gastos aún</p>
+        }
+      </div>
+    </div>
+
+    <div class="button-container">
+      <button 
+        class="btn-add-expense" 
+        (click)="openAddExpenseModal()"
+        aria-label="Añadir nuevo gasto">
+        + Añadir Gasto
+      </button>
+    </div>
+  </article>
+
+  <!-- SELECTOR DE DÍAS - SIEMPRE VISIBLE -->
+  <div class="date-selector-wrapper">
+    <h3 class="date-selector-title">Gastos por día</h3>
+    <div class="date-selector">
+      @if (tripDateRange().length > 0) {
+        @for (date of tripDateRange(); track date) {
+          <button 
+            class="date-card"
+            [class.selected]="selectedDate() === date"
+            (click)="selectDate(date)"
+            [attr.aria-pressed]="selectedDate() === date">
+            <div class="day">{{ formatDateForSelector(date).day }}</div>
+            <div class="month">{{ formatDateForSelector(date).month }}</div>
+            <div class="label">Gastos</div>
+            <div class="total">{{ getTotalForDate(date) | number: '1.2-2' }} €</div>
+          </button>
+        }
+      } @else {
+        <p class="no-dates">No hay días disponibles en este viaje</p>
+      }
+    </div>
+  </div>
+
+  <!-- LISTA DETALLADA -->
+  <section class="expenses-list">
+    <h2 class="date-title">Día {{ formatDateForSelector(selectedDate()).day }} de {{ formatDateForSelector(selectedDate()).month }}</h2>
+    
+    <div class="expenses-list-info">
+      <span class="total-label">Total:</span>
+      <span class="total-amount-day">{{ totalForSelectedDate() | number: '1.2-2' }} €</span>
+    </div>
+    
+    @if (expensesForSelectedDate().length > 0) {
+      <div class="expenses-cards">
+        @for (expense of expensesForSelectedDate(); track expense.id) {
+          <div class="expense-card">
+            <div class="expense-icon">
+              {{ categoryIcons[expense.category] }}
+            </div>
+
+            <div class="expense-content">
+              <p class="description">{{ expense.description }}</p>
+              <div class="payer-info">
+                <img 
+                  [src]="getParticipantAvatar(expense.payerId)"
+                  [alt]="getParticipantName(expense.payerId)"
+                  class="avatar">
+                <span class="payer-name">Pagado por {{ getParticipantName(expense.payerId) }}</span>
+              </div>
+            </div>
+
+            <div class="expense-amount">
+              {{ expense.amount | number: '1.2-2' }} €
+            </div>
+
+            <button 
+              class="btn-delete"
+              (click)="deleteExpense(expense.id)"
+              aria-label="Eliminar gasto">
+              🗑️
+            </button>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>Sin gastos para este día</p>
+      </div>
+    }
+  </section>
+
+  <!-- PAGOS PENDIENTES / DEUDAS -->
+  @if (debts().length > 0) {
+    <section class="debts-section">
+      <details class="debts-accordion">
+        <summary class="debts-title">💳 Deudas ({{ debts().length }})</summary>
+        
+        <div class="debts-list">
+          @for (debt of debts(); track debt.debtor + debt.creditor) {
+            <div class="debt-item">
+              <div class="debt-text">
+                <strong>{{ debt.debtor }}</strong> debe <strong>{{ debt.amount | number: '1.2-2' }} €</strong> a <strong>{{ debt.creditor }}</strong>
+              </div>
+              <button 
+                class="btn-settle"
+                (click)="settleDebt(debt.debtor, debt.creditor)">
+                Saldar
+              </button>
+            </div>
+          }
+        </div>
+      </details>
+    </section>
+  }
+</div>
+<!-- MODAL PARA AÑADIR GASTO -->
+@if (showAddExpenseModal()) {
+  <app-add-expense-modal 
+    [tripId]="tripId()"
+    [participants]="participants()"
+    [currentUserId]="currentUserId()"
+    [currentUserName]="currentUserName()"
+    (close)="closeAddExpenseModal()">
+  </app-add-expense-modal>
+}
