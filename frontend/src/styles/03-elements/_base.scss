@@ -15,6 +15,79 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select {
 }
 
 /**
+ * CUMPLE WCAG 2.1 AA - Fase 7: Focus Visible - Indicador de Foco Accesible
+ * 
+ * Requisitos:
+ * - Outline grueso (3-4px) y de alto contraste
+ * - Visible en claro y oscuro
+ * - Aplicado a todos los elementos interactivos
+ * - Offset positivo para no sobreposición
+ */
+
+/* Focus visible para enlaces */
+a:focus-visible {
+  outline: 3px solid var(--principal-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Focus visible para botones */
+button:focus-visible,
+input[type="button"]:focus-visible,
+input[type="submit"]:focus-visible,
+input[type="reset"]:focus-visible {
+  outline: 3px solid var(--principal-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Focus visible para campos de formulario */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--quinary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Focus visible para checkboxes y radios */
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 3px solid var(--principal-color);
+  outline-offset: 2px;
+}
+
+/* Adaptación para modo oscuro */
+[data-theme="dark"] {
+  a:focus-visible {
+    outline-color: var(--tertiary-color-hover);
+  }
+
+  button:focus-visible,
+  input[type="button"]:focus-visible,
+  input[type="submit"]:focus-visible,
+  input[type="reset"]:focus-visible {
+    outline-color: var(--tertiary-color-hover);
+  }
+
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline-color: var(--quaternary-color);
+  }
+
+  input[type="checkbox"]:focus-visible,
+  input[type="radio"]:focus-visible {
+    outline-color: var(--secondary-color-hover);
+  }
+}
+
+/* Ocultar el outline por defecto en navegador para usar solo nuestro :focus-visible */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/**
  * CUMPLE CE6.d: Animación para el tooltip creado dinámicamente
  * Usa @keyframes para fade-in del tooltip generado con Renderer2
  */

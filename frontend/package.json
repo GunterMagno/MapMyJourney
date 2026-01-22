@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
+    "optimize:images": "node scripts/optimize-images.js"
   },
   "prettier": {
     "printWidth": 100,
@@ -45,6 +46,7 @@
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
     "jsdom": "^27.1.0",
+    "sharp": "^0.33.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

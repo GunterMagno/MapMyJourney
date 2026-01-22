@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed, signal, effect } from '@angular/core';
+import { Component, OnInit, inject, computed, signal, effect, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ExpenseStore, TripStore } from '../../../../core/store';
@@ -7,12 +7,19 @@ import { AuthService } from '../../../../services/auth.service';
 import { DateFormatService } from '../../../../core/services/date-format.service';
 import { AddExpenseModalComponent } from './modals/add-expense-modal.component';
 
+// Interfaz para un día con fecha
+interface DayWithDate {
+  date: Date;
+  dayIndex: number;
+}
+
 @Component({
   selector: 'app-expenses',
   standalone: true,
   imports: [CommonModule, AddExpenseModalComponent],
   templateUrl: './expenses.component.html',
-  styleUrl: './expenses.component.scss'
+  styleUrl: './expenses.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExpensesComponent implements OnInit {
   private readonly expenseStore = inject(ExpenseStore);
@@ -48,6 +55,54 @@ export class ExpensesComponent implements OnInit {
     const start = trip?.startDate ? this.normalizeDate(trip.startDate) : '';
     const end = trip?.endDate ? this.normalizeDate(trip.endDate) : '';
     return { start, end };
+  });
+
+  /**
+   * Computed: Todos los días del viaje (Similar a Itinerario)
+   */
+  days = computed(() => {
+    const trip = this.tripStore.tripDetail();
+    if (!trip?.startDate || !trip?.endDate) {
+      return [];
+    }
+
+    const daysList: DayWithDate[] = [];
+    const start = new Date(trip.startDate);
+    const end = new Date(trip.endDate);
+    
+    // Asegurarse de que la fecha final sea inclusiva
+    const adjustedEnd = new Date(end);
+    adjustedEnd.setDate(adjustedEnd.getDate() + 1);
+
+    let dayIndex = 0;
+    for (let d = new Date(start); d < adjustedEnd; d.setDate(d.getDate() + 1)) {
+      daysList.push({
+        date: new Date(d),
+        dayIndex: dayIndex
+      });
+      dayIndex++;
+    }
+
+    return daysList;
+  });
+
+  /**
+   * Mantener la fecha seleccionada dentro del rango del viaje
+   */
+  readonly clampSelectedDate = effect(() => {
+    const daysList = this.days();
+    
+    if (daysList.length === 0) {
+      return;
+    }
+
+    const current = this.selectedDate();
+    const validDates = daysList.map(d => d.date.toISOString().split('T')[0]);
+    
+    if (!current || !validDates.includes(current)) {
+      const fallback = daysList[0].date.toISOString().split('T')[0];
+      this.selectedDate.set(fallback);
+    }
   });
 
   /**
@@ -124,40 +179,19 @@ export class ExpensesComponent implements OnInit {
   });
 
   /**
-   * Mantener la fecha seleccionada dentro del rango del viaje
-   */
-  readonly clampSelectedDate = effect(() => {
-    const range = this.tripDateRange();
-    console.log('[clampSelectedDate] Range:', range);
-    
-    if (range.length === 0) {
-      console.log('[clampSelectedDate] No dates available yet');
-      return;
-    }
-
-    const current = this.selectedDate();
-    console.log('[clampSelectedDate] Current selected:', current);
-    
-    if (!current || !range.includes(current)) {
-      const fallback = range[0];
-      console.log('[clampSelectedDate] Setting fallback:', fallback);
-      this.selectedDate.set(fallback);
-    }
-  });
-
-  /**
    * Obtener todas las fechas únicas con gastos
    */
   uniqueDates = computed(() => {
-    const expenseDates = new Set(
-      this.expenses().map(e => e.date)
-    );
+    const daysList = this.days();
+    const expenseDates = new Set(this.expenses().map(e => e.date));
+    
     // Combinar fechas del viaje con fechas con gastos
-    const allDates = new Set([
-      ...this.tripDateRange(),
-      ...Array.from(expenseDates)
-    ]);
-    return Array.from(allDates).sort().reverse();
+    const allDates = new Set(
+      daysList.map(d => d.date.toISOString().split('T')[0])
+    );
+    expenseDates.forEach(date => allDates.add(date));
+    
+    return Array.from(allDates).sort();
   });
 
   /**
@@ -313,18 +347,27 @@ export class ExpensesComponent implements OnInit {
   }
 
   /**
-   * Formatea fecha completa en formato DD-MM-YYYY
+   * Formatea fecha completa en formato legible
    */
   formatDateComplete(dateStr: string): string {
+    if (!dateStr) return '';
     return this.dateFormatService.formatDisplayDate(dateStr);
   }
 
   /**
-   * Seleccionar una fecha
+   * Seleccionar una fecha (convertir Date a string)
    */
-  selectDate(date: string): void {
-    if (this.tripDateRange().includes(date)) {
-      this.selectedDate.set(date);
+  selectDate(dateOrString: Date | string): void {
+    let dateStr: string;
+    if (dateOrString instanceof Date) {
+      dateStr = dateOrString.toISOString().split('T')[0];
+    } else {
+      dateStr = dateOrString;
+    }
+    
+    const validDates = this.days().map(d => d.date.toISOString().split('T')[0]);
+    if (validDates.includes(dateStr)) {
+      this.selectedDate.set(dateStr);
     }
   }
 
@@ -384,14 +427,13 @@ export class ExpensesComponent implements OnInit {
    * Saldar una deuda
    */
   settleDebt(debtor: string, creditor: string): void {
-    // Implementar lógica de pago
     console.log(`Saldando deuda de ${debtor} a ${creditor}`);
   }
 
   /**
    * Obtener descripción de categoría
    */
-  private getCategoryDescription(category: string): string {
+  getCategoryDescription(category: string): string {
     const categoryMap: Record<string, string> = {
       'TRANSPORT': 'Billetes del vuelo',
       'ACCOMMODATION': 'Pago Alojamiento',
@@ -403,12 +445,43 @@ export class ExpensesComponent implements OnInit {
   }
 
   /**
+   * Obtener icono para una categoría
+   */
+  getCategoryIcon(category: string): string {
+    const categoryIcons: Record<string, string> = {
+      'TRANSPORT': '✈️',
+      'ACCOMMODATION': '🏨',
+      'FOOD': '🍽️',
+      'ACTIVITIES': '🎭',
+      'OTHER': '📦'
+    };
+    return categoryIcons[category] || '📦';
+  }
+
+  /**
    * Obtener texto con participantes divididos
    */
   getSplitParticipantsText(participantIds: string[]): string {
     return participantIds
       .map(id => this.getParticipantName(id))
       .join(', ');
+  }
+
+  /**
+   * Capitalizar primera letra de una cadena
+   */
+  capitalize(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  /**
+   * Abrir modal para editar un gasto
+   */
+  openEditExpenseModal(expense: Expense): void {
+    console.log('Editar gasto:', expense);
+    // TODO: Implementar edición de gastos
+    this.openAddExpenseModal();
   }
 
   /**

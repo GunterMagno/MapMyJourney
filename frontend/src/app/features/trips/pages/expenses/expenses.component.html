@@ -1,4 +1,4 @@
-<div class="expenses-container">
+<div class="expenses-page">
   <!-- SECCIÓN 1: RESUMEN DE GASTOS DEL VIAJE -->
   <article class="expenses-summary-card">
     <div class="summary-header">
@@ -55,127 +55,147 @@
     </div>
   </article>
 
-  <!-- SECCIÓN 2: CARRUSEL DE DÍAS CON GASTOS -->
+  <!-- SECCIÓN 2: SELECTOR DE DÍAS (Grid colorido - estilo Itinerario) -->
   <nav class="days-selector">
     <div class="days-selector__list">
-      @if (tripDateRange().length > 0) {
-        @for (date of tripDateRange(); let i = $index; track date) {
-          <button 
-            class="day-card"
-            [class.selected]="selectedDate() === date"
-            (click)="selectDate(date)"
-            [attr.aria-pressed]="selectedDate() === date"
-            [attr.aria-label]="'Día ' + formatDateForSelector(date).day + ', gastos: ' + (getTotalForDate(date) | number: '1.2-2') + ' €'">
-            <span class="day-card__day-name">{{ formatDateForSelector(date).dayName }}</span>
-            <span class="day-card__number">{{ formatDateForSelector(date).day }}</span>
-            <span class="day-card__month">{{ formatDateForSelector(date).month }}</span>
-          </button>
-        }
-      } @else {
-        <p class="no-dates-message">No hay días disponibles</p>
+      @for (day of days(); let i = $index; track day.dayIndex) {
+        <button 
+          class="day-card"
+          [class.selected]="selectedDate() === (day.date | date: 'yyyy-MM-dd')"
+          (click)="selectDate(day.date)"
+          [attr.aria-pressed]="selectedDate() === (day.date | date: 'yyyy-MM-dd')"
+          [attr.aria-label]="'Seleccionar ' + (day.date | date: 'EEEE, d MMMM' : undefined : 'es-ES')">
+          <span class="day-card__day-name">{{ (day.date | date: 'EEE' : undefined : 'es-ES') }}</span>
+          <span class="day-card__number">{{ (day.date | date: 'dd') }}</span>
+          <span class="day-card__month">{{ capitalize((day.date | date: 'MMM' : undefined : 'es-ES') || '') }}</span>
+        </button>
       }
     </div>
   </nav>
 
-  <!-- SECCIÓN 3: DETALLE DE GASTOS DEL DÍA SELECCIONADO -->
-  <section class="daily-expenses-detail">
-    <div class="detail-header">
-      <div class="header-left">
-        <h2 class="detail-title">
-          Día - <span class="date-highlight">{{ formatDateComplete(selectedDate()) }}</span>
-        </h2>
-        <span class="daily-total-badge">{{ totalForSelectedDate() | number: '1.2-2' }} €</span>
+  <!-- SECCIÓN 3: DETALLE DE GASTOS DEL DÍA SELECCIONADO (Estilo Actividades) -->
+  <main class="expenses-content">
+    <!-- Day Header -->
+    <div class="day-header">
+      <div>
+        <h1 class="day-title">{{ formatDateComplete(selectedDate()) }}</h1>
       </div>
-      <button 
-        class="btn-add-day-expense-brutalist" 
-        (click)="openAddExpenseModalForDate(selectedDate())"
-        aria-label="Añadir gasto para este día">
-        Añadir <span class="icon">➕</span>
-      </button>
+      
+      <!-- Monto total del día -->
+      <div class="day-total-badge">
+        <span class="day-total-amount">{{ totalForSelectedDate() | number: '1.2-2' }} €</span>
+      </div>
     </div>
 
-    <!-- Tabla de gastos -->
-    @if (expensesForSelectedDate().length > 0) {
-      <div class="expenses-table">
-        <div class="table-header">
-          <div class="col-description">Descripción:</div>
-          <div class="col-amount">Monto:</div>
-          <div class="col-payer">Pagado por:</div>
-          <div class="col-split">Dividido:</div>
-          <div class="col-actions"></div>
-        </div>
-
-        @for (expense of expensesForSelectedDate(); track expense.id) {
-          <div class="table-row" [class.paid]="isExpensePaid(expense.id)">
-            <div class="col-description">{{ expense.description }}</div>
-            <div class="col-amount">{{ expense.amount | number: '1.2-2' }} €</div>
-            <div class="col-payer">
-              <img 
-                [src]="getParticipantAvatar(expense.payerId)"
-                [alt]="getParticipantName(expense.payerId)"
-                class="participant-avatar">
-              <span class="payer-name">{{ getParticipantName(expense.payerId) }}</span>
-            </div>
-            <div class="col-split">{{ getSplitParticipantsText(expense.participants) }}</div>
-            <div class="col-actions">
-              <button 
-                class="btn-details-green"
-                (click)="openExpenseDetails(expense)"
-                aria-label="Ver detalles del gasto">
-                Ver Detalles
-              </button>
-              <button 
-                class="btn-delete-pink"
-                (click)="deleteExpense(expense.id)"
-                aria-label="Eliminar gasto">
-                <span class="delete-icon">🗑️</span> Borrar
-              </button>
-            </div>
-          </div>
-        }
-      </div>
-    } @else {
-      <div class="empty-state">
-        <p>Sin gastos para este día</p>
-      </div>
-    }
-  </section>
-
-  <!-- SECCIÓN 4: PAGOS PENDIENTES -->
-  @if (pendingPayments().length > 0) {
-    <section class="pending-payments-card">
-      <h3 class="payments-title">Pagos Pendientes</h3>
+    <!-- Lista de Gastos (estilo Actividades) -->
+    <section 
+      class="expenses-container"
+      [attr.aria-label]="'Gastos del día ' + formatDateComplete(selectedDate())">
       
-      <div class="payments-list">
-        @for (payment of pendingPayments(); track payment.id) {
-          <div class="payment-item">
-            <p class="payment-text">
-              <strong>{{ payment.debtor }}</strong> debe <strong>{{ payment.amount | number: '1.2-2' }} €</strong> a <strong>{{ payment.creditor }}</strong>
-            </p>
-            <button 
-              class="btn-pay-pill"
-              (click)="markPaymentAsSettled(payment.id)"
-              aria-label="Marcar como pagado">
-              Pagar
-            </button>
-          </div>
-        }
+      @if (expensesForSelectedDate().length === 0) {
+        <div class="empty-state">
+          <p class="empty-state__message">No hay gastos para este día</p>
+          <p class="empty-state__hint">Pulsa el botón <strong style="color: var(--quaternary-color);">"Añadir Gasto"</strong> para crear uno nuevo</p>
+        </div>
+      } @else {
+        <div class="expenses-list">
+          @for (expense of expensesForSelectedDate(); let idx = $index; track expense.id) {
+            <article 
+              class="expense-card"
+              [attr.data-expense-id]="expense.id">
+              
+              <!-- Main Content -->
+              <div class="expense-card__content">
+                <div class="expense-card__header">
+                  <h3 class="expense-card__title">{{ expense.description }}</h3>
+                  <span class="expense-card__amount-badge">{{ expense.amount | number: '1.2-2' }} €</span>
+                </div>
+
+                <!-- Payer Info -->
+                <div class="expense-card__payer">
+                  <img 
+                    [src]="getParticipantAvatar(expense.payerId)"
+                    [alt]="getParticipantName(expense.payerId)"
+                    class="payer-avatar">
+                  <div class="payer-info">
+                    <span class="payer-label">Pagado por:</span>
+                    <span class="payer-name">{{ getParticipantName(expense.payerId) }}</span>
+                  </div>
+                </div>
+
+                <!-- Category -->
+                <div class="expense-card__category">
+                  <span class="category-icon">{{ getCategoryIcon(expense.category) }}</span>
+                  <span class="category-name">{{ getCategoryDescription(expense.category) }}</span>
+                </div>
+
+                <!-- Participants Split -->
+                @if (expense.participants.length > 0) {
+                  <div class="expense-card__split">
+                    <span class="split-label">Dividido entre:</span>
+                    <span class="split-text">{{ getSplitParticipantsText(expense.participants) }}</span>
+                  </div>
+                }
+              </div>
+
+              <!-- Actions -->
+              <div class="expense-card__actions">
+                <button 
+                  class="btn-icon"
+                  (click)="openEditExpenseModal(expense)"
+                  aria-label="Editar gasto"
+                  title="Editar">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+                <button 
+                  class="btn-icon btn-icon--danger"
+                  (click)="deleteExpense(expense.id)"
+                  aria-label="Eliminar gasto"
+                  title="Eliminar">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      }
+
+      <!-- Centered Add Expense Button -->
+      <div style="display: flex; justify-content: center; padding-top: 2rem; padding-bottom: 4rem;">
+        <button 
+          class="btn-add-expense"
+          (click)="openAddExpenseModal()"
+          aria-label="Añadir nuevo gasto">
+          Añadir gasto
+        </button>
       </div>
     </section>
-  }
+  </main>
 
-  <!-- MODAL PARA AÑADIR GASTO -->
+  <!-- MODAL PARA AÑADIR/EDITAR GASTO -->
   @if (showAddExpenseModal()) {
-    <app-add-expense-modal 
-      [tripId]="tripId()"
-      [participants]="participants()"
-      [currentUserId]="currentUserId()"
-      [currentUserName]="currentUserName()"
-      [tripStartDate]="tripDateBounds().start"
-      [tripEndDate]="tripDateBounds().end"
-      [preselectedDate]="preselectedDate()"
-      (close)="closeAddExpenseModal()"
-      (expenseAdded)="onExpenseAdded($event)">
-    </app-add-expense-modal>
+    <div class="modal-overlay" (click)="closeAddExpenseModal()">
+      <div class="modal-container" (click)="$event.stopPropagation()">
+        <app-add-expense-modal 
+          [tripId]="tripId()"
+          [participants]="participants()"
+          [currentUserId]="currentUserId()"
+          [currentUserName]="currentUserName()"
+          [tripStartDate]="tripDateBounds().start"
+          [tripEndDate]="tripDateBounds().end"
+          [preselectedDate]="selectedDate()"
+          (close)="closeAddExpenseModal()"
+          (expenseAdded)="onExpenseAdded($event)">
+        </app-add-expense-modal>
+      </div>
+    </div>
   }
 </div>

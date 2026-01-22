@@ -676,14 +676,14 @@ export class UserProfileComponent implements OnInit, OnDestroy, FormComponent {
   showNewPassword = false;
   showNewPasswordConfirm = false;
   availableAvatars = [
+    'assets/profile-picture.webp',
+    'assets/profile-picture2.webp',
+    'assets/profile-picture3.webp',
+    'assets/profile-picture4.webp',
+    'assets/profile-picture5.webp',
     'assets/avatar-1.svg',
-    'assets/avatar-1.svg',
-    'assets/avatar-1.svg',
-    'assets/avatar-1.svg',
-    'assets/avatar-1.svg',
-    'assets/avatar-1.svg',
-    'assets/avatar-1.svg',
-    'assets/avatar-1.svg'
+    'assets/avatar-2.svg',
+    'assets/avatar-3.svg'
   ];
   private destroy$ = new Subject<void>();
 
@@ -716,7 +716,7 @@ export class UserProfileComponent implements OnInit, OnDestroy, FormComponent {
             newPasswordConfirm: ''
           });
           this.form.markAsPristine();
-          this.selectedAvatar = user.profilePicture || 'assets/profile-picture.png';
+          this.selectedAvatar = user.profilePicture || 'assets/profile-picture.webp';
         }
       });
   }
@@ -726,7 +726,7 @@ export class UserProfileComponent implements OnInit, OnDestroy, FormComponent {
    */
   getAvatarUrl(): string {
     const currentUser = this.authService.getCurrentUser();
-    return currentUser?.profilePicture || 'assets/profile-picture.png';
+    return currentUser?.profilePicture || 'assets/profile-picture.webp';
   }
 
   /**

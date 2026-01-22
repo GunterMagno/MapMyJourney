@@ -1,20 +1,72 @@
-@use '../../../../../styles/00-settings/variables' as vars;
+@use 'sass:color';
 
 // ============================================================================
-// CONTAINER
+// COLOR PALETTE & MIXINS - Using CSS Variables
 // ============================================================================
-.expenses-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+
+@mixin card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
+              0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 300ms ease-out;
+  
+  &:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15),
+                0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+}
+
+@mixin flex-center {
   display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
 }
 
 // ============================================================================
-// SECCIÓN 1: RESUMEN DE GASTOS DEL VIAJE
+// MAIN CONTAINER & DECORATIVE BACKGROUND
+// ============================================================================
+
+.expenses-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 300ms ease-out;
+  
+  // Decorative pattern background (same as itinerary)
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.08;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(239, 71, 111, 0.1) 1px, transparent 1px),
+      radial-gradient(circle at 80% 80%, rgba(243, 119, 72, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  // Contenido por encima del fondo
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  // Dark mode
+  [data-theme="dark"] & {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-body) 100%);
+    
+    &::before {
+      opacity: 0.05;
+    }
+  }
+}
+
+// ============================================================================
+// SECCIÓN 1: RESUMEN DE GASTOS DEL VIAJE (Preservado intacto)
 // ============================================================================
 .expenses-summary-card {
   background-color: var(--bg-surface);
@@ -25,8 +77,10 @@
   gap: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   max-width: 600px;
-  margin: 0 auto;
+  margin: 2rem auto 0;
   width: 100%;
+  position: relative;
+  z-index: 2;
 
   .summary-header {
     text-align: center;
@@ -191,47 +245,43 @@
       }
     }
   }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    margin: 1rem auto 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+    border-radius: 16px;
+    margin: 1rem 0.75rem 0;
+
+    .summary-header .total-amount {
+      font-size: 2rem;
+    }
+  }
 }
 
 // ============================================================================
-// SECCIÓN 2: SELECTOR DE DÍAS (Igual al itinerario)
+// SECCIÓN 2: SELECTOR DE DÍAS (Copiado exacto de Itinerario)
 // ============================================================================
+
 .days-selector {
-  padding: 3rem 1.5rem;
-  background: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  overflow: visible;
+  padding: 2rem 0;
+  background: transparent;
+  display: block;
   
   &__list {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(95px, 1fr));
-    grid-auto-rows: 140px;
-    gap: 1.5rem 2rem;
-    justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
+    gap: 1rem;
     width: 100%;
-    max-width: 100%;
-    padding: 2rem 1rem;
-    overflow-x: auto;
-    overflow-y: visible;
-    
-    // Allow items to wrap to 2 rows max
-    grid-auto-flow: row;
-    
-    @media (max-width: 768px) {
-      grid-template-columns: repeat(10, minmax(90px, 1fr));
-      grid-auto-rows: 105px;
-      gap: 0.9rem;
-    }
-    
-    @media (max-width: 480px) {
-      grid-template-columns: repeat(6, minmax(80px, 1fr));
-      grid-auto-rows: 100px;
-      gap: 0.7rem;
-    }
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
   }
 }
 
@@ -240,528 +290,533 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  height: 125px;
-  padding: 1rem;
-  border: 4px solid transparent;
-  border-radius: 0.8rem;
+  width: 100px;
+  height: 130px;
+  padding: 0.75rem;
+  border: 3px solid transparent;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  color: var(--text-inverse);
-  transition: all 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: white;
+  transition: all 200ms ease-out;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   text-align: center;
+  flex-shrink: 0;
   
-  // Colores cíclicos con modulo - asegura que todos los días tengan color
+  // Colores cíclicos con modulo
   &:nth-child(5n+1) { background-color: var(--principal-color); }
   &:nth-child(5n+2) { background-color: var(--secondary-color); }
   &:nth-child(5n+3) { background-color: var(--tertiary-color); }
   &:nth-child(5n+4) { background-color: var(--quaternary-color); }
-  &:nth-child(5n) { background-color: var(--quinary-color); }
+  &:nth-child(5n+0) { background-color: var(--quinary-color); }
   
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   }
   
   &.selected {
-    transform: scale(1.1);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
-    border-color: var(--principal-color) !important;
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    border-color: white;
   }
   
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
   }
   
   &__day-name {
     font-size: 0.65rem;
-    opacity: 0.92;
-    margin-bottom: 0.3rem;
+    opacity: 0.95;
+    margin-bottom: 0.4rem;
     line-height: 1.2;
-    text-transform: capitalize;
   }
   
   &__number {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
     line-height: 1;
   }
   
   &__month {
-    font-size: 0.55rem;
-    opacity: 0.88;
-    margin-top: 0.2rem;
+    font-size: 0.6rem;
+    opacity: 0.9;
+    margin-top: 0.3rem;
     line-height: 1.2;
-    text-transform: capitalize;
   }
 }
 
-.no-dates-message {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  padding: 1rem;
-  text-align: center;
-  width: 100%;
+// ============================================================================
+// SECCIÓN 3: CONTENIDO PRINCIPAL (Estilo Itinerario)
+// ============================================================================
+
+.expenses-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 }
 
-// ============================================================================
-// SECCIÓN 3: DETALLE DE GASTOS DEL DÍA - BRUTALIST STYLE
-// ============================================================================
-.daily-expenses-detail {
-  background-color: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 1.5rem;
-  box-shadow: none;
-
-  .detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 3px solid var(--text-main);
-    gap: 1rem;
-
-    .header-left {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex: 1;
-      gap: 1rem;
-    }
-
-    .detail-title {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin: 0;
+// Day header
+.day-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+  
+  .day-title {
+    margin: 0;
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    
+    [data-theme="dark"] & {
       color: var(--text-main);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-
-      .date-highlight {
-        font-weight: 700;
-        color: var(--text-main);
-      }
-    }
-
-    .daily-total-badge {
-      background-color: var(--principal-color);
-      color: white;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0;
-      font-weight: 700;
-      font-size: 1rem;
-      border: 2px solid var(--text-main);
-      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-add-day-expense-brutalist {
-      background-color: var(--secondary-color);
-      color: white;
-      border: 3px solid var(--text-main);
-      padding: 0.75rem 1.5rem;
-      border-radius: 0;
-      cursor: pointer;
-      font-weight: 700;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      letter-spacing: 0.5px;
-
-      .icon {
-        font-size: 1.25rem;
-        display: inline-block;
-      }
-
-      &:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.15);
-      }
-
-      &:active {
-        transform: translate(0, 0);
-        box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
-      }
     }
   }
+}
 
-  .expenses-table {
+// Day total badge
+.day-total-badge {
+  @include flex-center;
+  background-color: var(--principal-color);
+  color: var(--text-inverse);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(239, 71, 111, 0.3);
+
+  .day-total-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(239, 71, 111, 0.4);
+  }
+}
+
+// ============================================================================
+// EXPENSES CONTAINER & CARDS (Estilo Actividades del Itinerario)
+// ============================================================================
+
+.expenses-container {
+  min-height: 300px;
+  margin-bottom: 2rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: var(--principal-color-disabled);
+  border: 4px dashed var(--secondary-color-disabled);
+  border-radius: 1.5rem;
+  min-height: 300px;
+  
+  [data-theme="dark"] & {
+    background: linear-gradient(135deg, rgba(62, 203, 166, 0.1) 0%, rgba(239, 71, 111, 0.1) 100%);
+    border-color: var(--border-color);
+  }
+  
+  .empty-state__message {
+    margin: 0 0 1rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  
+  .empty-state__hint {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    
+    strong {
+      color: var(--quaternary-color);
+      font-weight: 600;
+    }
+  }
+}
+
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// ============================================================================
+// EXPENSE CARDS (Adaptado de Activity Cards)
+// ============================================================================
+
+.expense-card {
+  display: flex;
+  gap: 0.8rem;
+  align-items: stretch;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.25rem;
+  border: 2px solid transparent;
+  transition: all 250ms ease-out;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  
+  [data-theme="dark"] & {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    
+    .expense-card__actions {
+      opacity: 1;
+    }
+  }
+  
+  // Content area
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  
+  &__title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    
+    [data-theme="dark"] & {
+      color: var(--text-main);
+    }
+  }
+  
+  // Amount badge
+  &__amount-badge {
+    background: var(--tertiary-color);
+    color: var(--text-main);
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  
+  // Payer info
+  &__payer {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.2rem 0 0 0;
+    padding: 0.4rem 0;
+  }
+  
+  .payer-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+    flex-shrink: 0;
+  }
+  
+  .payer-info {
     display: flex;
     flex-direction: column;
     gap: 0;
-    border: 3px solid var(--text-main);
-    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.12);
-
-    .table-header {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1.5fr 2fr 1.5fr;
-      gap: 0;
-      padding: 1.25rem;
-      background-color: var(--tertiary-color);
-      font-weight: 700;
-      font-size: 0.8rem;
-      color: white;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-bottom: 3px solid var(--text-main);
-
-      .col-description,
-      .col-amount,
-      .col-payer,
-      .col-split,
-      .col-actions {
-        display: flex;
-        align-items: center;
-      }
+  }
+  
+  .payer-label {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .payer-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  
+  // Category
+  &__category {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin: 0.3rem 0;
+    
+    .category-icon {
+      font-size: 1rem;
     }
-
-    .table-row {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1.5fr 2fr 1.5fr;
-      gap: 0;
-      padding: 1.25rem;
-      border-bottom: 2px solid var(--text-main);
-      align-items: center;
-      transition: background-color 0.2s ease;
-      background-color: white;
-
-      &:hover {
-        background-color: var(--bg-hover);
-      }
-
-      &.paid {
-        border-left: 4px solid var(--principal-color);
-        background-color: var(--bg-hover);
-      }
-
-      &:last-child {
-        border-bottom: 3px solid var(--text-main);
-      }
-
-      .col-description {
-        font-weight: 600;
-        color: var(--text-main);
-        font-size: 0.95rem;
-      }
-
-      .col-amount {
-        font-weight: 700;
-        color: var(--principal-color);
-        font-size: 1rem;
-      }
-
-      .col-payer {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-
-        .participant-avatar {
-          width: 28px;
-          height: 28px;
-          border-radius: 0;
-          object-fit: cover;
-          border: 2px solid var(--text-main);
-        }
-
-        .payer-name {
-          font-size: 0.9rem;
-          font-weight: 600;
-          color: var(--text-main);
-        }
-      }
-
-      .col-split {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        font-weight: 500;
-      }
-
-      .col-actions {
-        display: flex;
-        gap: 0.5rem;
-
-        .btn-details-green {
-          background-color: var(--quinary-color);
-          color: white;
-          border: 2px solid var(--text-main);
-          padding: 0.5rem 0.9rem;
-          border-radius: 0;
-          font-size: 0.75rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          text-transform: uppercase;
-          box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
-
-          &:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15);
-          }
-
-          &:active {
-            transform: translate(0, 0);
-            box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
-          }
-        }
-
-        .btn-delete-pink {
-          background-color: var(--text-danger);
-          color: white;
-          border: 2px solid var(--text-main);
-          padding: 0.5rem 0.9rem;
-          border-radius: 0;
-          font-size: 0.75rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          text-transform: uppercase;
-          display: flex;
-          align-items: center;
-          gap: 0.3rem;
-          box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
-
-          .delete-icon {
-            font-size: 0.85rem;
-          }
-
-          &:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15);
-          }
-
-          &:active {
-            transform: translate(0, 0);
-            box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
-          }
-        }
-      }
+    
+    .category-name {
+      font-weight: 500;
     }
   }
-
-  .empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
+  
+  // Split info
+  &__split {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--text-secondary);
-    font-size: 1rem;
-
-    p {
-      margin: 0;
+    font-size: 0.8rem;
+    margin: 0.3rem 0 0 0;
+    
+    .split-label {
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    .split-text {
+      font-weight: 500;
+    }
+  }
+  
+  // Actions
+  &__actions {
+    display: flex;
+    gap: 0.4rem;
+    align-items: flex-start;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 250ms ease-out;
+    
+    &:hover {
+      opacity: 1;
     }
   }
 }
 
-// ============================================================================
-// SECCIÓN 4: PAGOS PENDIENTES
-// ============================================================================
-.pending-payments-card {
-  background-color: var(--bg-surface);
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  max-width: 600px;
-  margin: 0 auto;
-  width: 100%;
-
-  .payments-title {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0 0 1.5rem 0;
-    text-align: center;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--border-color);
+// Action buttons
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  color: var(--text-tertiary);
+  font-size: 1.2rem;
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-
-  .payments-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    .payment-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem;
-      background-color: var(--bg-hover);
-      border-radius: 12px;
-      gap: 1rem;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-
-      .payment-text {
-        flex: 1;
-        font-size: 0.95rem;
-        line-height: 1.5;
-        color: var(--text-primary);
-        margin: 0;
-
-        strong {
-          color: var(--text-primary);
-          font-weight: 600;
-        }
-      }
-
-      .btn-pay-pill {
-        background-color: var(--quinary-color);
-        color: var(--text-main);
-        border: none;
-        padding: 0.6rem 1.8rem;
-        border-radius: 50px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        white-space: nowrap;
-        flex-shrink: 0;
-        box-shadow: 0 2px 6px rgba(93, 217, 193, 0.2);
-
-        &:hover {
-          background-color: var(--quinary-color-hover);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 10px rgba(93, 217, 193, 0.3);
-        }
-
-        &:active {
-          transform: translateY(0);
-        }
-      }
+  
+  [data-theme="dark"] & {
+    color: var(--text-secondary);
+  }
+  
+  &:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.08);
+    
+    [data-theme="dark"] & {
+      background: rgba(255, 255, 255, 0.12);
     }
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  &--danger {
+    color: var(--text-secondary);
+  }
+  
+  &--danger:hover {
+    color: var(--principal-color);
+    background: var(--principal-color-disabled);
+    transform: scale(1.1);
+  }
+}
+
+// ============================================================================
+// ADD EXPENSE BUTTON
+// ============================================================================
+
+.btn-add-expense {
+  background: var(--quaternary-color);
+  color: var(--text-main);
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 1.5rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(69, 196, 160, 0.3);
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(69, 196, 160, 0.4);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  .icon {
+    font-size: 1.5rem;
+  }
+}
+
+// ============================================================================
+// MODAL OVERLAY & CONTAINER
+// ============================================================================
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  
+  [data-theme="dark"] & {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.modal-container {
+  background: var(--bg-surface);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+    border-radius: 1rem;
   }
 }
 
 // ============================================================================
 // RESPONSIVE
 // ============================================================================
+
 @media (max-width: 768px) {
-  .expenses-container {
-    padding: 1rem;
-    gap: 2rem;
+  .expenses-page {
+    padding: 0 1rem;
   }
 
-  .expenses-summary-card {
-    max-width: 100%;
+  .expenses-content {
+    padding: 1.5rem;
   }
 
-  .daily-expenses-detail {
-    .detail-header {
+  .day-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .day-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  .expense-card {
+    flex-direction: column;
+    
+    &__header {
       flex-direction: column;
       align-items: flex-start;
-
-      .header-right {
-        width: 100%;
-        justify-content: space-between;
-      }
-    }
-
-    .expenses-table {
-      .table-header,
-      .table-row {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-
-        .col-description::before,
-        .col-amount::before,
-        .col-payer::before,
-        .col-split::before,
-        .col-actions::before {
-          content: attr(data-label);
-          font-weight: 600;
-          display: block;
-          margin-bottom: 0.25rem;
-        }
-      }
-
-      .table-header {
-        display: none;
-      }
-
-      .table-row {
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        margin-bottom: 1rem;
-
-        .col-actions {
-          flex-direction: column;
-          width: 100%;
-        }
-      }
-    }
-  }
-
-  .pending-payments-card {
-    max-width: 100%;
-
-    .payments-list .payment-item {
-      flex-direction: column;
-      align-items: flex-start;
-
-      .btn-pay-pill {
-        width: 100%;
-        text-align: center;
-      }
-    }
-  }
-
-  .days-carousel-container {
-    padding: 1rem;
-
-    .carousel-wrapper {
-      gap: 0.8rem;
-
-      .day-card {
-        width: 100px;
-        padding: 1.2rem 0.8rem;
-      }
     }
   }
 }
 
 @media (max-width: 480px) {
-  .expenses-container {
-    padding: 0.75rem;
-    gap: 1.5rem;
+  .expenses-page {
+    padding: 0 0.5rem;
   }
 
-  .expenses-summary-card {
-    padding: 1.5rem;
-    border-radius: 16px;
-
-    .summary-header .total-amount {
-      font-size: 2rem;
-    }
-
-    .aggregated-expenses .aggregated-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  .expenses-content {
+    padding: 1rem;
   }
 
-  .daily-expenses-detail {
-    padding: 1.5rem;
-    border-radius: 16px;
+  .day-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
 
-    .detail-header {
-      .detail-title {
-        font-size: 1.1rem;
-      }
+    .day-title {
+      font-size: 1.5rem;
     }
   }
 
-  .pending-payments-card {
-    padding: 1.5rem;
-    border-radius: 16px;
-
-    .payments-title {
-      font-size: 1rem;
+  .expense-card {
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+    
+    &__header {
+      flex-direction: row;
+      flex-wrap: wrap;
     }
+    
+    &__actions {
+      width: 100%;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+  }
+
+  .btn-add-expense {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
   }
 }
