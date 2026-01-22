@@ -266,6 +266,5 @@ graph TD
 
 ## Estado de los tests
 
-### ✅ - Test Correctos3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
+### ✅ - Test Correctos4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
