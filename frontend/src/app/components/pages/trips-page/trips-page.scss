@@ -5,6 +5,7 @@
   min-height: calc(100vh - 80px - 200px);
   display: flex;
   flex-direction: column;
+  background-color: var(--tertiary-color-disabled);
 }
 
 // Card container para los viajes

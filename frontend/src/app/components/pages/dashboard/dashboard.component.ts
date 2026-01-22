@@ -13,13 +13,14 @@ import { CardComponent } from '../../shared/card/card';
 import { FormSelectComponent } from '../../shared/form-select/form-select';
 import { FormInputComponent } from '../../shared/form-input/form-input';
 import { DateFormatService } from '../../../core/services/date-format.service';
+import { TripService } from '../../../services/trip.service';
 
 // Importar modelos (ajustar la ruta según tu estructura)
 interface Trip {
   id: string;
   name: string;
   description: string;
-  image: string;
+  imageUrl: string;
   startDate: Date;
   endDate: Date;
   participants: { id: string; name: string }[];
@@ -67,6 +68,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private dateFormatService = inject(DateFormatService);
+  private tripService = inject(TripService);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -82,22 +84,43 @@ export class DashboardComponent implements OnInit, OnDestroy {
    * Carga los viajes desde el servicio
    */
   private loadTrips(): void {
-    // TODO: Reemplazar con llamada real al servicio
-    // this.tripService.getTrips().pipe(
-    //   takeUntil(this.destroy$)
-    // ).subscribe(trips => {
-    //   this.trips = trips;
-    //   this.applyFilters();
-    //   this.updateStatistics();
-    // });
+    this.tripService.getUserTrips().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (trips: any[]) => {
+        // Mapear 'title' del backend a 'name' para el frontend
+        this.trips = trips.map(trip => ({
+          id: trip.id,
+          name: trip.title || '',
+          description: trip.description || '',
+          imageUrl: trip.imageUrl,
+          startDate: trip.startDate,
+          endDate: trip.endDate,
+          participants: trip.participants || [],
+          totalExpense: trip.totalExpense || 0,
+          status: trip.status || 'planning'
+        } as Trip));
+        this.applyFilters();
+        this.updateStatistics();
+      },
+      error: (error: any) => {
+        console.error('Error loading trips:', error);
+        // Fallback a mock data si hay error
+        this.loadMockTrips();
+      }
+    });
+  }
 
-    // MOCK DATA
+  /**
+   * Carga datos mock (fallback)
+   */
+  private loadMockTrips(): void {
     this.trips = [
       {
         id: '1',
         name: 'Viaje a París',
         description: 'Experiencia increíble visitando los monumentos más icónicos de Francia. Duracion: 7 dias',
-        image: 'images/paris.jpg',
+        imageUrl: 'images/paris.jpg',
         startDate: new Date(2024, 5, 10),
         endDate: new Date(2024, 5, 17),
         participants: [{ id: '1', name: 'Juan' }, { id: '2', name: 'María' }],
@@ -108,7 +131,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         id: '2',
         name: 'Viaje a Japón',
         description: 'Exploración de cultura ancestral y tecnología moderna en Tokio y Kioto. Duracion: 14 dias',
-        image: 'images/japan.jpg',
+        imageUrl: 'images/japan.jpg',
         startDate: new Date(2024, 7, 1),
         endDate: new Date(2024, 7, 15),
         participants: [{ id: '1', name: 'Juan' }, { id: '3', name: 'Carlos' }, { id: '4', name: 'Ana' }],
@@ -119,7 +142,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         id: '3',
         name: 'Viaje a Nueva York',
         description: 'La ciudad que nunca duerme: Broadway, Central Park y compras en 5ta Avenida. Duracion: 5 dias',
-        image: 'images/newyork.jpg',
+        imageUrl: 'images/newyork.jpg',
         startDate: new Date(2024, 3, 15),
         endDate: new Date(2024, 3, 20),
         participants: [{ id: '1', name: 'Juan' }],

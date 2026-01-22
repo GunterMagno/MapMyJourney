@@ -55,14 +55,16 @@ export class DateFormatService {
   /**
    * Extrae el día y mes formateados para mostrar en selector compacto
    * @param dateString ISO string o date
-   * @returns { day: number, month: string (3 letras) }
+   * @returns { day: number, month: string (3 letras), dayName: string (día de la semana) }
    */
-  getDateParts(dateString: string | Date): { day: number; month: string } {
+  getDateParts(dateString: string | Date): { day: number; month: string; dayName: string } {
     const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
     const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
     return {
       day: date.getDate(),
-      month: months[date.getMonth()]
+      month: months[date.getMonth()],
+      dayName: dayNames[date.getDay()]
     };
   }
 

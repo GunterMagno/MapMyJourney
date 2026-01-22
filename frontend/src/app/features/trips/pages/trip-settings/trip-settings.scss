@@ -152,6 +152,11 @@
     margin-top: 4px;
   }
 
+  &__hint {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
   &__dates-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

@@ -25,6 +25,7 @@ export class AddExpenseModalComponent implements OnInit {
   @Input() tripEndDate: string = '';
   @Input() preselectedDate: string = ''; // Fecha preseleccionada para el gasto
   @Output() close = new EventEmitter<void>();
+  @Output() expenseAdded = new EventEmitter<any>();
 
   private readonly fb = inject(FormBuilder);
   private readonly expenseStore = inject(ExpenseStore);
@@ -193,6 +194,7 @@ export class AddExpenseModalComponent implements OnInit {
       next: () => {
         this.loading = false;
         this.error = null;
+        this.expenseAdded.emit(formValue);
         this.closeModal();
       },
       error: (err: any) => {

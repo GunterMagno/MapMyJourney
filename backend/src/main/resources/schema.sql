@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS trips (
     title VARCHAR(20) NOT NULL,
     destination VARCHAR(20) NOT NULL,
     description TEXT,
+    image_url TEXT,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     budget DECIMAL(10,2) NOT NULL,

@@ -56,45 +56,42 @@
   </article>
 
   <!-- SECCIÓN 2: CARRUSEL DE DÍAS CON GASTOS -->
-  <div class="days-carousel-container">
-    <div class="carousel-wrapper">
+  <nav class="days-selector">
+    <div class="days-selector__list">
       @if (tripDateRange().length > 0) {
-        @for (date of tripDateRange(); track date; let i = $index) {
+        @for (date of tripDateRange(); let i = $index; track date) {
           <button 
             class="day-card"
             [class.selected]="selectedDate() === date"
-            [style.background-color]="getDayColor(date)"
             (click)="selectDate(date)"
             [attr.aria-pressed]="selectedDate() === date"
             [attr.aria-label]="'Día ' + formatDateForSelector(date).day + ', gastos: ' + (getTotalForDate(date) | number: '1.2-2') + ' €'">
-            <div class="day-number">{{ formatDateForSelector(date).day }}</div>
-            <div class="day-month">{{ formatDateForSelector(date).month }}</div>
-            <div class="day-label">Día {{ i + 1 }}</div>
-            <div class="day-total">{{ getTotalForDate(date) | number: '1.2-2' }}€</div>
+            <span class="day-card__day-name">{{ formatDateForSelector(date).dayName }}</span>
+            <span class="day-card__number">{{ formatDateForSelector(date).day }}</span>
+            <span class="day-card__month">{{ formatDateForSelector(date).month }}</span>
           </button>
         }
       } @else {
         <p class="no-dates-message">No hay días disponibles</p>
       }
     </div>
-  </div>
-
+  </nav>
 
   <!-- SECCIÓN 3: DETALLE DE GASTOS DEL DÍA SELECCIONADO -->
   <section class="daily-expenses-detail">
     <div class="detail-header">
-      <h2 class="detail-title">
-        Día – <span class="date-highlight">{{ formatDateComplete(selectedDate()) }}</span>
-      </h2>
-      <div class="header-right">
-        <span class="daily-total">Total: {{ totalForSelectedDate() | number: '1.2-2' }} €</span>
-        <button 
-          class="btn-add-day-expense" 
-          (click)="openAddExpenseModalForDate(selectedDate())"
-          aria-label="Añadir gasto para este día">
-          Añadir +
-        </button>
+      <div class="header-left">
+        <h2 class="detail-title">
+          Día - <span class="date-highlight">{{ formatDateComplete(selectedDate()) }}</span>
+        </h2>
+        <span class="daily-total-badge">{{ totalForSelectedDate() | number: '1.2-2' }} €</span>
       </div>
+      <button 
+        class="btn-add-day-expense-brutalist" 
+        (click)="openAddExpenseModalForDate(selectedDate())"
+        aria-label="Añadir gasto para este día">
+        Añadir <span class="icon">➕</span>
+      </button>
     </div>
 
     <!-- Tabla de gastos -->
@@ -177,7 +174,8 @@
       [tripStartDate]="tripDateBounds().start"
       [tripEndDate]="tripDateBounds().end"
       [preselectedDate]="preselectedDate()"
-      (close)="closeAddExpenseModal()">
+      (close)="closeAddExpenseModal()"
+      (expenseAdded)="onExpenseAdded($event)">
     </app-add-expense-modal>
   }
 </div>

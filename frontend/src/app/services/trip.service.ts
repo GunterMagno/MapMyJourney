@@ -6,6 +6,7 @@ export interface TripFormData {
   title: string;
   destination: string;
   description?: string;
+  imageUrl?: string;
   startDate: string;
   endDate: string;
   budget?: number;

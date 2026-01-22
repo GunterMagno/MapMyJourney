@@ -14,6 +14,7 @@ export interface Trip {
   description: string;
   budget: number;
   currency?: string;
+  imageUrl?: string;
   image?: string;
   createdAt?: string;
 }

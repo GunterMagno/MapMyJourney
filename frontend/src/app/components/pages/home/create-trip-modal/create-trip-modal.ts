@@ -35,6 +35,7 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private dateFormatService = inject(DateFormatService);
   private communicationService = inject(CommunicationService);
+  private readonly availableImages = ['/images/paris.jpg', '/images/japan.jpg', '/images/newyork.jpg'];
 
   tripForm: TripFormDataLocal = {
     title: '',
@@ -98,6 +99,7 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
         title: this.tripForm.title,
         destination: this.tripForm.destination,
         description: this.tripForm.description || undefined,
+        imageUrl: this.getRandomImage(),
         startDate: this.tripForm.startDate,
         endDate: this.tripForm.endDate,
         budget: budgetNumber
@@ -135,6 +137,10 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
     };
     this.dateError = '';
     this.budgetError = '';
+  }
+
+  private getRandomImage(): string {
+    return this.availableImages[Math.floor(Math.random() * this.availableImages.length)];
   }
 
   openModal(): void {

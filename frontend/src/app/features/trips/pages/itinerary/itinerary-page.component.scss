@@ -183,7 +183,7 @@ qq * FASE 5: Drag & Drop Itinerary with Modern Travel Design
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  color: var(--text-main);
+  color: var(--text-inverse);
   transition: all 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   text-align: center;
@@ -296,8 +296,8 @@ qq * FASE 5: Drag & Drop Itinerary with Modern Travel Design
   width: auto;
   height: 36px;
   border-radius: 8px;
-  background-color: #EF476F;
-  color: var(--text-main);
+  background-color: var(--principal-color);
+  color: var(--text-inverse);
   border: none;
   font-size: 0.8125rem;
   font-weight: 600;

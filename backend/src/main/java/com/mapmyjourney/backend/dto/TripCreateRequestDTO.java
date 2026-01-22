@@ -27,6 +27,10 @@ public class TripCreateRequestDTO {
     @JsonProperty("description")
     private String description;
 
+    @Size(max = 2048)
+    @JsonProperty("imageUrl")
+    private String imageUrl;
+
     @NotNull(message = "La fecha de inicio es obligatoria")
     @JsonProperty("startDate")
     private LocalDate startDate;
@@ -48,6 +52,17 @@ public class TripCreateRequestDTO {
         this.title = title;
         this.destination = destination;
         this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.budget = budget;
+    }
+
+    public TripCreateRequestDTO(String title, String destination, String description, String imageUrl,
+                               LocalDate startDate, LocalDate endDate, BigDecimal budget) {
+        this.title = title;
+        this.destination = destination;
+        this.description = description;
+        this.imageUrl = imageUrl;
         this.startDate = startDate;
         this.endDate = endDate;
         this.budget = budget;
@@ -76,7 +91,15 @@ public class TripCreateRequestDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public LocalDate getStartDate() {
         return startDate;
     }

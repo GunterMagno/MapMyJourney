@@ -142,6 +142,14 @@
     white-space: nowrap;
   }
 
+  &__hint {
+    font-family: var(--font-tertiary);
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    margin-top: var(--spacing-1);
+    display: block;
+  }
+
   &__date-input,
   &__budget-input {
     position: relative;

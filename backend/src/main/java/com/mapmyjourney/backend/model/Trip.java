@@ -47,6 +47,10 @@ public class Trip {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Size(max = 2048, message = "La URL de la imagen no puede superar 2048 caracteres")
+    @Column(columnDefinition = "TEXT")
+    private String imageUrl;
+
     @NotNull(message = "La fecha de inicio es obligatoria")
     @Column(nullable = false)
     private LocalDate startDate;

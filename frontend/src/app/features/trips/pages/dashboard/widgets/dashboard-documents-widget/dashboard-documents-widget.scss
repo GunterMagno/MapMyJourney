@@ -1,5 +1,7 @@
 .documents-widget {
-  background-color: var(--bg-surface);
+  background-color: var(--tertiary-color-disabled);
+  border: 4px solid;
+  border-color: var(--tertiary-color);
   border-radius: 12px;
   padding: var(--spacing-6);
   height: 100%;

@@ -49,6 +49,7 @@ public class TripService {
         trip.setTitle(request.getTitle());
         trip.setDestination(request.getDestination());
         trip.setDescription(request.getDescription());
+        trip.setImageUrl(request.getImageUrl());
         trip.setStartDate(request.getStartDate());
         trip.setEndDate(request.getEndDate());
         // El presupuesto ahora es obligatorio (validado en DTO)
@@ -189,6 +190,7 @@ public class TripService {
         trip.setTitle(request.getTitle());
         trip.setDestination(request.getDestination());
         trip.setDescription(request.getDescription());
+        trip.setImageUrl(request.getImageUrl());
         trip.setStartDate(request.getStartDate());
         trip.setEndDate(request.getEndDate());
         // El presupuesto ahora es obligatorio (validado en DTO)
@@ -236,6 +238,7 @@ public class TripService {
         dto.setTitle(trip.getTitle());
         dto.setDestination(trip.getDestination());
         dto.setDescription(trip.getDescription());
+        dto.setImageUrl(trip.getImageUrl());
         dto.setStartDate(trip.getStartDate());
         dto.setEndDate(trip.getEndDate());
         dto.setBudget(trip.getBudget());

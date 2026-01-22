@@ -308,7 +308,7 @@ export class ExpensesComponent implements OnInit {
   /**
    * Formatea fecha para mostrar en formato DD-MM-YYYY
    */
-  formatDateForSelector(dateStr: string): { day: number; month: string } {
+  formatDateForSelector(dateStr: string): { day: number; month: string; dayName: string } {
     return this.dateFormatService.getDateParts(dateStr);
   }
 
@@ -417,6 +417,14 @@ export class ExpensesComponent implements OnInit {
   openAddExpenseModalForDate(date: string): void {
     this.preselectedDate.set(date);
     this.showAddExpenseModal.set(true);
+  }
+
+  /**
+   * Manejador cuando se crea un gasto exitosamente
+   */
+  onExpenseAdded(expense: any): void {
+    // El gasto ya fue guardado por el store
+    // Solo cerramos el modal (que se cierra automáticamente por el evento close)
   }
 
   /**

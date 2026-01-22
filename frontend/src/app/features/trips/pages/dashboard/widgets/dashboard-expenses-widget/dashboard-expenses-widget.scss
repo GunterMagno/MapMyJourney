@@ -1,5 +1,7 @@
 .expenses-widget {
-  background-color: var(--bg-surface);
+  background-color: var(--principal-color-disabled);
+  border: 4px solid;
+  border-color: var(--principal-color);
   border-radius: 12px;
   padding: var(--spacing-6);
   height: 100%;

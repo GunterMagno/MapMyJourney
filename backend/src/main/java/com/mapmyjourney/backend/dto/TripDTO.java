@@ -28,6 +28,8 @@ public class TripDTO {
 
     private String description;
 
+    private String imageUrl;
+
     private LocalDate startDate;
 
     private LocalDate endDate;
