@@ -216,7 +216,7 @@
 
 .btn-primary {
   background: var(--principal-color);
-  color: white;
+  color: var(--text-main);
 
   &:hover:not(:disabled) {
     background: rgba(255, 107, 107, 0.9);

@@ -103,7 +103,8 @@
     color: var(--text-inverse);
 
     &:hover:not(:disabled) {
-      background-color: #c42b14;
+      background-color: var(--error-color);
+      filter: brightness(0.85);
       box-shadow: var(--shadow-md);
       transform: translateY(-2px);
     }

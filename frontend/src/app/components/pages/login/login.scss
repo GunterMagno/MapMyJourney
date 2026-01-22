@@ -38,12 +38,12 @@
 }
 
 .login-page input {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
+  background-color: var(--bg-hover) !important;
+  color: var(--text-main) !important;
 }
 
 .login-page input::placeholder {
-  color: #999999 !important;
+  color: var(--text-secondary) !important;
 }
 
 @keyframes slideUp {
@@ -84,7 +84,7 @@
     var(--quinary-color) 0%,
     var(--quaternary-color) 100%
   );
-  color: white;
+  color: var(--text-main);
 }
 
 .login-page__logo-container {
@@ -98,14 +98,14 @@
   font-size: var(--font-size-tittle-h1);
   font-weight: var(--font-weight-bold);
   font-family: var(--font-primary);
-  color: white;
+  color: var(--text-main);
   line-height: var(--line-height-tight);
 }
 
 .login-page__logo-subtitle {
   margin: 0;
   font-size: var(--font-size-medium);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-main);
   font-family: var(--font-tertiary);
 }
 
@@ -119,7 +119,7 @@
   margin: 0;
   font-size: var(--font-size-tittle-h3);
   font-weight: var(--font-weight-bold);
-  color: white;
+  color: var(--text-main);
   font-family: var(--font-primary);
 }
 
@@ -127,7 +127,7 @@
   margin: 0;
   font-size: var(--font-size-medium);
   line-height: var(--line-height-relaxed);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-main);
 }
 
 .login-page__features {
@@ -144,7 +144,7 @@
   align-items: center;
   gap: var(--spacing-3);
   font-size: var(--font-size-medium);
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-main);
 }
 
 .login-page__feature-icon {
@@ -154,7 +154,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--bg-surface);
   font-weight: var(--font-weight-bold);
   flex-shrink: 0;
 }

@@ -153,7 +153,7 @@
 
   &.trip-detail__nav-link--active {
     background-color: var(--principal-color);
-    color: white;
+    color: var(--text-main);
     font-weight: var(--font-weight-semibold);
   }
 }
@@ -237,7 +237,7 @@
   height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--principal-color), var(--secondary-color));
-  color: white;
+  color: var(--text-main);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
   flex-shrink: 0;

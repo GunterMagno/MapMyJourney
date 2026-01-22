@@ -17,7 +17,7 @@
 // SECCIÓN 1: RESUMEN DE GASTOS DEL VIAJE
 // ============================================================================
 .expenses-summary-card {
-  background-color: #ffc0e0; // Light pink
+  background-color: var(--bg-surface);
   border-radius: 24px;
   padding: 2rem;
   display: flex;
@@ -41,7 +41,7 @@
 
     .summary-label {
       font-size: 0.95rem;
-      color: #666;
+      color: var(--text-secondary);
       margin: 0.5rem 0 0 0;
       font-weight: 500;
     }
@@ -49,7 +49,7 @@
     .budget-info {
       margin-top: 1.5rem;
       padding-top: 1.5rem;
-      border-top: 2px solid rgba(0, 0, 0, 0.1);
+      border-top: 2px solid var(--border-color);
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
@@ -67,17 +67,17 @@
 
         .budget-value {
           font-weight: 700;
-          color: #5dd9c1;
+          color: var(--quinary-color);
           font-size: 1.1rem;
         }
 
         .budget-remaining {
           font-weight: 700;
-          color: #4bc9b2;
+          color: var(--quinary-color-hover);
           font-size: 1.1rem;
 
           &.over-budget {
-            color: #ff6b6b;
+            color: var(--text-danger);
           }
         }
       }
@@ -85,14 +85,14 @@
       .budget-bar {
         width: 100%;
         height: 8px;
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: var(--bg-hover);
         border-radius: 4px;
         overflow: hidden;
         margin: 0.5rem 0;
 
         .budget-used {
           height: 100%;
-          background: linear-gradient(90deg, #5dd9c1, #4bc9b2);
+          background: linear-gradient(90deg, var(--quinary-color), var(--quinary-color-hover));
           border-radius: 4px;
           transition: width 0.3s ease;
         }
@@ -100,7 +100,7 @@
 
       .budget-percentage {
         font-size: 0.85rem;
-        color: #999;
+        color: var(--text-secondary);
         margin: 0;
         text-align: center;
         font-weight: 500;
@@ -118,12 +118,7 @@
       justify-content: space-between;
       align-items: flex-start;
       padding: 0.75rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-
-      &:last-child {
-        border-bottom: none;
-      }
-
+        border-bottom: 1px solid var(--border-color);
       .item-left {
         flex: 1;
 
@@ -136,14 +131,14 @@
 
         .expense-subtitle {
           font-size: 0.8rem;
-          color: #999;
+          color: var(--text-secondary);
           margin: 0 0 0.15rem 0;
           font-weight: 500;
         }
 
         .expense-date {
           font-size: 0.75rem;
-          color: #bbb;
+          color: var(--text-secondary);
           margin: 0;
         }
       }
@@ -161,7 +156,7 @@
 
     .no-expenses-text {
       text-align: center;
-      color: #999;
+      color: var(--text-secondary);
       font-size: 0.9rem;
       margin: 1rem 0;
     }
@@ -173,8 +168,8 @@
     width: 100%;
 
     .btn-add-expense-pill {
-      background-color: #5dd9c1; // Turquoise/teal green
-      color: #333;
+      background-color: var(--quinary-color);
+      color: var(--text-main);
       border: none;
       padding: 0.75rem 2.5rem;
       border-radius: 50px;
@@ -185,7 +180,7 @@
       box-shadow: 0 2px 8px rgba(93, 217, 193, 0.3);
 
       &:hover {
-        background-color: #4bc9b2;
+        background-color: var(--quinary-color-hover);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(93, 217, 193, 0.4);
       }
@@ -201,10 +196,10 @@
 // SECCIÓN 2: CARRUSEL DE DÍAS
 // ============================================================================
 .days-carousel-container {
-  background-color: #f5e8d8; // Beige/cream
+  background-color: var(--bg-surface);
   border-radius: 20px;
   padding: 1.5rem;
-  border: 3px solid #ffc0e0; // Pink border
+  border: 3px solid var(--border-color);
   display: flex;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -236,7 +231,7 @@
       flex-shrink: 0;
       width: 120px;
       padding: 1.5rem 1rem;
-      background-color: #fff9f3;
+      background-color: var(--bg-hover);
       border: 3px solid transparent;
       border-radius: 16px;
       text-align: center;
@@ -248,7 +243,7 @@
       align-items: center;
       gap: 0.4rem;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      color: white;
+      color: var(--text-main);
       font-weight: 600;
 
       &:hover {
@@ -292,7 +287,7 @@
     }
 
     .no-dates-message {
-      color: #999;
+      color: var(--text-secondary);
       font-size: 0.9rem;
       padding: 1rem;
     }
@@ -303,7 +298,7 @@
 // SECCIÓN 3: DETALLE DE GASTOS DEL DÍA
 // ============================================================================
 .daily-expenses-detail {
-  background-color: #fffacd; // Light yellow
+  background-color: var(--bg-surface);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -315,7 +310,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 1rem;
     flex-wrap: wrap;
     gap: 1rem;
@@ -345,8 +340,8 @@
       }
 
       .btn-add-day-expense {
-        background-color: #5dd9c1;
-        color: #333;
+        background-color: var(--quinary-color);
+        color: var(--text-main);
         border: none;
         padding: 0.5rem 1.5rem;
         border-radius: 50px;
@@ -356,7 +351,7 @@
         transition: all 0.3s ease;
 
         &:hover {
-          background-color: #4bc9b2;
+          background-color: var(--quinary-color-hover);
           transform: translateY(-2px);
         }
 
@@ -400,17 +395,17 @@
       grid-template-columns: 1.5fr 1fr 1.5fr 2fr 1.5fr;
       gap: 1rem;
       padding: 1.25rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      border-bottom: 1px solid var(--border-color);
       align-items: center;
       transition: background-color 0.2s ease;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.03);
+        background-color: var(--bg-hover);
       }
 
       &.paid {
-        border-left: 4px solid #5dd9c1;
-        background-color: rgba(93, 217, 193, 0.05);
+        border-left: 4px solid var(--quinary-color);
+        background-color: var(--bg-hover);
       }
 
       &:last-child {
@@ -437,7 +432,7 @@
           height: 32px;
           border-radius: 6px;
           object-fit: cover;
-          border: 2px solid rgba(0, 0, 0, 0.1);
+          border: 2px solid var(--border-color);
         }
 
         .payer-name {
@@ -449,7 +444,7 @@
 
       .col-split {
         font-size: 0.85rem;
-        color: #666;
+        color: var(--text-secondary);
       }
 
       .col-actions {
@@ -457,8 +452,8 @@
         gap: 0.75rem;
 
         .btn-details-green {
-          background-color: #5dd9c1;
-          color: white;
+          background-color: var(--quinary-color);
+          color: var(--text-main);
           border: none;
           padding: 0.5rem 1rem;
           border-radius: 6px;
@@ -468,7 +463,7 @@
           transition: all 0.3s ease;
 
           &:hover {
-            background-color: #4bc9b2;
+            background-color: var(--quinary-color-hover);
             transform: translateY(-1px);
             box-shadow: 0 2px 6px rgba(93, 217, 193, 0.3);
           }
@@ -479,8 +474,8 @@
         }
 
         .btn-delete-pink {
-          background-color: #ff69b4;
-          color: white;
+          background-color: var(--text-danger);
+          color: var(--text-main);
           border: none;
           padding: 0.5rem 1rem;
           border-radius: 6px;
@@ -497,9 +492,10 @@
           }
 
           &:hover {
-            background-color: #ff1493;
+            background-color: var(--text-danger);
+            filter: brightness(0.8);
             transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(255, 105, 180, 0.3);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
           }
 
           &:active {
@@ -513,7 +509,7 @@
   .empty-state {
     text-align: center;
     padding: 3rem 1rem;
-    color: #999;
+    color: var(--text-secondary);
     font-size: 1rem;
 
     p {
@@ -526,7 +522,7 @@
 // SECCIÓN 4: PAGOS PENDIENTES
 // ============================================================================
 .pending-payments-card {
-  background-color: #ffc0e0; // Light pink
+  background-color: var(--bg-surface);
   border-radius: 24px;
   padding: 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -541,7 +537,7 @@
     margin: 0 0 1.5rem 0;
     text-align: center;
     padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+    border-bottom: 2px solid var(--border-color);
   }
 
   .payments-list {
@@ -554,7 +550,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 1rem;
-      background-color: white;
+      background-color: var(--bg-hover);
       border-radius: 12px;
       gap: 1rem;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -573,8 +569,8 @@
       }
 
       .btn-pay-pill {
-        background-color: #5dd9c1;
-        color: #333;
+        background-color: var(--quinary-color);
+        color: var(--text-main);
         border: none;
         padding: 0.6rem 1.8rem;
         border-radius: 50px;
@@ -587,7 +583,7 @@
         box-shadow: 0 2px 6px rgba(93, 217, 193, 0.2);
 
         &:hover {
-          background-color: #4bc9b2;
+          background-color: var(--quinary-color-hover);
           transform: translateY(-2px);
           box-shadow: 0 4px 10px rgba(93, 217, 193, 0.3);
         }
@@ -647,7 +643,7 @@
       }
 
       .table-row {
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--border-color);
         border-radius: 8px;
         margin-bottom: 1rem;
 

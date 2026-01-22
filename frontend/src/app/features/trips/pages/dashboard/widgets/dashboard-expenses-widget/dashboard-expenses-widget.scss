@@ -1,5 +1,5 @@
 .expenses-widget {
-  background-color: #FFE0E6;
+  background-color: var(--bg-surface);
   border-radius: 12px;
   padding: var(--spacing-6);
   height: 100%;
@@ -22,7 +22,7 @@
   }
 
   &__summary {
-    background-color: white;
+    background-color: var(--bg-hover);
     border-radius: 8px;
     padding: var(--spacing-4);
     margin-bottom: var(--spacing-4);
@@ -69,7 +69,7 @@
 
   &__progress-bar {
     height: 20px;
-    background-color: #e0e0e0;
+    background-color: var(--border-color);
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: var(--spacing-2);
@@ -114,7 +114,7 @@
   }
 
   &__item {
-    background-color: white;
+    background-color: var(--bg-hover);
     border-radius: 8px;
     padding: var(--spacing-3);
     margin-bottom: var(--spacing-2);

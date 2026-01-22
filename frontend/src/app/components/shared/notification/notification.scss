@@ -9,7 +9,7 @@
   padding: var(--spacing-4) var(--spacing-6);
   border-radius: var(--border-radius-small);
   box-shadow: var(--shadow-lg);
-  background-color: white;
+  background-color: var(--bg-surface);
   color: var(--text-color);
   z-index: 9999;
   min-width: 300px;
@@ -92,45 +92,45 @@
 
   // Tipos
   &--success {
-    background-color: var(--correct-color);
-    color: white;
+    background-color: rgba(102, 221, 51, 0.15);
+    color: var(--correct-color);
     border-left: var(--border-thick) solid #6ba538;
 
     .notification__icon {
-      color: white;
+      color: var(--text-main);
       font-weight: var(--font-weight-bold);
     }
   }
 
   &--error {
-    background-color: var(--error-color);
-    color: white;
+    background-color: rgba(255, 107, 91, 0.15);
+    color: var(--quaternary-color);
     border-left: var(--border-thick) solid #b8280d;
 
     .notification__icon {
-      color: white;
+      color: var(--text-main);
       font-weight: var(--font-weight-bold);
     }
   }
 
   &--warning {
-    background-color: var(--secondary-color);
-    color: white;
+    background-color: rgba(160, 101, 68, 0.15);
+    color: var(--secondary-color);
     border-left: var(--border-thick) solid #d45f2d;
 
     .notification__icon {
-      color: white;
+      color: var(--text-main);
       font-weight: var(--font-weight-bold);
     }
   }
 
   &--info {
-    background-color: var(--quinary-color);
-    color: white;
+    background-color: rgba(44, 143, 163, 0.15);
+    color: var(--quinary-color);
     border-left: var(--border-thick) solid #0c5f7f;
 
     .notification__icon {
-      color: white;
+      color: var(--text-main);
       font-weight: var(--font-weight-bold);
     }
   }

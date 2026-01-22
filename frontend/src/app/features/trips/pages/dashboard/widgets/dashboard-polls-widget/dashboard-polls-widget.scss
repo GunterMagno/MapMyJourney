@@ -1,5 +1,5 @@
 .polls-widget {
-  background-color: #C8F5F0;
+  background-color: var(--bg-surface);
   border-radius: 12px;
   padding: var(--spacing-6);
   height: 100%;
@@ -22,7 +22,7 @@
   }
 
   &__poll {
-    background-color: white;
+    background-color: var(--bg-hover);
     border-radius: 8px;
     padding: var(--spacing-4);
     margin-bottom: var(--spacing-4);
@@ -110,7 +110,7 @@
     gap: var(--spacing-3);
     padding: var(--spacing-3) var(--spacing-6);
     background-color: var(--quaternary-color);
-    color: white;
+    color: var(--text-main);
     border: none;
     border-radius: 8px;
     font-size: 0.9375rem;

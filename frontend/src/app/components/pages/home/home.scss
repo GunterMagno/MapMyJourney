@@ -12,9 +12,9 @@
 
   &__link {
     font-family: var(--font-tertiary);
-    font-size: 14px;
+    font-size: 20px;
     font-weight: var(--font-weight-medium);
-    color: var(--quinary-color-hover);
+    color: var(--text-main);
     background: none;
     border: none;
     cursor: pointer;
@@ -64,19 +64,7 @@
   justify-content: center;
   padding: var(--spacing-16) var(--spacing-8);
   overflow: hidden;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--principal-color),
-    var(--principal-color) 100px,
-    var(--secondary-color) 100px,
-    var(--secondary-color) 200px,
-    var(--tertiary-color) 200px,
-    var(--tertiary-color) 300px,
-    var(--quaternary-color) 300px,
-    var(--quaternary-color) 400px,
-    var(--quinary-color) 400px,
-    var(--quinary-color) 500px
-  );
+  background: repeating-linear-gradient(45deg, var(--principal-color), var(--principal-color) 100px, var(--secondary-color) 100px, var(--secondary-color) 200px, var(--tertiary-color) 200px, var(--tertiary-color) 300px, var(--quaternary-color) 300px, var(--quaternary-color) 400px, var(--quinary-color) 400px, var(--quinary-color) 500px);
   
   // Overlay semi-transparente para suavizar (más transparente para ver mejor los colores)
   &::before {
@@ -86,7 +74,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.4);
     z-index: 1;
   }
   
@@ -117,7 +105,7 @@
     font-family: var(--font-primary);
     font-size: var(--font-size-tittle-h1);
     font-weight: var(--font-weight-bold);
-    color: var(--quinary-color-hover);
+    color: var(--text-main);
     margin-bottom: var(--spacing-6);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     
@@ -129,7 +117,7 @@
   &__description {
     font-family: var(--font-secondary);
     font-size: var(--font-size-tittle-h4);
-    color: var(--quinary-color-hover);
+    color: var(--text-main);
     line-height: var(--line-height-relaxed);
     margin-bottom: var(--spacing-10);
     max-width: 700px;
@@ -182,7 +170,7 @@
   &__text {
     font-family: var(--font-secondary);
     font-size: var(--font-size-tittle-h4);
-    color: var(--quinary-color-hover);
+    color: var(--text-main);
     max-width: 800px;
     margin: 0 auto;
     line-height: var(--line-height-relaxed);
@@ -265,7 +253,7 @@
     font-family: var(--font-primary);
     font-size: var(--font-size-tittle-h3);
     font-weight: var(--font-weight-bold);
-    color: var(--quinary-color-hover);
+    color: var(--text-main);
     margin-bottom: var(--spacing-4);
   }
 
@@ -370,7 +358,7 @@
     font-family: var(--font-primary);
     font-size: var(--font-size-tittle-h4);
     font-weight: var(--font-weight-semibold);
-    color: var(--quinary-color-hover);
+    color: var(--text-main);
     margin: 0;
   }
 
@@ -433,7 +421,7 @@
     font-family: var(--font-primary);
     font-size: var(--font-size-tittle-h2);
     font-weight: var(--font-weight-bold);
-    color: var(--quinary-color-hover);
+    color: var(--text-main);
     margin-bottom: var(--spacing-6);
     
     @media (max-width: 768px) {
@@ -444,7 +432,7 @@
   &__description {
     font-family: var(--font-secondary);
     font-size: var(--font-size-tittle-h4);
-    color: var(--quinary-color-hover);
+    color: var(--text-main);
     line-height: var(--line-height-relaxed);
     max-width: 700px;
     margin: 0 auto var(--spacing-12);

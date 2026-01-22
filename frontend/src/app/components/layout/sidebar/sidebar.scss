@@ -15,7 +15,7 @@
   width: 240px;
   height: 100vh;
   background-color: var(--quinary-color);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
@@ -35,10 +35,10 @@
     right: var(--spacing-3);
     width: 32px;
     height: 32px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--bg-hover);
     border: none;
     border-radius: 6px;
-    color: white;
+    color: var(--text-main);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -47,7 +47,7 @@
     z-index: 10;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: var(--bg-surface);
       transform: scale(1.05);
     }
 
@@ -158,7 +158,7 @@
     align-items: center;
     gap: var(--spacing-3);
     padding: var(--spacing-2) var(--spacing-4);
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-main);
     text-decoration: none;
     position: relative;
     transition: all var(--transition-fast);
@@ -166,13 +166,13 @@
 
     &:hover {
       background-color: var(--quinary-color-hover);
-      color: white;
+      color: var(--text-main);
     }
 
     // Estado activo
     &--active {
       background-color: var(--quinary-color-hover);
-      color: white;
+      color: var(--text-main);
       font-weight: 600;
       border-left-color: var(--principal-color);
     }
@@ -220,7 +220,7 @@
   // ============================================================================
   &__footer {
     padding: var(--spacing-2) var(--spacing-3);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-2);
@@ -233,7 +233,7 @@
     height: 36px;
     border-radius: 8px;
     background-color: var(--principal-color);
-    color: white;
+    color: var(--text-main);
     border: none;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -517,7 +517,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     z-index: 999;
     opacity: 0;
     visibility: hidden;
