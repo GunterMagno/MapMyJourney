@@ -1,5 +1,5 @@
 services:
-  # Backend API - Spring Boot
+  # Backend API - Spring Boot with Docker
   - type: web
     name: mapmyjourney-backend
     runtime: docker
@@ -14,50 +14,19 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:h2:file:/data/mapmyjourney;MODE=MySQL;AUTO_SERVER=TRUE
-      - key: SPRING_DATASOURCE_DRIVERNAME
-        value: org.h2.Driver
-      - key: SPRING_DATASOURCE_USERNAME
-        value: sa
-      - key: SPRING_H2_CONSOLE_ENABLED
-        value: "true"
-      - key: SPRING_JPA_DATABASE_PLATFORM
-        value: org.hibernate.dialect.H2Dialect
     disk:
       name: backend-data
       mountPath: /data
       sizeGB: 1
 
-  # Frontend - Angular SSR
+  # Frontend - Static Site
   - type: web
     name: mapmyjourney-frontend
-    runtime: docker
-    dockerfilePath: ./frontend/Dockerfile
-    dockerContext: ./frontend/
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    publishDirectory: frontend/dist/frontend/browser
     region: frankfurt
     plan: starter
-    buildFilter:
-      paths:
-        - frontend/**
-    envVars:
-      - key: PORT
-        value: 3000
-      - key: API_URL
-        value: https://mapmyjourney-backend.onrender.com
-
-  # Health Check - Mantiene el backend activo
-  - type: web
-    name: mapmyjourney-health-check
-    runtime: docker
-    dockerfilePath: ./health-check/Dockerfile
-    dockerContext: ./health-check/
-    region: frankfurt
-    plan: free
-    envVars:
-      - key: BACKEND_URL
-        value: https://mapmyjourney-backend.onrender.com/api/health
-      - key: CHECK_INTERVAL
-        value: "600"
+    routes:
+      - path: /*
+        destination: /index.html
