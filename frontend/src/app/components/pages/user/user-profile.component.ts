@@ -859,7 +859,7 @@ export class UserProfileComponent implements OnInit, OnDestroy, FormComponent {
           });
           
           this.form.markAsPristine();
-          this.toastService.success('✅ Perfil actualizado exitosamente');
+          this.toastService.success('Perfil actualizado exitosamente');
         },
         error: (error) => {
           this.isSubmitting = false;
