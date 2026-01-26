@@ -42,7 +42,7 @@ services:
     name: mapmyjourney-frontend
     runtime: static
     buildCommand: cd frontend && npm install && NG_APP_API_URL=https://mapmyjourney-backend.onrender.com/api npm run build
-    publishDirectory: frontend/dist/frontend/browser
+    publishDirectory: frontend/dist/frontend
     region: frankfurt
     plan: starter
     routes:
