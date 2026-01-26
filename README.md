@@ -266,4 +266,4 @@ graph TD
 
 ## Estado de los tests
 
-### ✅ - Test Correctos5. Abre un Pull Request
+### ✅ - Test Correctos
