@@ -20,8 +20,11 @@ import java.util.List;
 @Configuration
 public class WebConfig {
 
-    @Value("${spring.web.cors.allowed-origins:http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-4w93.onrender.com}")
+    @Value("${spring.web.cors.allowed-origins:http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-frontend.onrender.com,https://mapmyjourney-4w93.onrender.com,https://mapmyjourney.onrender.com}")
     private String allowedOrigins;
+
+    @Value("${spring.profiles.active:}")
+    private String activeProfiles;
 
     /**
      * Bean de CorsFilter - Ejecuta ANTES que Security Filters
@@ -32,11 +35,18 @@ public class WebConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Permitir orígenes desde la propiedad de ambiente
-        List<String> origins = Arrays.asList(allowedOrigins.split(","));
-        config.setAllowedOrigins(origins);
+        // En ambiente de producción, solo permitir orígenes específicos
+        // En desarrollo, permitir localhost y variantes
+        if (activeProfiles.contains("prod")) {
+            // Ambiente de producción - orígenes específicos
+            List<String> origins = Arrays.asList(allowedOrigins.split(","));
+            config.setAllowedOrigins(origins);
+        } else {
+            // Desarrollo - permitir cualquier origen
+            config.setAllowedOriginPatterns(Arrays.asList("*"));
+        }
         
-        // Permitir todos los métodos
+        // Permitir todos los métodos HTTP
         config.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
         ));
@@ -44,17 +54,17 @@ public class WebConfig {
         // Permitir todos los headers
         config.setAllowedHeaders(Arrays.asList("*"));
         
-        // Permitir credentials
+        // Permitir credentials (cookies, headers de autorización)
         config.setAllowCredentials(true);
         
-        // Exponer headers
+        // Exponer headers necesarios al cliente
         config.setExposedHeaders(Arrays.asList(
             "Authorization",
             "Content-Type",
             "X-Total-Count"
         ));
         
-        // Cache preflight
+        // Cache preflight por 1 hora
         config.setMaxAge(3600L);
         
         // Registrar configuración para todos los paths
