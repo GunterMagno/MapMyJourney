@@ -27,7 +27,7 @@ services:
       - key: SPRING_JPA_DATABASE_PLATFORM
         value: org.hibernate.dialect.PostgreSQLDialect
       - key: SPRING_WEB_CORS_ALLOWED_ORIGINS
-        value: https://mapmyjourney.onrender.com
+        value: https://mapmyjourney-4w93.onrender.com
       - key: SPRING_WEB_CORS_ALLOWED_METHODS
         value: GET,POST,PUT,DELETE,OPTIONS,PATCH
       - key: SPRING_WEB_CORS_ALLOW_CREDENTIALS
@@ -38,7 +38,7 @@ services:
     name: mapmyjourney-frontend
     runtime: static
     rootDir: frontend
-    buildCommand: npm install && NG_APP_API_URL=https://mapmyjourney-backend.onrender.com/api npm run build
+    buildCommand: npm install && npm run build
     publishDirectory: dist/frontend
     region: frankfurt
     plan: starter
