@@ -14,6 +14,24 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+      - key: BACKEND_PORT
+        value: 10000
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:h2:file:/data/mapmyjourney;MODE=MySQL;AUTO_SERVER=TRUE
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.h2.Driver
+      - key: SPRING_DATASOURCE_USERNAME
+        value: sa
+      - key: SPRING_H2_CONSOLE_ENABLED
+        value: "false"
+      - key: SPRING_JPA_DATABASE_PLATFORM
+        value: org.hibernate.dialect.H2Dialect
+      - key: SPRING_WEB_CORS_ALLOWED_ORIGINS
+        value: https://mapmyjourney.onrender.com
+      - key: SPRING_WEB_CORS_ALLOWED_METHODS
+        value: GET,POST,PUT,DELETE,OPTIONS,PATCH
+      - key: SPRING_WEB_CORS_ALLOW_CREDENTIALS
+        value: "true"
     disk:
       name: backend-data
       mountPath: /data
@@ -23,7 +41,7 @@ services:
   - type: web
     name: mapmyjourney-frontend
     runtime: static
-    buildCommand: cd frontend && npm install && npm run build
+    buildCommand: cd frontend && npm install && NG_APP_API_URL=https://mapmyjourney-backend.onrender.com/api npm run build
     publishDirectory: frontend/dist/frontend/browser
     region: frankfurt
     plan: starter
