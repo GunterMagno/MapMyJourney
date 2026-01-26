@@ -266,5 +266,4 @@ graph TD
 
 ## Estado de los tests
 
-### ✅ - Test Correctos4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+### ✅ - Test Correctos5. Abre un Pull Request
