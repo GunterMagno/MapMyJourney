@@ -5,6 +5,7 @@
   margin-top: auto;
   box-sizing: border-box;
   transition: var(--theme-transition);
+  border-top: 5px solid var(--quinary-color-hover);
 
   &__container {
     display: grid;
