@@ -41,7 +41,7 @@ services:
   - type: web
     name: mapmyjourney-frontend
     runtime: static
-    buildCommand: cd frontend && npm install --legacy-peer-deps && NG_APP_API_URL=https://mapmyjourney-backend.onrender.com/api npm run build
+    buildCommand: cd frontend && npm install && NG_APP_API_URL=https://mapmyjourney-backend.onrender.com/api npm run build
     publishDirectory: frontend/dist/frontend/browser
     region: frankfurt
     plan: starter
