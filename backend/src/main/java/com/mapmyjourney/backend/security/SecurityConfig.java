@@ -1,6 +1,7 @@
 package com.mapmyjourney.backend.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +26,7 @@ import java.util.Arrays;
  * Configuración de Spring Security con JWT y CORS.
  * - Define rutas públicas (/register, /login, Swagger)
  * - Protege endpoints privados que requieren autenticación
- * - Configura CORS para Angular Frontend (localhost:4200)
+ * - Configura CORS para Angular Frontend (localhost:4200 y dominios Render)
  * - Integra JwtAuthenticationFilter
  */
 @Configuration
@@ -36,6 +37,9 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    
+    @Value("${spring.web.cors.allowed-origins:https://mapmyjourney-4w93.onrender.com,http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-frontend.onrender.com,https://mapmyjourney.onrender.com}")
+    private String allowedOrigins;
 
     /**
      * Configura la cadena de filtros de seguridad HTTP.
@@ -71,43 +75,28 @@ public class SecurityConfig {
     }
 
     /**
-     * Configura CORS para permitir solicitudes desde el frontend en localhost:4200.
+     * Configura CORS para permitir solicitudes desde el frontend en localhost y dominios Render.
      * Explícitamente permite el preflight (OPTIONS) que es obligatorio para CORS en navegadores.
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Permitir orígenes específicos
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:4200", 
-            "http://localhost:3000",
-            "http://127.0.0.1:4200",
-            "http://127.0.0.1:3000"
-        ));
+        // Permitir orígenes desde la propiedad de configuración
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.replaceAll("\\s", "").split(",")));
         
         // Permitir todos los métodos HTTP incluyendo OPTIONS (preflight)
         configuration.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
         ));
         
-        // Permitir headers específicos
-        configuration.setAllowedHeaders(Arrays.asList(
-            "*",
-            "Content-Type",
-            "Authorization",
-            "X-Requested-With",
-            "Accept",
-            "Origin",
-            "Access-Control-Request-Method",
-            "Access-Control-Request-Headers",
-            "X-App-Client"
-        ));
+        // Permitir todos los headers
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         
         // Permitir credenciales (cookies, tokens)
         configuration.setAllowCredentials(true);
         
-        // Permitir exponerExposeHeaders para el frontend
+        // Exponer headers necesarios para el frontend
         configuration.setExposedHeaders(Arrays.asList(
             "Authorization",
             "Content-Type",
