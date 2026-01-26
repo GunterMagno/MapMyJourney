@@ -22,7 +22,7 @@
 
 | Sección | Descripción | Enlace |
 |---------|-------------|--------|
-| **Web Desplegada** | Sitio web completo desplegado en Render | [MapMyJourney Live]([https://guntermagno.github.io/MapMyJourney/demo](https://mapmyjourney-4w93.onrender.com)) |
+| **Web Desplegada** | Sitio web completo desplegado en Render | [MapMyJourney Live](https://mapmyjourney-4w93.onrender.com) |
 | **Backend API** | Documentación completa de endpoints y arquitectura | [Backend Docs](/docs/backend/Documentacion.md) |
 | **Diseño & CSS** | Arquitectura visual y sistema de diseño | [Guía de Diseño](/docs/design/DOCUMENTACION.md) |
 | **Javadoc API** | Documentación automática del código Java | [API Documentation](https://guntermagno.github.io/MapMyJourney/api-docs) |
