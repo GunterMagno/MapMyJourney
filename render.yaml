@@ -48,4 +48,3 @@ databases:
   - name: mapmyjourney-db
     plan: starter
     ipAllowList: []
-    postgresVersion: "16"
