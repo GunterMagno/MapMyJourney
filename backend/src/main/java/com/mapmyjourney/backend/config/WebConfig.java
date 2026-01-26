@@ -1,5 +1,6 @@
 package com.mapmyjourney.backend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -8,6 +9,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Configuración Web - CORS Global
@@ -18,6 +20,9 @@ import java.util.Arrays;
 @Configuration
 public class WebConfig {
 
+    @Value("${spring.web.cors.allowed-origins:http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-4w93.onrender.com}")
+    private String allowedOrigins;
+
     /**
      * Bean de CorsFilter - Ejecuta ANTES que Security Filters
      * Esto es crítico para manejar preflight correctamente
@@ -27,13 +32,9 @@ public class WebConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Permitir orígenes específicos
-        config.setAllowedOrigins(Arrays.asList(
-            "http://localhost:4200",
-            "http://localhost:3000",
-            "http://127.0.0.1:4200",
-            "http://127.0.0.1:3000"
-        ));
+        // Permitir orígenes desde la propiedad de ambiente
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        config.setAllowedOrigins(origins);
         
         // Permitir todos los métodos
         config.setAllowedMethods(Arrays.asList(
