@@ -5,7 +5,7 @@ import { Subject, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 interface ServiceStatus {
   name: string;
