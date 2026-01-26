@@ -23,9 +23,6 @@ public class WebConfig {
     @Value("${spring.web.cors.allowed-origins:http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-frontend.onrender.com,https://mapmyjourney-4w93.onrender.com,https://mapmyjourney.onrender.com}")
     private String allowedOrigins;
 
-    @Value("${spring.profiles.active:}")
-    private String activeProfiles;
-
     /**
      * Bean de CorsFilter - Ejecuta ANTES que Security Filters
      * Esto es crítico para manejar preflight correctamente
@@ -35,16 +32,9 @@ public class WebConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // En ambiente de producción, solo permitir orígenes específicos
-        // En desarrollo, permitir localhost y variantes
-        if (activeProfiles.contains("prod")) {
-            // Ambiente de producción - orígenes específicos
-            List<String> origins = Arrays.asList(allowedOrigins.split(","));
-            config.setAllowedOrigins(origins);
-        } else {
-            // Desarrollo - permitir cualquier origen
-            config.setAllowedOriginPatterns(Arrays.asList("*"));
-        }
+        // Permitir orígenes específicos
+        List<String> origins = Arrays.asList(allowedOrigins.split(",\\s*"));
+        config.setAllowedOrigins(origins);
         
         // Permitir todos los métodos HTTP
         config.setAllowedMethods(Arrays.asList(
@@ -70,6 +60,6 @@ public class WebConfig {
         // Registrar configuración para todos los paths
         source.registerCorsConfiguration("/**", config);
         
-        return new CorsFilter(source);
+        return new CorsFilter(config);
     }
 }
