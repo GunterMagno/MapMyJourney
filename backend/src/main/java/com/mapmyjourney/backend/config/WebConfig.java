@@ -20,7 +20,7 @@ import java.util.List;
 @Configuration
 public class WebConfig {
 
-    @Value("${spring.web.cors.allowed-origins:http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-frontend.onrender.com,https://mapmyjourney-4w93.onrender.com,https://mapmyjourney.onrender.com}")
+    @Value("${spring.web.cors.allowed-origins:https://mapmyjourney-4w93.onrender.com,http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-frontend.onrender.com,https://mapmyjourney.onrender.com}")
     private String allowedOrigins;
 
     /**
@@ -32,11 +32,11 @@ public class WebConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Permitir orígenes específicos
-        List<String> origins = Arrays.asList(allowedOrigins.split(",\\s*"));
+        // Permitir orígenes específicos (removiendo espacios en blanco)
+        List<String> origins = Arrays.asList(allowedOrigins.replaceAll("\\s", "").split(","));
         config.setAllowedOrigins(origins);
         
-        // Permitir todos los métodos HTTP
+        // Permitir todos los métodos HTTP incluyendo OPTIONS
         config.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
         ));
@@ -44,7 +44,7 @@ public class WebConfig {
         // Permitir todos los headers
         config.setAllowedHeaders(Arrays.asList("*"));
         
-        // Permitir credentials (cookies, headers de autorización)
+        // IMPORTANTE: Permitir credentials (cookies, headers de autorización)
         config.setAllowCredentials(true);
         
         // Exponer headers necesarios al cliente
@@ -54,7 +54,7 @@ public class WebConfig {
             "X-Total-Count"
         ));
         
-        // Cache preflight por 1 hora
+        // Cache preflight por 1 hora (3600 segundos)
         config.setMaxAge(3600L);
         
         // Registrar configuración para todos los paths

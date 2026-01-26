@@ -34,6 +34,7 @@ public class UserController {
      * POST /api/users/register
      */
     @PostMapping("/register")
+    @CrossOrigin(origins = {"https://mapmyjourney-4w93.onrender.com", "http://localhost:4200", "http://localhost:3000"})
     @Operation(summary = "Registrar nuevo usuario", 
                description = "Crea una nueva cuenta de usuario con nombre, email y contraseña")
     @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente - retorna token JWT")
