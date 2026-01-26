@@ -30,17 +30,11 @@ services:
         fromService:
           name: mapmyjourney-backend
           property: url
-    routes:
-      - path: /*
-        service: mapmyjourney-frontend
-    staticSite: false
     
   # PostgreSQL Database
   - type: pserv
     name: mapmyjourney-db
-    env: postgresql
     plan: starter
-    ipAllowList: []
     envVars:
       - key: POSTGRES_DB
         value: mapmyjourney
@@ -50,5 +44,3 @@ services:
 databases:
   - name: mapmyjourney-db
     plan: starter
-    ipAllowList: []
-    postgresVersion: "16"
