@@ -17,25 +17,21 @@ services:
       - key: BACKEND_PORT
         value: 10000
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:h2:file:/data/mapmyjourney;MODE=MySQL;AUTO_SERVER=TRUE
+        value: postgresql://mapmyjourney_user:lDB6wKZXDlsZCedguetF1kMJbiMvLEkk@dpg-d5rihfh4tr6s73e3li20-a/mapmyjourney
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-        value: org.h2.Driver
+        value: org.postgresql.Driver
       - key: SPRING_DATASOURCE_USERNAME
-        value: sa
-      - key: SPRING_H2_CONSOLE_ENABLED
-        value: "false"
+        value: mapmyjourney_user
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: lDB6wKZXDlsZCedguetF1kMJbiMvLEkk
       - key: SPRING_JPA_DATABASE_PLATFORM
-        value: org.hibernate.dialect.H2Dialect
+        value: org.hibernate.dialect.PostgreSQLDialect
       - key: SPRING_WEB_CORS_ALLOWED_ORIGINS
         value: https://mapmyjourney.onrender.com
       - key: SPRING_WEB_CORS_ALLOWED_METHODS
         value: GET,POST,PUT,DELETE,OPTIONS,PATCH
       - key: SPRING_WEB_CORS_ALLOW_CREDENTIALS
         value: "true"
-    disk:
-      name: backend-data
-      mountPath: /data
-      sizeGB: 1
 
   # Frontend - Static Site
   - type: web
