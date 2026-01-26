@@ -35,7 +35,7 @@ export class CreateTripModalComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private dateFormatService = inject(DateFormatService);
   private communicationService = inject(CommunicationService);
-  private readonly availableImages = ['/images/paris.jpg', '/images/japan.jpg', '/images/newyork.jpg'];
+  private readonly availableImages = ['/images/paris.webp', '/images/japan.webp', '/images/newyork.webp'];
 
   tripForm: TripFormDataLocal = {
     title: '',

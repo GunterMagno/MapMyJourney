@@ -76,7 +76,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => {
         this.currentUserName = user?.name || null;
-        this.currentUserAvatar = user?.profilePicture || 'assets/profile-picture.png';
+        this.currentUserAvatar = user?.profilePicture || 'assets/profile-picture.webp';
       });
   }
 

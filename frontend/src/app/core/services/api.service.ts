@@ -19,7 +19,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ApiService {
   private http = inject(HttpClient);
-  private readonly baseUrl = environment.apiUrl || 'http://localhost:8080/api';
+  private readonly baseUrl = environment.apiUrl;
 
   /**
    * GET - Obtener datos

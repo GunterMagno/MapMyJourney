@@ -5,6 +5,7 @@ import { Subject, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
+import { environment } from '../../../environments/environment';
 
 interface ServiceStatus {
   name: string;
@@ -22,9 +23,9 @@ interface ServiceStatus {
 export class StatusPageComponent implements OnInit, OnDestroy {
   services: ServiceStatus[] = [
     { name: 'Frontend', status: 'checking', endpoint: window.location.origin },
-    { name: 'Backend - Auth', status: 'checking', endpoint: 'http://localhost:8080/api/health/auth' },
-    { name: 'Backend - Trips', status: 'checking', endpoint: 'http://localhost:8080/api/health/trips' },
-    { name: 'Backend - Users', status: 'checking', endpoint: 'http://localhost:8080/api/health/users' },
+    { name: 'Backend - Auth', status: 'checking', endpoint: `${environment.apiUrl}/health/auth` },
+    { name: 'Backend - Trips', status: 'checking', endpoint: `${environment.apiUrl}/health/trips` },
+    { name: 'Backend - Users', status: 'checking', endpoint: `${environment.apiUrl}/health/users` },
   ];
 
   private destroy$ = new Subject<void>();

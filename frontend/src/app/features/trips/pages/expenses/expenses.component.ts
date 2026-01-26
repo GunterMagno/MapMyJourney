@@ -420,7 +420,7 @@ export class ExpensesComponent implements OnInit {
    * Obtener avatar de participante por ID
    */
   getParticipantAvatar(id: string): string {
-    return this.participants().find(p => p.id === id)?.avatar || 'assets/default-avatar.png';
+    return this.participants().find(p => p.id === id)?.avatar || 'assets/default-avatar.webp';
   }
 
   /**

@@ -34,7 +34,7 @@ class TripService {
       description: 'Una experiencia inolvidable por las calles de Barcelona',
       budget: 1299,
       currency: 'USD',
-      image: 'barcelona.jpg'
+      image: 'barcelona.webp'
     },
     {
       id: '2',
@@ -44,7 +44,7 @@ class TripService {
       description: 'Descubre una de las 7 maravillas del mundo',
       budget: 2199,
       currency: 'USD',
-      image: 'machupicchu.jpg'
+      image: 'machupicchu.webp'
     },
     {
       id: '3',
@@ -54,7 +54,7 @@ class TripService {
       description: 'Observa la fauna silvestre en su hábitat natural',
       budget: 1899,
       currency: 'USD',
-      image: 'safari.jpg'
+      image: 'safari.webp'
     }
   ];
 
