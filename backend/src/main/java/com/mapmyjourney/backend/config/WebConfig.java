@@ -60,6 +60,6 @@ public class WebConfig {
         // Registrar configuración para todos los paths
         source.registerCorsConfiguration("/**", config);
         
-        return new CorsFilter(config);
+        return new CorsFilter(source);
     }
 }
