@@ -2,7 +2,7 @@ services:
   # Backend Service - Spring Boot API
   - type: web
     name: mapmyjourney-backend
-    env: java
+    runtime: java
     buildCommand: cd backend && mvn clean package -DskipTests
     startCommand: cd backend && java -jar target/backend-0.0.1-SNAPSHOT.jar
     envVars:
@@ -19,7 +19,7 @@ services:
   # Frontend Service - Angular SSR
   - type: web
     name: mapmyjourney-frontend
-    env: node
+    runtime: node
     region: oregon
     buildCommand: cd frontend && npm install && npm run build
     startCommand: cd frontend && npm run serve:ssr:frontend
@@ -29,12 +29,15 @@ services:
       - key: API_URL
         fromService:
           name: mapmyjourney-backend
-          property: url
+          property: host
+          type: web
     
   # PostgreSQL Database
   - type: pserv
     name: mapmyjourney-db
+    runtime: postgres
     plan: starter
+    ipAllowList: []
     envVars:
       - key: POSTGRES_DB
         value: mapmyjourney
@@ -44,3 +47,5 @@ services:
 databases:
   - name: mapmyjourney-db
     plan: starter
+    ipAllowList: []
+    postgresVersion: "16"
