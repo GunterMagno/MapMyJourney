@@ -10,7 +10,7 @@ import { FooterComponent } from '../../layout/footer/footer';
 // ✅ FASE 6: Importar stores y modelos
 import { TripStore, ExpenseStore } from '../../../core/store';
 import { Trip, ExpenseWithDetails } from '../../../core/models';
-import { DateFormatService } from '../../../core/services/date-format.service';
+import { DateFormatService, PollingService } from '../../../core/services';
 
 // Interfaces locales para secciones que no son de estado global
 interface Activity {
@@ -84,6 +84,7 @@ export class TripDetailComponent implements OnInit, OnDestroy {
 
   private route = inject(ActivatedRoute);
   private dateFormatService = inject(DateFormatService);
+  private pollingService = inject(PollingService);
   tripStore = inject(TripStore);
   expenseStore = inject(ExpenseStore);
 
@@ -187,6 +188,13 @@ export class TripDetailComponent implements OnInit, OnDestroy {
       
       // Cargar gastos asociados al viaje
       this.expenseStore.loadExpensesByTrip(this.tripId);
+
+      // FASE 6 - REALTIME: Iniciar polling de gastos cada 30 segundos
+      // Solo actualiza si la pestaña está visible
+      this.pollingService.poll(30000, () => {
+        console.debug('[TripDetailComponent] Actualizando gastos (polling)');
+        this.expenseStore.loadExpensesByTrip(this.tripId);
+      });
     } else {
       // Fallback: obtener ID de paramMap (si resolver falla)
       this.tripId = this.route.snapshot.paramMap.get('id') || '';
@@ -194,6 +202,12 @@ export class TripDetailComponent implements OnInit, OnDestroy {
       
       if (this.tripId) {
         this.expenseStore.loadExpensesByTrip(this.tripId);
+
+        // FASE 6 - REALTIME: Iniciar polling (fallback también)
+        this.pollingService.poll(30000, () => {
+          console.debug('[TripDetailComponent] Actualizando gastos (polling - fallback)');
+          this.expenseStore.loadExpensesByTrip(this.tripId);
+        });
       }
     }
 
@@ -205,6 +219,12 @@ export class TripDetailComponent implements OnInit, OnDestroy {
     // Limpieza de IntersectionObserver
     if (this.observer) {
       this.observer.disconnect();
+    }
+
+    // FASE 6 - REALTIME: Detener polling al destruir componente
+    if (this.pollingService.isActive()) {
+      this.pollingService.stop();
+      console.debug('[TripDetailComponent] Polling detenido (componente destruido)');
     }
   }
 
