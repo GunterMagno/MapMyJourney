@@ -22,7 +22,7 @@
  * </ul>
  */
 
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -66,6 +66,30 @@ export class SearchStore {
    */
   error = this._error.asReadonly();
 
+  /**
+   * FASE 6: Computed signal que indica si no hay resultados
+   *
+   * Es true solo si:
+   * - El usuario ha escrito algo (searchTerm no está vacío)
+   * - La búsqueda no está cargando (loading es false)
+   * - El array de resultados está vacío
+   *
+   * Uso en template:
+   * ```html
+   * @if (searchStore.emptyResults()) {
+   *   <p class="search-empty">No se encontraron viajes</p>
+   * }
+   * ```
+   */
+  emptyResults = computed(() => {
+    const term = this._searchTerm();
+    const isLoading = this._loading();
+    const results = this._results();
+
+    // True solo si hay búsqueda, no está cargando y sin resultados
+    return term.trim().length > 0 && !isLoading && results.length === 0;
+  });
+
   // ============================================================================
   // FORM CONTROL PARA INTEGRACIÓN CON INPUT
   // ============================================================================
@@ -93,7 +117,7 @@ export class SearchStore {
 
   /**
    * Buscar viajes por término
-   * Aplica debounce automáticamente
+   * Aplica debounce automáticamente a través del pipeline
    *
    * @param term Término a buscar
    *
@@ -101,10 +125,10 @@ export class SearchStore {
    * this.searchStore.search('París');
    * // Se encolará debounceTime(300) antes de enviar a API
    * // results() se actualiza cuando la API responde
+   * // emptyResults() se actualiza automáticamente
    */
   search(term: string): void {
-    this._searchTerm.set(term);
-    this.searchControl.setValue(term, { emitEvent: false });
+    this.searchControl.setValue(term, { emitEvent: true });
   }
 
   /**
@@ -140,9 +164,13 @@ export class SearchStore {
    * 3. Debounce espera 300ms sin cambios
    * 4. DistinctUntilChanged evita búsquedas duplicadas
    * 5. SwitchMap cancela búsqueda anterior e inicia nueva
-   * 6. API devuelve resultados
+   *    (Automaticamente cancela petición HTTP anterior si hay una pendiente)
+   * 6. API devuelve resultados (o array vacío si término está vacío)
    * 7. Signal _results se actualiza
-   * 8. Componentes reaccionan automáticamente
+   * 8. Componentes reaccionan automáticamente (incluido emptyResults computed)
+   *
+   * FASE 6: El switchMap garantiza que solo la última búsqueda
+   *    tenga efecto, evitando race conditions
    */
   private _setupSearchPipeline(): void {
     this.searchControl.valueChanges
@@ -150,18 +178,24 @@ export class SearchStore {
         debounceTime(300), // Esperar 300ms sin cambios
         distinctUntilChanged(), // Solo si el valor cambió
         switchMap(term => {
+          // Actualizar el signal del término (para emptyResults)
+          this._searchTerm.set(term || '');
+
           if (!term || term.trim().length === 0) {
             // Si vacío, limpiar resultados sin hacer petición
             this._setLoading(false);
-            return of([]);
+            this._setError(null);
+            return of([] as Trip[]);
           }
 
           // Mostrar loading
           this._setLoading(true);
           this._setError(null);
 
+          // FASE 6: Filtrado robusto del backend
           // Nota: Idealmente habría un searchTrips(term) en TripService
           // Por ahora usamos getMyTrips y filtramos localmente
+          // La petición anterior será cancelada automáticamente por switchMap
           return this.tripService.getMyTrips(1, 100).pipe(
             switchMap(response => {
               const filtered = response.items.filter(trip =>
@@ -173,14 +207,21 @@ export class SearchStore {
             catchError(err => {
               this._setError('Error durante la búsqueda');
               console.error('SearchStore error:', err);
-              return of([]);
+              return of([] as Trip[]);
             })
           );
         })
       )
-      .subscribe(results => {
-        this._results.set(results);
-        this._setLoading(false);
+      .subscribe({
+        next: (results) => {
+          this._results.set(results);
+          this._setLoading(false);
+        },
+        error: (err) => {
+          console.error('[SearchStore] Error en pipeline:', err);
+          this._setError('Error inesperado en búsqueda');
+          this._setLoading(false);
+        }
       });
   }
 

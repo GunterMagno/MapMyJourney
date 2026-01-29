@@ -5,6 +5,8 @@
 
 export * from './api.service';
 export * from './auto-save-state.service';
+export * from './date-format.service';
 export * from './expense.service';
+export * from './polling.service';
 export * from './toast.service';
 export * from './trip.service';
