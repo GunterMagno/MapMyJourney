@@ -6,6 +6,7 @@ import { CommonModule as CommonAngularModule } from '@angular/common';
 // Importar componentes
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
+import { GalleryComponent } from '../../shared/gallery/gallery.component';
 
 // ✅ FASE 6: Importar stores y modelos
 import { TripStore, ExpenseStore } from '../../../core/store';
@@ -72,7 +73,7 @@ interface Participant {
 @Component({
   selector: 'app-trip-detail',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, HeaderComponent, FooterComponent, GalleryComponent],
   templateUrl: './trip-detail.html',
   styleUrl: './trip-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush // ✅ OnPush para mejor rendimiento
@@ -98,7 +99,7 @@ export class TripDetailComponent implements OnInit, OnDestroy {
   // ============================================================================
 
   tripId: string = '';
-  activeSection: 'itinerary' | 'voting' | 'documents' | 'expenses' = 'itinerary';
+  activeSection: 'itinerary' | 'gallery' | 'voting' | 'documents' | 'expenses' = 'itinerary';
   mobileMenuOpen: boolean = false;
 
   // Datos lokales

@@ -36,7 +36,8 @@
     --bg-surface: #F8F9FA;
     --bg-elevated: #FFFFFF;
     --text-main: var(--quinary-color-hover);
-    --text-secondary: #6C757D;
+    /* WCAG 2.1 AA: Increased contrast from #6C757D (4.54:1) to #555555 (6.45:1) for better accessibility */
+    --text-secondary: #555555;
     --text-inverse: #FFFFFF;
     --border-color: #DEE2E6;
     --hover-bg: #F1F3F5;
