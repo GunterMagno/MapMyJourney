@@ -1,7 +1,27 @@
 <header class="header" [class.dark-mode-active]="isDarkTheme">
   <section class="header__left">
-    <a routerLink="/">
-      <img src="assets/logo.webp" alt="MapMyJourney-Logo" class="header__logo-img" />
+    <a routerLink="/" class="header__logo-link">
+      <picture>
+        <!-- Para pantallas grandes (Desktop): Carga el logo de alta calidad -->
+        <source 
+          media="(min-width: 1024px)" 
+          srcset="assets/logo.webp">
+        
+        <!-- Para pantallas medianas (Tablet): Carga una versión intermedia -->
+        <source 
+          media="(min-width: 640px)" 
+          srcset="assets/logo.640w.webp">
+
+        <!-- Imagen por defecto (Móvil): Carga la versión más ligera (320w) -->
+        <!-- fetchpriority="high" indica al navegador que es prioridad crítica (LCP) -->
+        <img 
+          src="assets/logo.320w.webp" 
+          alt="MapMyJourney Logo" 
+          class="header__logo-img"
+          width="150"
+          height="50"
+          fetchpriority="high">
+      </picture>
     </a>
   </section>
 
