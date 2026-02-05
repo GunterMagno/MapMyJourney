@@ -1,0 +1,27 @@
+<div class="trip-share">
+    <h1>Compartir Viaje</h1>
+    
+    <!-- Sección de invitación por email -->
+    <div class="invite-section">
+        <h2>Invitar usuario por email</h2>
+        <div class="form-group">
+            <label for="email">Email del usuario a invitar:</label>
+            <div class="input-with-button">
+                <input 
+                    type="email" 
+                    id="email"
+                    [(ngModel)]="emailToInvite"
+                    placeholder="correo@ejemplo.com"
+                    (keyup.enter)="inviteUserByEmail()"
+                    class="email-input">
+                <app-button
+                    label="Invitar"
+                    variant="primary"
+                    size="md"
+                    [disabled]="!emailToInvite || isLoading"
+                    (click)="inviteUserByEmail()">
+                </app-button>
+            </div>
+        </div>
+    </div>
+</div>

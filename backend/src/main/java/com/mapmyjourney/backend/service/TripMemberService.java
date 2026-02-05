@@ -226,4 +226,16 @@ public class TripMemberService {
 
         return dto;
     }
+
+    @Transactional
+    public TripMemberDTO inviteUserByEmail(Long tripId, String email){
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if (!userOptional.isPresent()) {
+            throw new ResourceNotFoundException("Usuario con email " + email + " no encontrado");
+        }
+
+        User user = userOptional.get();
+        return addMemberToTrip(tripId, user.getId(), TripMemberRole.EDITOR);
+    }
 }

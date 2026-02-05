@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntil, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 
 // Importar componentes
 import { HeaderComponent } from '../../layout/header/header';
@@ -78,6 +78,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTrips();
     this.setupFilters();
+    
+    // Recargar viajes cuando el usuario vuelve a esta página
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      // Verificar si estamos en la ruta del dashboard
+      if (this.router.url.includes('/dashboard') || this.router.url === '/') {
+        this.loadTrips();
+      }
+    });
   }
 
   /**

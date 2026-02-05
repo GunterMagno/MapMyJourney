@@ -2,6 +2,8 @@ package com.mapmyjourney.backend.controller;
 
 import com.mapmyjourney.backend.dto.AddMemberRequestDTO;
 import com.mapmyjourney.backend.dto.ChangeMemberRoleRequestDTO;
+
+import com.mapmyjourney.backend.dto.InviteUserRequestDTO;
 import com.mapmyjourney.backend.dto.TripMemberDTO;
 import com.mapmyjourney.backend.service.TripMemberService;
 import com.mapmyjourney.backend.service.UserService;
@@ -161,4 +163,30 @@ public class TripMemberController {
         return userService.getUserIdByEmail(email);
     }
 
+    /**
+     * Invita un usuario a un viaje por su email.
+     * POST /trips/{tripId}/invite
+     */
+    @PreAuthorize("hasRole('USER')")  // Solo usuarios autenticados
+    @PostMapping("/invite")            // Ruta: /trips/{tripId}/invite
+    @Operation(summary = "Invitar usuario por email",
+            description = "Agrega un usuario al viaje buscándolo por su email")
+    @ApiResponse(responseCode = "201", description = "Usuario invitado exitosamente")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    @ApiResponse(responseCode = "400", description = "Email inválido o usuario ya es miembro")
+    public ResponseEntity<TripMemberDTO> inviteUserByEmail(
+            @Parameter(description = "ID del viaje", example = "1")
+            @PathVariable Long tripId,
+            
+            @Valid  // Spring valida automáticamente el DTO
+            @org.springframework.web.bind.annotation.RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Email a invitar")
+            InviteUserRequestDTO request) {
+        
+        // Llamar al servicio
+        TripMemberDTO newMember = tripMemberService.inviteUserByEmail(tripId, request.getEmail());
+        
+        // Retornar 201 (Created) + el miembro creado
+        return ResponseEntity.status(201).body(newMember);
+    }
 }
