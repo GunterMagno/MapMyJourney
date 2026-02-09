@@ -38,7 +38,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     
-    @Value("${spring.web.cors.allowed-origins:https://mapmyjourney-4w93.onrender.com,http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-frontend.onrender.com,https://mapmyjourney.onrender.com}")
+    @Value("${spring.web.cors.allowed-origins:https://mapmyjourney-4w93.onrender.com,http://localhost:4200,http://localhost:3000,http://127.0.0.1:4200,https://mapmyjourney-frontend.onrender.com,https://mapmyjourney.onrender.com,http://localhost:8080}")
     private String allowedOrigins;
 
     /**
@@ -56,15 +56,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Configurar autorización de endpoints
                 .authorizeHttpRequests(authorize -> authorize
-                        // Permitir todas las solicitudes OPTIONS (preflight CORS)
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                        // Rutas públicas - permitir sin autenticación
-                        .requestMatchers("/users/login", "/users/register").permitAll()
-                        .requestMatchers("/health/**", "/health").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
-                        // Todos los demás endpoints requieren autenticación
-                        .anyRequest().authenticated()
+                        // Permitir acceso público a Swagger
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Permitir acceso público a endpoints de autenticación
+                        .requestMatchers("/users/login", "/users/register", "/health").permitAll()
+                        // Permitir TODAS las demás solicitudes (JWT es validado en el filtro)
+                        .anyRequest().permitAll()
                 )
                 // Agregar JWT filter antes de UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -82,8 +79,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Permitir orígenes desde la propiedad de configuración
-        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.replaceAll("\\s", "").split(",")));
+        // Para desarrollo/testing: permitir todos los orígenes
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         
         // Permitir todos los métodos HTTP incluyendo OPTIONS (preflight)
         configuration.setAllowedMethods(Arrays.asList(

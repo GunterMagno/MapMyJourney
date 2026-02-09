@@ -7,13 +7,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN npm run build -- --configuration production --optimization=false
+RUN npm run build -- --configuration development
 
 # List what was built for debugging
 RUN ls -la /app/dist/ || echo "No dist found"
@@ -29,33 +29,35 @@ RUN rm -rf /usr/share/nginx/html/*
 RUN rm /etc/nginx/conf.d/default.conf
 
 # Create custom nginx config for SPA with API proxy
-RUN echo 'server { \
-  listen 4200; \
-  server_name _; \
-  root /usr/share/nginx/html; \
-  index index.html; \
-  \
-  location / { \
-    try_files $uri $uri/ /index.html; \
-  } \
-  \
-  location /api/ { \
-    proxy_pass http://backend:8080/api/; \
-    proxy_http_version 1.1; \
-    proxy_set_header Upgrade $http_upgrade; \
-    proxy_set_header Connection "upgrade"; \
-    proxy_set_header Host $host; \
-    proxy_set_header X-Real-IP $remote_addr; \
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
-    proxy_set_header X-Forwarded-Proto $scheme; \
-    proxy_cache_bypass $http_upgrade; \
-  } \
-  \
-  location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ { \
-    expires 1y; \
-    add_header Cache-Control "public, immutable"; \
-  } \
-}' > /etc/nginx/conf.d/default.conf
+COPY <<EOF /etc/nginx/conf.d/default.conf
+server {
+  listen 4200;
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+    try_files \$uri \$uri/ /index.html;
+  }
+
+  location /api/ {
+    proxy_pass http://backend:8080/api/;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade \$http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host \$host;
+    proxy_set_header X-Real-IP \$remote_addr;
+    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto \$scheme;
+    proxy_cache_bypass \$http_upgrade;
+  }
+
+  location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+  }
+}
+EOF
 
 # Copy built application - Angular outputs to dist/frontend/browser
 COPY --from=builder /app/dist/frontend/browser /usr/share/nginx/html

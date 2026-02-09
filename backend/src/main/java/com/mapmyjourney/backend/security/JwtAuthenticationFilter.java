@@ -27,6 +27,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                    FilterChain filterChain)
             throws ServletException, IOException {
         
+        // Skip JWT processing for public endpoints
+        String requestURI = request.getRequestURI();
+        if (isPublicEndpoint(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         try {
             String jwt = getJwtFromRequest(request);
             
@@ -47,6 +54,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         
         filterChain.doFilter(request, response);
+    }
+    
+    private boolean isPublicEndpoint(String uri) {
+        return uri.contains("/swagger-ui") ||
+               uri.contains("/v3/api-docs") ||
+               uri.contains("/users/login") ||
+               uri.contains("/users/register") ||
+               uri.contains("/health");
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {

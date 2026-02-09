@@ -8,42 +8,68 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
+/**
+ * Proveedor de tokens JWT.
+ * Maneja la generación, validación y extracción de información de tokens JWT.
+ * 
+ * Usa JJWT (Java JWT) para crear tokens seguros con firma HMAC SHA-512.
+ */
 @Component
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
-    private String jwtSecret;
+    private String jwtSecret;  // Clave secreta para firmar tokens (debe tener 256+ caracteres)
 
     @Value("${jwt.expiration}")
-    private long jwtExpirationMs;
+    private long jwtExpirationMs;  // Tiempo de expiración en milisegundos (ej: 86400000 = 24 horas)
 
+    /**
+     * Obtiene la clave de firma HMAC a partir del secreto.
+     * Spring Security requiere claves de al menos 256 bits.
+     * 
+     * @return Key para firmar tokens
+     */
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
     /**
-     * Genera un token JWT a partir de una Authentication.
-     * Usa el nombre de usuario (email) del Authentication.
+     * Genera un token JWT a partir de una Authentication de Spring.
+     * Extrae el email del usuario autenticado como "subject" del token.
+     * 
+     * @param authentication Objeto Authentication de Spring con el usuario logueado
+     * @return Token JWT codificado en Base64
      */
     public String generateToken(Authentication authentication) {
-        String email = authentication.getName();
+        String email = authentication.getName();  // Email es el nombre del usuario
         return generateToken(email);
     }
 
     /**
-     * Genera un token JWT para el email proporcionado.
+     * Genera un token JWT para un email específico.
+     * El token contiene:
+     * - subject: Email del usuario
+     * - issuedAt: Fecha/hora de creación
+     * - expiration: Fecha/hora de expiración
+     * - firma: HMAC SHA-512
+     * 
+     * @param email Email del usuario
+     * @return Token JWT codificado
      */
     public String generateToken(String email) {
         return Jwts.builder()
-                .subject(email)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSigningKey())
-                .compact();
+                .subject(email)  // El email es el "subject" del token
+                .issuedAt(new Date())  // Marca con la fecha/hora actual
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))  // Expira en 24h
+                .signWith(getSigningKey())  // Firma con HMAC SHA-512
+                .compact();  // Serializa a string Base64
     }
 
     /**
-     * Extrae el email del token JWT.
+     * Extrae el email (subject) de un token JWT válido.
+     * 
+     * @param token Token JWT a parsear
+     * @return Email del usuario contenido en el token
      */
     public String extractEmail(String token) {
         return Jwts.parser()

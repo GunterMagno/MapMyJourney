@@ -34,6 +34,8 @@ services:
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
       - SPRING_JPA_HIBERNATE_DDLAUTO=update
       - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - BACKEND_PORT=8080
+      - BACKEND_CONTEXT_PATH=/api
     networks:
       - mapmyjourney-network
     depends_on:
