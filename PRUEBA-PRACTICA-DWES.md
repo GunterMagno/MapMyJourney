@@ -1,7 +1,7 @@
 # Prueba Practica DWES
 
 ## El porque del endpoint
-He creado el endpoint /trips/{tripId}/notes para Listar notas del viaje y /trips/{tripId}/notes para Registrar nueva nota. Son notas especificas de cada viaje, he creado este endpoint para que los integrantes puedan añadir notas importantes en sus viajes, tambien para llevar esto acabo he creado Modelo, DTO's, Repositorio, Servicio y Controlador.
+He creado el endpoint `/trips/{tripId}/notes` para Listar notas del viaje y `/trips/{tripId}/notes` para Registrar nueva nota. Son notas especificas de cada viaje, he creado este endpoint para que los integrantes puedan añadir notas importantes en sus viajes, tambien para llevar esto acabo he creado `Modelo`, `DTO's`, `Repositorio`, `Servicio` y `Controlador`.
 
 ## Como he implementado la seguridad.
 

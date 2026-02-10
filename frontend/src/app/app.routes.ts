@@ -3,6 +3,7 @@ import { DemoPageComponent } from './components/pages/demo-page/demo-page';
 import { HomeComponent } from './components/pages/home/home';
 import { NotFoundComponent } from './components/pages/not-found/not-found';
 import { StatusPageComponent } from './components/pages/status-page/status-page';
+import { AUTH_ROUTES } from './features/auth/auth.routes';
 //TODO: Crear TripDetailComponent (componente para mostrar detalles de un viaje)
   // {
   //   path: 'trips/:id',
@@ -95,7 +96,7 @@ export const routes: Routes = [
    */
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
+    children: AUTH_ROUTES,
     data: { breadcrumb: 'Autenticación' }
   },
 

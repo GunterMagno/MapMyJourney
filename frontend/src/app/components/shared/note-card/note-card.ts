@@ -12,6 +12,8 @@ export class NoteCardComponent {
 
   @Input() content?: string;
 
+  @Input() createdAt?: string;
+
   @Input() variant: 'vertical' | 'horizontal' = 'vertical';
 
   getCardClasses(): string {
