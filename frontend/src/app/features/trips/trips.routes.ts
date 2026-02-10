@@ -75,13 +75,13 @@ export const TRIPS_ROUTES: Routes = [
         loadComponent: () => 
           import('./pages/trip-settings/trip-settings').then(m => m.TripSettingsComponent),
         data: { breadcrumb: 'Configuración' }
-      }/*,
+      },
       {
         path: 'notas',
         loadComponent: () =>
-          import('./pages/trip-notes/trip-notes.component').then(m => m.NotesComponent),
+          import('../../components/pages/trip-notes/trip-notes.component').then(m => m.NotesComponent),
         data: { breadcrumb: 'Notas'}
-      }*/
+      }
     ]
   }
 ];
