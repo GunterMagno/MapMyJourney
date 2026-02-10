@@ -109,6 +109,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate(['/auth/login']);
   }
 
+  goNotes(): void {
+    this.router.navigate(['/trips/1/notes']);
+  }
+
   /**
    * Navigate to signup page
    */

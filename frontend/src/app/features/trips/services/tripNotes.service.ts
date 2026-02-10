@@ -1,6 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CreateActivityDto, Note } from "../models/itinerary.model";
+import { Note, CreateNoteDto } from "../models/note.model";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ export class TripNotesService {
 
     private apiUrl = '/api/trips';
 
-    notes = signal<string>('');
+    notes = signal<Note[]>([]);
     isLoading = signal(false);
     error = signal<string | null>(null);
 
@@ -19,10 +19,10 @@ export class TripNotesService {
     getNotes(tripId: number){
         this.isLoading.set(true);
         this.error.set(null);
-        this.http.get<{content: string}>(`${this.apiUrl}/${tripId}/notes`)
+        this.http.get<Note[]>(`${this.apiUrl}/${tripId}/notes`)
         .subscribe({
             next: (data) => {
-                this.notes.set(data.content);
+                this.notes.set(data);
                 this.isLoading.set(false);
             },
             error: (err: any) => {
@@ -32,7 +32,7 @@ export class TripNotesService {
         })
     }
 
-    createNote(tripId: number, dto: CreateActivityDto){
+    createNote(tripId: number, dto: CreateNoteDto){
         return this.http.post<Note>(`${this.apiUrl}/${tripId}/notes`, dto);
     }
 }

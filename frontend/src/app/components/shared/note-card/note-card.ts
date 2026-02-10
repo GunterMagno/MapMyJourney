@@ -5,8 +5,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-note-card',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './note-card.html',
-  styleUrl: './note-card.scss'
+  templateUrl: './note-card.html'
 })
 export class NoteCardComponent {
 

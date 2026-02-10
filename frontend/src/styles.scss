@@ -7,6 +7,7 @@
 @use "./styles/03-elements/base";
 @use "./styles/04-layout/layout";
 @use "./styles/05-animations/animations";
+@use "./styles/06-components/note-card";
 
 // Dark Mode Overrides - Aplica a [data-theme="dark"]
 [data-theme="dark"] {

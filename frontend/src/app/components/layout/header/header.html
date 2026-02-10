@@ -74,6 +74,10 @@
       <span class="header__hamburger-line"></span>
     </button>
 
+    <button class="header__btn header__btn--primary" (click)="goNotes()" type="button">
+      Notas de Viaje
+    </button>
+
     <ng-container *ngIf="!isLoggedIn">
       <button class="header__btn header__btn--primary" (click)="login()" type="button">
         Iniciar Sesion

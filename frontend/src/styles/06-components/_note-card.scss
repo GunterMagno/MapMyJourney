@@ -1,0 +1,101 @@
+.note-card {
+  
+  &__content {
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    line-height: var(--line-height-normal);
+    overflow: hidden;
+    border: solid 1px var(--support-color-2);
+    background-color: var(--support-color-1);
+    padding: var(--spacing-3);
+    border-radius: var(--border-radius-md);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+
+
+    &:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+    }
+
+    &:focus-within {
+        outline: 2px solid var(--principal-color);
+        outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow-md);
+      border-color: var(--principal-color-hover);
+    }
+
+    &--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: var(--quaternary-color-disabled);
+      border-color: var(--border-color);
+    }
+
+    @media (min-width: var(--breakpoint-desktop)) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  
+  &__label {
+    font-weight: var(--font-weight-bold);
+    color: var(--text-main);
+  }
+
+  
+  &__value {
+    word-break: break-word;
+    color: var(--text-secondary);
+  }
+
+  
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding-top: var(--spacing-2);
+    border-top: var(--border-thin) solid var(--support-color-2);
+    font-size: var(--font-size-extra-small);
+    color: var(--text-secondary);
+
+    
+    &:focus {
+      outline: var(--border-thin) solid var(--info-color);
+      outline-offset: 1px;
+    }
+
+    
+    @media (max-width: var(--breakpoint-tablet-max)) {
+      justify-content: flex-start;
+    }
+
+    
+    @media (min-width: var(--breakpoint-desktop)) {
+      border-top: none;
+      border-left: var(--border-thin) solid var(--support-color-2);
+      padding-top: 0;
+      padding-left: var(--spacing-2);
+    }
+  }
+
+
+  &--horizontal {
+    .note-card__content {
+      flex-direction: row;
+      
+      @media (max-width: var(--breakpoint-tablet-max)) {
+        flex-direction: column;
+      }
+    }
+  }
+}

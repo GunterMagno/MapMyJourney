@@ -1,13 +1,13 @@
 <article [class]="getCardClasses()">
   
-  <section class="note__card__content">
-    <article class="note__card__content">
-      <span class="note__card__label">Contenido: </span>
-      <span class="note__card__value"><ng-content select="[slot='content']"></ng-content></span>
+  <section class="note-card__content">
+    <article class="note-card__body">
+      <span class="note-card__label">Contenido: </span>
+      <span class="note-card__value"><ng-content select="[slot='content']"></ng-content></span>
     </article>
 
-    <footer class="note__card__footer">
-      <span class="note__card__label">Creado: </span>
+    <footer class="note-card__footer">
+      <span class="note-card__label">Creado: </span>
       <ng-content select="[slot='footer']"></ng-content>
     </footer>
   </section>
