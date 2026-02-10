@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.mapmyjourney.backend.dto.TripNoteRequestDTO;
 import com.mapmyjourney.backend.dto.TripNoteResponseDTO;
 import com.mapmyjourney.backend.exception.ResourceNotFoundException;
 import com.mapmyjourney.backend.model.Trip;
@@ -24,7 +25,7 @@ public class TripNoteService {
     private final TripNoteRepository tripNoteRepository;
 
     @Transactional
-    public TripNoteResponseDTO createNote(Long tripId, TripNoteResponseDTO request){
+    public TripNoteResponseDTO createNote(Long tripId, TripNoteRequestDTO request){
         Optional<Trip> tripOptional = tripRepository.findById(tripId);
         if (!tripOptional.isPresent()) {
             throw new ResourceNotFoundException("Viaje no encontrado");

@@ -1,10 +1,14 @@
 package com.mapmyjourney.backend.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapmyjourney.backend.dto.TripNoteRequestDTO;
@@ -41,5 +45,22 @@ public class TripNoteController {
         TripNoteRequestDTO request){
             TripNoteResponseDTO createdNote = tripNoteService.createNote(tripId, request);
             return ResponseEntity.status(201).body(createdNote);
+        }
+    
+    @GetMapping
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Listar notas del viaje", 
+               description = "Obtiene las notas creadas en el viaje.")
+    @ApiResponse(responseCode = "200", description = "Lista de notas del viaje")
+    @ApiResponse(responseCode = "404", description = "Viaje no encontrado")
+    public ResponseEntity<List<TripNoteResponseDTO>> getTripNotes(
+        @Parameter(description = "ID del viaje", example = "1")
+        @PathVariable Long tripId,
+        @Parameter(description = "Número de página (comienza en 0)", example = "0")
+        @RequestParam(defaultValue = "0") int page,
+        @Parameter(description = "Cantidad de registros por página", example = "20")
+        @RequestParam(defaultValue = "20") int size){
+            List<TripNoteResponseDTO> notes = tripNoteService.getTripNotes(tripId);
+            return ResponseEntity.ok(notes);
         }
 }
