@@ -4,13 +4,15 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
-@media (max-width: var(--breakpoint-tablet)) {
+
+@media (max-width: 1023px) {
   .notes__grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: var(--breakpoint-mobile)) {
+
+@media (max-width: 767px) {
   .notes__grid {
     grid-template-columns: 1fr;
   }

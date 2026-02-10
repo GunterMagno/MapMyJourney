@@ -1,19 +1,15 @@
-<main class="trip-notes-page">
-    <section class="trip-notes-page__header">
-        <h1>Notas del Viaje</h1>
-        <p>Aquí puedes escribir tus notas para el viaje.</p>
-    </section>
+<section class="trip-notes-page__header">
+    <h1>Notas del Viaje</h1>
+    <p>Aquí puedes escribir tus notas para el viaje.</p>
+</section>
 
-    
-    <section class="trip-notes-page__content">
-        <article class="notes__grid">
-            <app-note-card 
-                *ngFor="let note of notes" 
-                [variant]="'vertical'">
-                <span slot="content">{{ note.content }}</span>
-                <span slot="footer">{{ note.createdAt }}</span>
-            </app-note-card>
-        </article>
-    </section>
-
-</main>
+<section class="trip-notes-page__content">
+    <article class="notes__grid">
+        <app-note-card 
+            *ngFor="let note of notes" 
+            [variant]="'vertical'">
+            <span slot="content">{{ note.content }}</span>
+            <span slot="footer">{{ note.createdAt }}</span>
+        </app-note-card>
+    </article>
+</section>
