@@ -59,5 +59,14 @@ export interface ItineraryReorderPayload {
     id: string;
     order: number;
     dayIndex: number;
-  }>;
+  }>;}
+
+export interface CreateNoteDto {
+  content: String;
+}
+
+export interface Note {
+  id?: number;
+  content: string;
+  createdAt?: string;
 }
