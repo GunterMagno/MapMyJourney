@@ -48,14 +48,6 @@
         📅 Itinerario
       </a>
       <a 
-        href="#gallery"
-        class="trip-detail__nav-link"
-        [class.trip-detail__nav-link--active]="activeSection === 'gallery'"
-        (click)="switchSection('gallery')"
-        role="menuitem">
-        🖼️ Recuerdos
-      </a>
-      <a 
         href="#voting"
         class="trip-detail__nav-link"
         [class.trip-detail__nav-link--active]="activeSection === 'voting'"
@@ -147,16 +139,6 @@
           </article>
         </article>
       </article>
-    </section>
-
-    <!-- Gallery Section: Recuerdos -->
-    <section 
-      id="gallery"
-      class="trip-detail__section"
-      *ngIf="activeSection === 'gallery'">
-      <h2 class="trip-detail__section-title">Recuerdos</h2>
-      <p class="trip-detail__section-description">Revive los mejores momentos de tu viaje a través de estas fotos</p>
-      <app-gallery></app-gallery>
     </section>
 
     <!-- Voting Section -->
