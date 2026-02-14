@@ -14,7 +14,7 @@
     font-family: var(--font-tertiary);
     font-size: 20px;
     font-weight: var(--font-weight-medium);
-    color: var(--text-main);
+    color: var(--text-inverse);
     background: none;
     border: none;
     cursor: pointer;
@@ -38,7 +38,7 @@
 
 // Modo oscuro para navegación
 [data-theme="dark"] .home-nav__link {
-  color: var(--text-main);
+  color: var(--text-inverse);
   
   &:hover {
     background-color: var(--bg-surface);
@@ -170,7 +170,7 @@
   &__text {
     font-family: var(--font-secondary);
     font-size: var(--font-size-tittle-h4);
-    color: var(--text-main);
+    color: var(--text-inverse);
     max-width: 800px;
     margin: 0 auto;
     line-height: var(--line-height-relaxed);
@@ -253,14 +253,14 @@
     font-family: var(--font-primary);
     font-size: var(--font-size-tittle-h3);
     font-weight: var(--font-weight-bold);
-    color: var(--text-main);
+    color: var(--text-inverse);
     margin-bottom: var(--spacing-4);
   }
 
   &__card-description {
     font-family: var(--font-tertiary);
     font-size: var(--font-size-medium);
-    color: var(--text-main);
+    color: var(--text-inverse);
     line-height: var(--line-height-relaxed);
   }
 }
@@ -358,14 +358,14 @@
     font-family: var(--font-primary);
     font-size: var(--font-size-tittle-h4);
     font-weight: var(--font-weight-semibold);
-    color: var(--text-main);
+    color: var(--text-inverse);
     margin: 0;
   }
 
   &__step-description {
     font-family: var(--font-tertiary);
     font-size: var(--font-size-medium);
-    color: var(--text-main);
+    color: var(--text-inverse);
     line-height: var(--line-height-relaxed);
   }
 }
@@ -421,7 +421,7 @@
     font-family: var(--font-primary);
     font-size: var(--font-size-tittle-h2);
     font-weight: var(--font-weight-bold);
-    color: var(--text-main);
+    color: var(--text-inverse);
     margin-bottom: var(--spacing-6);
     
     @media (max-width: 768px) {
@@ -432,7 +432,7 @@
   &__description {
     font-family: var(--font-secondary);
     font-size: var(--font-size-tittle-h4);
-    color: var(--text-main);
+    color: var(--text-inverse);
     line-height: var(--line-height-relaxed);
     max-width: 700px;
     margin: 0 auto var(--spacing-12);
@@ -454,7 +454,7 @@
     }
     
     &__title {
-      color: var(--text-main) !important;
+      color: var(--text-inverse) !important;
       text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
     }
     
@@ -474,7 +474,7 @@
     border-bottom-color: var(--border-color) !important;
     
     &__text {
-      color: var(--text-main) !important;
+      color: var(--text-inverse) !important;
     }
     
     &__author {
@@ -489,7 +489,7 @@
     border-bottom-color: var(--border-color) !important;
     
     &__title {
-      color: var(--text-main) !important;
+      color: var(--text-inverse) !important;
     }
     
     &__card {
@@ -509,7 +509,7 @@
     }
     
     &__card-title {
-      color: var(--text-main) !important;
+      color: var(--text-inverse) !important;
     }
     
     &__card-description {
@@ -524,7 +524,7 @@
     border-bottom-color: var(--border-color) !important;
     
     &__title {
-      color: var(--text-main) !important;
+      color: var(--text-inverse) !important;
     }
     
     &__step-icon {
@@ -540,7 +540,7 @@
     }
     
     &__step-title {
-      color: var(--text-main) !important;
+      color: var(--text-inverse) !important;
     }
     
     &__step-description {
@@ -555,7 +555,7 @@
     border-bottom-color: var(--border-color) !important;
     
     &__title {
-      color: var(--text-main) !important;
+      color: var(--text-inverse) !important;
     }
     
     &__description {

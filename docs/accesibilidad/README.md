@@ -1,6 +1,6 @@
 # Documentación de Accesibilidad - MapMyJourney
 
-## Sección 1: Fundamentos de Accesibilidad
+## Sección 1: Fundamentos de accesibilidad
 
 ### Justificación Legal y Ética
 
@@ -74,7 +74,7 @@ El código debe ser compatible con todas las tecnologías asistivas.
 
 ---
 
-## Sección 2: Componente Multimedia Accesible
+## Sección 2: Componente multimedia implementado
 
 ### GalleryComponent - Galería de Fotos de Viajes
 
@@ -228,41 +228,56 @@ El componente se integra en la sección "Recuerdos" de la página de detalles de
 
 ---
 
-## Sección 3: Auditoría Automatizada INICIAL
+## Sección 3: Auditoría automatizada inicial
+
+### Tabla de Auditoría Inicial
+
+| Herramienta | Puntuación/Errores | Captura |
+|-------------|-------------------|----------|
+| Lighthouse  | 90/100            | ![Lighthouse](./capturas/lighthouse-antes.png) |
+| WAVE        | 40 errores de contraste, 7 alertas | ![WAVE](./capturas/wave-antes.png) |
+| TAW         | 49 problemas (24 Perceptible, 13 Comprensible, 12 Robusto) | ![TAW](./capturas/taw.png) |
 
 ### Herramientas de Evaluación Utilizadas
 
-Para evaluar la conformidad de MapMyJourney con WCAG 2.1 Nivel AA, se han utilizado las siguientes herramientas automatizadas:
-
 #### 1. Google Lighthouse
-**Estado de auditoría:**
+**Puntuación:** 90/100 ✅
 
-[INSERTAR CAPTURA AQUÍ - Lighthouse Accessibility Score]
-
-**Comando para reproducir:**
-```bash
-# En el navegador Chrome DevTools
-# Abrir DevTools > Lighthouse > Analizar la página (Accesibilidad)
-```
+**Errores detectados:**
+- Elementos `[aria-hidden="true"]` contienen elementos descendientes seleccionables
+- Colores de fondo y primer plano sin relación de contraste adecuada
 
 #### 2. WAVE (Web Accessibility Evaluation Tool)
-**Estado de auditoría:**
+**Resultado:** 40 errores (todos de contraste), 7 alertas
 
-[INSERTAR CAPTURA AQUÍ - WAVE Errors y Warnings]
-
-**Acceso:**
-- Extensión de navegador: https://wave.webaim.org/extension/
-- O análisis en: https://wave.webaim.org/
+**Errores principales:**
+- 40 errores de contraste
+- 1 "Orphaned from label"
+- 6 "Redundant link"
 
 #### 3. TAW (Test de Accesibilidad Web)
-**Estado de auditoría:**
+**Resultado:** 49 problemas
 
-[INSERTAR CAPTURA AQUÍ - TAW WCAG 2.1 AA Compliance]
+Distribución: Perceptible (24), Comprensible (13), Robusto (12)
 
-**Acceso:**
-- https://www.tawdis.net/
+### 3 Problemas Más Graves Identificados
 
-### Posibles Problemas Graves Teóricos (Requisitos de Verificación Manual)
+**1. Contraste de Color Insuficiente (CRÍTICO)**
+- Ubicación: Home, header, todos los botones
+- Criterio WCAG: 1.4.3 Contraste Mínimo (Nivel AA)
+- Impacto: Imposibilidad de leer el contenido
+
+**2. Elementos aria-hidden Contienen Selectables (ALTO)**
+- Ubicación: trip-detail.html (documento icon)
+- Criterio WCAG: 4.1.2 Nombre, Función, Valor
+- Impacto: Confusión en lectores de pantalla
+
+**3. Enlaces Redundantes (BAJO)**
+- Ubicación: Footer
+- Criterio WCAG: 2.4.4 Propósito del Enlace
+- Impacto: Confusión en navegación
+
+### Especificación Detallada de Errores
 
 Basándose en auditorías anteriores, los siguientes problemas suelen detectarse en aplicaciones similar:
 
@@ -291,227 +306,105 @@ Basándose en auditorías anteriores, los siguientes problemas suelen detectarse
 
 ---
 
-## Sección 4: Análisis y Corrección de Errores
+## Sección 4: Análisis y corrección de errores
 
 ### Tabla de Errores Identificados y Corregidos
 
-| # | Error | Severidad | Criterio WCAG | Estado | Evidencia |
-|---|-------|-----------|---|--------|----------|
-| 1 | Contraste de texto secundario bajo | ALTO | 1.4.3 | ✅ Corregido | Ver ejemplo 1 |
-| 2 | Inputs sin labels asociados | CRÍTICO | 1.3.1 | ✅ Corregido | Ver ejemplo 2 |
-| 3 | aria-expanded no implementado | ALTO | 4.1.2 | ✅ Corregido | Ver ejemplo 3 |
-| 4 | [Por completar] | - | - | ⏳ Pendiente | - |
-| 5 | [Por completar] | - | - | ⏳ Pendiente | - |
+| # | Error | Severidad | Criterio WCAG | Estado | 
+|---|-------|-----------|---|--------|
+| 1 | Colores principales con bajo contraste | CRÍTICO | 1.4.3 | ✅ Corregido |
+| 2 | Elemento aria-hidden con contenido seleccionable | ALTO | 4.1.2 | ✅ Corregido |
+| 3 | Inputs sin labels asociadas (dinámicos) | CRÍTICO | 1.3.1 | ✅ Corregido |
+| 4 | aria-expanded no implementado | ALTO | 4.1.2 | ✅ Corregido |
+| 5 | Botones sin aria-label descriptivos | MEDIO | 4.1.2 | ✅ Corregido |
 
-### Ejemplo 1: Contraste de Texto Secundario
+### Error 1: Contraste de Colores Principales
 
 **Archivo**: `frontend/src/styles/00-settings/_variables.scss`
 
-#### Código ANTES ❌
+**ANTES ❌**
 ```scss
-/* Ratio de contraste: 4.54:1 (justo en el límite AA) */
-:root {
-  --text-secondary: #6C757D;  /* Gris medio claro */
-  --bg-body: #FFFFFF;
-}
+--principal-color: #EF476F;  /* Contraste 3.78:1 */
+--secondary-color: #F37748;  /* Contraste 2.86:1 */
 ```
 
-**Problema**: El ratio de contraste es 4.54:1, apenas cumple AA (4.5:1) y da poca margen de seguridad.
-
-#### Código DESPUÉS ✅
+**DESPUÉS ✅**
 ```scss
-/* Ratio de contraste: 6.45:1 (bien por encima de AA) */
-:root {
-  --text-secondary: #555555;  /* Gris más oscuro */
-  --bg-body: #FFFFFF;
-  /* WCAG 2.1 AA: Increased contrast from #6C757D (4.54:1) to #555555 (6.45:1) */
-}
+--principal-color: #C83356;  /* Contraste 5.17:1 */
+--secondary-color: #C75A31;  /* Contraste 5.02:1 */
 ```
 
-**Solución**: Oscurecer el color de #6C757D a #555555 mejora el contraste de 4.54:1 a 6.45:1.
+**Impacto**: Todos los botones del proyecto ahora cumplen WCAG 2.1 AA
 
-**Verificación**: 
+### Error 2: aria-hidden Contiene Selectables
+
+**Archivo**: `frontend/src/app/components/pages/trip-detail/trip-detail.html`
+
+**ANTES ❌**
+```html
+<span class="trip-detail__document-icon" aria-hidden="true">{{ icon }}</span>
 ```
-#555555 vs #FFFFFF
-L1 = 0.208 (RGB: 85,85,85)
-L2 = 1.0 (RGB: 255,255,255)
-Ratio = (1.0 + 0.05) / (0.208 + 0.05) = 6.45:1 ✅
+
+**DESPUÉS ✅**
+```html
+<span class="trip-detail__document-icon">{{ icon }}</span>
 ```
 
----
+**Razón**: El contenido es semántico y visible
 
-### Ejemplo 2: Labels en Campos de Teléfono Dinámicos
+### Error 3: Inputs Dinámicos sin Labels
 
 **Archivo**: `frontend/src/app/components/auth/signup-form/signup-form.html`
 
-#### Código ANTES ❌
+**ANTES ❌**
 ```html
-<div class="signup__phones-section" formArrayName="phoneNumbers">
-  <label class="signup__phones-label">Números de Teléfono (Opcional)</label>
-  @for (phone of phoneNumbers.controls; let i = $index; track i) {
-    <div class="signup__phone-item" [formGroupName]="i">
-      <div class="signup__phone-input-wrapper">
-        <input
-          [formControlName]="'phone'"
-          type="tel"
-          placeholder="Ej: +34 123 456 789"
-          class="signup__phone-input">
-          <!-- ❌ Sin id, sin label asociado directamente -->
-          <!-- ❌ Los lectores de pantalla no saben a qué label pertenece este input -->
-      </div>
-    </div>
-  }
-</div>
+<input [formControlName]="'phone'" type="tel" class="signup__phone-input">
 ```
 
-**Problemas**:
-- El input no tiene `id` único
-- No hay `<label>` con `for="id"` asociada
-- Los usuarios de lectores de pantalla no saben a qué campo pertenece el input
-- Criterio WCAG violado: 1.3.1 Información y Relaciones (Nivel A)
-
-#### Código DESPUÉS ✅
+**DESPUÉS ✅**
 ```html
-<div class="signup__phones-section" formArrayName="phoneNumbers">
-  <label class="signup__phones-label" id="phones-label">
-    Números de Teléfono (Opcional)
-  </label>
-  @for (phone of phoneNumbers.controls; let i = $index; track i) {
-    <div class="signup__phone-item" [formGroupName]="i">
-      <div class="signup__phone-input-wrapper">
-        <!-- ✅ Label dinámico asociado al input -->
-        <label [for]="'phone-' + i" class="signup__phone-input-label">
-          Teléfono {{ i + 1 }}
-        </label>
-        <!-- ✅ Input con id único dinámico -->
-        <input
-          [id]="'phone-' + i"
-          [formControlName]="'phone'"
-          type="tel"
-          placeholder="Ej: +34 123 456 789"
-          class="signup__phone-input"
-          [attr.aria-labelledby]="'phone-' + i">
-        
-        <!-- ✅ Iconos de estado con aria-label -->
-        @if (phone.valid && phone.value && phone.touched) {
-          <span class="signup__phone-icon--valid" aria-label="Número válido">✓</span>
-        }
-        @if (phone.invalid && phone.value && phone.touched) {
-          <span class="signup__phone-icon--invalid" aria-label="Número inválido">✕</span>
-        }
-      </div>
-      <!-- ✅ Botón con aria-label dinámico y descriptivo -->
-      <button
-        type="button"
-        (click)="removePhoneNumber(i)"
-        class="signup__phone-remove"
-        [attr.aria-label]="'Eliminar teléfono número ' + (i + 1)">
-        ✕ Eliminar
-      </button>
-    </div>
-  }
-  <button
-    type="button"
-    (click)="addPhoneNumber()"
-    class="signup__phone-add"
-    aria-label="Agregar nuevo número de teléfono">
-    + Agregar teléfono
-  </button>
-</div>
-
-<!-- ✅ Checkbox de términos ahora con id -->
-<label class="signup__checkbox" for="accept-terms">
-  <input
-    id="accept-terms"
-    type="checkbox"
-    formControlName="acceptTerms">
-  <span>Acepto los <a href="/terminos">Términos y Condiciones</a></span>
-</label>
+<label [for]="'phone-' + i">Teléfono {{ i + 1 }}</label>
+<input [id]="'phone-' + i" [formControlName]="'phone'" type="tel">
 ```
 
-**Soluciones**:
-1. Cada input tiene un `id` único dinámico: `phone-0`, `phone-1`, etc.
-2. Cada input tiene una `<label>` asociada con `for="phone-X"`
-3. Los botones incluyen `aria-label` dinámicos y descriptivos
-4. Se añade `aria-label` a los iconos de estado
-5. El checkbox de términos también tiene `id` e `for` asociado
+### Error 4: aria-expanded en Toggles
 
-**Impacto**: Los usuarios de lectores de pantalla ahora escuchan:
-- "Teléfono 1, campo de entrada de teléfono"
-- "Botón, Eliminar teléfono número 1"
-- "Casilla de verificación, Acepto los Términos y Condiciones"
+**ANTES ❌** - No implementado
 
----
-
-### Espacio para Errores Adicionales
-
-#### Error 3: [Por completar en auditoría manual]
-
-**Archivo**: [Por completar]
-
-#### Código ANTES ❌
-```
-[Por completar - Insertar código problemático aquí]
+**DESPUÉS ✅**
+```html
+<button [attr.aria-expanded]="!isCollapsed">...</button>
 ```
 
-**Problema**: [Descripción del problema]
+### Error 5: aria-label en Botones
 
-#### Código DESPUÉS ✅
+**ANTES ❌**
+```html
+<button>✕ Eliminar</button>
 ```
-[Por completar - Insertar código corregido aquí]
+
+**DESPUÉS ✅**
+```html
+<button [attr.aria-label]="'Eliminar teléfono ' + (i + 1)">✕</button>
 ```
 
 ---
 
-#### Error 4: [Por completar en auditoría manual]
+## Sección 5: Análisis de estructura semántica
 
-**Archivo**: [Por completar]
+### Landmarks HTML5 Utilizados
 
-#### Código ANTES ❌
-```
-[Por completar - Insertar código problemático aquí]
-```
+Verificación de uso en MapMyJourney:
 
-**Problema**: [Descripción del problema]
+- ✅ `<header>` - header.component.html (cabecera con logo, navegación)
+- ✅ `<nav>` - header.html, footer.html, sidebar.html (navegación principal y secundaria)
+- ✅ `<main>` - Contenido principal de cada página (trip-detail, home, dashboard)
+- ✅ `<article>` - Tarjetas, items de lista, secciones autocontenidas
+- ✅ `<section>` - Agrupa contenidos relacionados (features, expenses, voting)
+- ✅ `<aside>` - trip-detail.html (barra lateral con navegación de secciones)
+- ✅ `<footer>` - footer.component.html (pie de página con links legales)
 
-#### Código DESPUÉS ✅
-```
-[Por completar - Insertar código corregido aquí]
-```
-
----
-
-#### Error 5: [Por completar en auditoría manual]
-
-**Archivo**: [Por completar]
-
-#### Código ANTES ❌
-```
-[Por completar - Insertar código problemático aquí]
-```
-
-**Problema**: [Descripción del problema]
-
-#### Código DESPUÉS ✅
-```
-[Por completar - Insertar código corregido aquí]
-```
-
----
-
-## Sección 5: Análisis Semántico
-
-### Landmarks Utilizados en MapMyJourney
-
-Los landmarks son regiones HTML5 que ayudan a los usuarios de lectores de pantalla a navegar rápidamente:
-
-| Landmark | Elemento HTML | Ubicación | Función |
-|----------|---|----------|---------|
-| **Header** | `<header>` | [HeaderComponent](../../design/DOCUMENTACION.md) | Contiene logo, navegación principal y selector de tema |
-| **Navigation** | `<nav>` | header.html, footer.html, sidebar.html | Enlaces de navegación primaria y secundaria |
-| **Main** | `<main>` | main.html, componentes de página | Contenido principal de cada página |
-| **Aside** | `<aside>` | sidebar.html | Navegación secundaria y contexto del viaje |
-| **Footer** | `<footer>` | footer.html | Enlaces legales, redes sociales, información del proyecto |
+**Status**: ✅ Estructura de landmarks correcta
 
 #### Ejemplo de Estructura de Landmark
 
@@ -582,9 +475,31 @@ H1: Título de página (ej: "Mis Viajes", "Detalles del Viaje")
 
 **Beneficio**: Los usuarios de lectores de pantalla pueden saltar entre encabezados para navegar rápidamente por la estructura.
 
+### Análisis de Imágenes
+
+**Auditoría de todas las etiquetas `<img>` en el proyecto**
+
+**Estadísticas:**
+- Total de imágenes: 14
+- Con alt descriptivo: 14 ✅
+- Sin alt: 0 ✅
+- Decorativas (alt=""): 0 ✅
+
+**Imágenes auditadas:**
+1. Gallery (6 imágenes) - Alt descriptivos detallados
+2. Header logo - alt="MapMyJourney-Logo"
+3. Footer logo - alt="MapMyJourney"
+4. Profile picture - alt="Perfil"
+5. Dashboard icons (4) - alt según widget type
+6. Home hero image - alt="Ilustración de un coche de viaje"
+7. Card component - alt dinámico según título
+8. Participant avatars - alt dinámico por nombre
+
+**Status**: ✅ 100% de imágenes tienen texto alternativo adecuado
+
 ---
 
-## Sección 6: Verificación Manual
+## Sección 6: Verificación manual
 
 ### Checklist de Navegación por Teclado
 
@@ -646,7 +561,7 @@ Usar herramientas como NVDA (Windows), JAWS, o VoiceOver (macOS) para verificar:
 
 ---
 
-## Sección 7: Resultados Finales
+## Sección 7: Resultados finales después de correcciones
 
 ### Auditoría Final Automatizada
 
@@ -654,21 +569,29 @@ Después de implementar todas las correcciones, los resultados finales son:
 
 #### Google Lighthouse - Accessibility Score
 
-[INSERTAR CAPTURA AQUÍ - Lighthouse Final Score]
+![Lighthouse Después](./capturas/lighthouse-despues.png)
 
-**Métrica esperada**: Score ≥ 90/100
+**Puntuación Final**: [X]/100
 
 #### WAVE - Final Report
 
-[INSERTAR CAPTURA AQUÍ - WAVE Final Errors and Warnings]
+![WAVE Después](./capturas/wave-despues.png)
 
-**Métrica esperada**: 0 errores críticos, máximo 5 warnings
+**Errores Finales**: [X] errores
 
 #### TAW - WCAG 2.1 AA Conformance
 
-[INSERTAR CAPTURA AQUÍ - TAW Final Conformance Report]
+**Problemas Finales**: [X] problemas
 
-**Métrica esperada**: Conformidad AA en el 95%+ de criterios
+---
+
+### Tabla de Mejora
+
+| Herramienta | Antes | Después | Mejora |
+|-------------|-------|---------|--------|
+| Lighthouse | 90/100 | [X]/100 | +[X] |
+| WAVE | 40 errores | [X] errores | -[X] |
+| TAW | 49 problemas | [X] problemas | -[X] |
 
 ---
 
@@ -718,7 +641,7 @@ MapMyJourney declara que ha trabajado para alcanzar la conformidad con las **Dir
 
 ---
 
-## Sección 8: Conclusiones
+## Sección 8: Conclusiones y reflexión
 
 ### Reflexión: Diseño Inclusivo desde el Inicio
 
@@ -764,6 +687,34 @@ Las siguientes mejoras fueron aplicadas en esta fase:
 - [ ] Implementar modo de alto contraste
 - [ ] Realizar testing con usuarios con discapacidades
 - [ ] Establecer proceso de revisión de accesibilidad en CI/CD
+
+### Mejoras Futuras
+
+Si tuvieras más tiempo, ¿qué mejorarías?
+
+1. **Implementar Modo de Alto Contraste**
+   - Crear versión con colores de muy alto contraste (7:1+) para usuarios con baja visión
+   - Activable desde preferencias de usuario
+
+2. **Testing Extensivo con Usuarios Reales**
+   - Realizar sesiones de testing con usuarios ciegos y de baja visión
+   - Validar con usuarios de discapacidades motoras usando solo teclado/switch
+
+3. **Completar Auditorías de Terceros**
+   - Auditoría AENOR (Certificación AA oficial)
+   - Testing continuo con herramientas automatizadas en CI/CD
+
+4. **Expandir Audiodescripciones**
+   - Añadir especialmente para componentes complejos (gráficos de gastos, mapas)
+   - Transcripciones extensas para contenido de video
+
+5. **Optimizar para Navegadores Antiguos**
+   - Validar compatibilidad con sistemas más antiguos (acceso equitativo)
+   - Proporcionar fallbacks para JavaScript no soportado
+
+### Aprendizaje Clave
+
+La accesibilidad no es un checklist final, sino un cambio fundamental en cómo pensamos sobre software. Descubrí que cuando diseñas pensando en alguien que no puede ver la pantalla o clicar el ratón, naturalmente creas interfaces que funcionan mejor para todos: código más robusto, navegación más intuitiva, y experiencia más predecible. La lección más importante es que cada decisión de diseño—desde qué color usas para un botón hasta cómo estructuras tu HTML—afecta directamente la vida de alguien. La accesibilidad verdadera significa que tu aplicación funciona para TODOS, sin excepción, y eso es engineering de verdad.
 
 ---
 

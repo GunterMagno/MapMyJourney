@@ -204,7 +204,7 @@
         <article 
           class="trip-detail__document-item"
           *ngFor="let doc of documents">
-          <span class="trip-detail__document-icon" aria-hidden="true">{{ getDocumentIcon(doc.type) }}</span>
+          <span class="trip-detail__document-icon">{{ getDocumentIcon(doc.type) }}</span>
           <article class="trip-detail__document-info">
             <h3 class="trip-detail__document-name">{{ doc.name }}</h3>
             <p class="trip-detail__document-meta">{{ doc.uploadedBy }} • {{ formatDate(doc.date) }}</p>

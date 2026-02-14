@@ -223,7 +223,7 @@ export class TripDetailComponent implements OnInit, OnDestroy {
   /**
    * Cambiar sección activa
    */
-  switchSection(section: 'itinerary' | 'voting' | 'documents' | 'expenses'): void {
+  switchSection(section: 'itinerary' | 'gallery' | 'voting' | 'documents' | 'expenses'): void {
     this.activeSection = section;
     this.mobileMenuOpen = false;
 

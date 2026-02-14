@@ -2,18 +2,18 @@
 
 :root {
     /* Principal Colors */
-    --principal-color: #EF476F;
-    --secondary-color: #F37748;
-    --tertiary-color: #FFD166;
+    --principal-color: #C83356;
+    --secondary-color: #C75A31;
+    --tertiary-color: #E6BC5C;
     --quaternary-color: #3ECBA6;
-    --quinary-color: #118AB2;
+    --quinary-color: #167FA2;
 
     /* Hover Colors */
-    --principal-color-hover: #C83356;
-    --secondary-color-hover: #DB6B41;
-    --tertiary-color-hover: #E6BC5C;
-    --quaternary-color-hover: #38B795;
-    --quinary-color-hover: #0F7CA0;
+    --principal-color-hover: #701233;
+    --secondary-color-hover: #804a23;
+    --tertiary-color-hover: #978312;
+    --quaternary-color-hover: #38B794;
+    --quinary-color-hover: #0A5F7F;
 
     /* Disabled Colors */
     --principal-color-disabled: #FAC6D2;
@@ -35,10 +35,10 @@
     --bg-body: #FFFFFF;
     --bg-surface: #F8F9FA;
     --bg-elevated: #FFFFFF;
-    --text-main: var(--quinary-color-hover);
+    --text-main: #FFFFFF;
     /* WCAG 2.1 AA: Increased contrast from #6C757D (4.54:1) to #555555 (6.45:1) for better accessibility */
     --text-secondary: #555555;
-    --text-inverse: #FFFFFF;
+    --text-inverse: #131313;
     --border-color: #DEE2E6;
     --hover-bg: #F1F3F5;
 
