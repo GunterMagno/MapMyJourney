@@ -1,9 +1,10 @@
-<aside class="sidebar" [class.sidebar--collapsed]="isCollapsed">
+<aside class="sidebar" [class.sidebar--collapsed]="isCollapsed" role="navigation" aria-label="Navegación principal del viaje">
   <!-- Botón de colapsar/expandir -->
   <button 
     class="sidebar__collapse-button" 
     (click)="toggleSidebar()"
-    aria-label="Colapsar/Expandir sidebar"
+    aria-label="Colapsar/Expandir menú de navegación"
+    [attr.aria-expanded]="!isCollapsed"
     [title]="isCollapsed ? 'Expandir menú' : 'Colapsar menú'"
   >
     <svg class="sidebar__collapse-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,8 +18,9 @@
     <button 
       class="sidebar__toggle" 
       (click)="toggleSidebar()"
-      aria-label="Toggle sidebar"
-      title="Colapsar/Expandir menú"
+      aria-label="Colapsar/Expandir menú del viaje"
+      [attr.aria-expanded]="!isCollapsed"
+      [title]="isCollapsed ? 'Expandir menú' : 'Colapsar menú'"
     >
       <span class="sidebar__toggle-icon">{{ isCollapsed ? '☰' : '✕' }}</span>
     </button>

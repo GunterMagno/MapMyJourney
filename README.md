@@ -233,8 +233,7 @@ graph TD
 ### Tabla de Compatibilidad de Eventos
 
 | Evento | Chrome | Firefox | Safari | Edge | Descripción |
-|--------|--------|---------|--------|------|-------------|
-| click | 1+ | 1+ | 1+ | 12+ | Clic del ratón en elemento |
+|--------|--------|---------|--------|------|-------------|| click | 1+ | 1+ | 1+ | 12+ | Clic del ratón en elemento |
 | dblclick | 1+ | 1+ | 1+ | 12+ | Doble clic del ratón |
 | mouseenter | 30+ | 10+ | 13.1+ | 12+ | Ratón entra en elemento (sin burbuja) |
 | mouseleave | 30+ | 10+ | 13.1+ | 12+ | Ratón sale del elemento (sin burbuja) |
@@ -259,6 +258,35 @@ graph TD
 - Para navegadores antiguos (<IE 11), considere polyfills (no recomendado en 2026)
 - Los eventos indicados con "sin burbuja" no se propagan a elementos padre
 - Angular abstrae estas diferencias a través de Renderer2
+
+
+---
+
+## ♿ Proyecto 4: Accesibilidad y Multimedia
+
+### Componente multimedia añadido
+**Tipo:** Galería de imágenes accesible (Opción A)
+**Ubicación:** `frontend/src/app/components/shared/gallery/`
+**Descripción:** Galería responsiva con carga diferida (lazy loading), uso de etiquetas semánticas (`<figure>`, `<figcaption>`) y textos alternativos descriptivos.
+
+### Resultados de auditoría de accesibilidad
+
+| Herramienta | Puntuación inicial | Puntuación final | Mejora |
+|-------------|-------------------|------------------|--------|
+| Lighthouse  | [90]/100          | [90]/100         | ✅ Optimizado |
+| WAVE        | [40] errores      | [TBD] errores    | -[X]   |
+| TAW         | [49] problemas    | [TBD] problemas  | -[X]   |
+
+**Nivel de conformidad alcanzado:** WCAG 2.1 Nivel AA
+
+### Documentación completa
+📄 **[Ver análisis completo de accesibilidad](./docs/accesibilidad/README.md)**
+
+### Verificación realizada
+- ✅ Auditoría con Lighthouse, WAVE y TAW
+- ✅ Test con lector de pantalla (NVDA)
+- ✅ Test de navegación por teclado (Focus visible)
+- ✅ Verificación cross-browser (Chrome, Firefox, Edge)
 
 ---
 

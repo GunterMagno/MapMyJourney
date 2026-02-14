@@ -172,7 +172,7 @@
 
     &--secondary {
       background-color: var(--quinary-color);
-      color: var(--text-inverse);
+      color: var(--text-main);
 
       &:hover {
         background-color: var(--quinary-color-hover);
@@ -353,7 +353,7 @@
 
     &--secondary {
       background-color: var(--quinary-color);
-      color: var(--text-inverse);
+      color: var(--text-main);
 
       &:hover {
         background-color: var(--quinary-color-hover);
@@ -395,7 +395,7 @@
     }
 
     &.header__mobile-menu-btn--secondary {
-      color: var(--text-inverse);
+      color: var(--text-main);
     }
 
     &.header__mobile-menu-btn--theme {

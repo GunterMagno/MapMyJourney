@@ -50,23 +50,28 @@
 
       <!-- Dynamic phone numbers FormArray -->
       <div class="signup__phones-section" formArrayName="phoneNumbers">
-        <label class="signup__phones-label">Números de Teléfono (Opcional)</label>
+        <label class="signup__phones-label" id="phones-label">Números de Teléfono (Opcional)</label>
         @for (phone of phoneNumbers.controls; let i = $index; track i) {
           <div class="signup__phone-item" [formGroupName]="i">
             <div class="signup__phone-input-wrapper">
+              <label [for]="'phone-' + i" class="signup__phone-input-label">
+                Teléfono {{ i + 1 }}
+              </label>
               <input
+                [id]="'phone-' + i"
                 [formControlName]="'phone'"
                 type="tel"
                 placeholder="Ej: +34 123 456 789"
                 class="signup__phone-input"
+                [attr.aria-labelledby]="'phone-' + i"
                 [class.signup__phone-input--valid]="phone.valid && phone.value && phone.touched"
                 [class.signup__phone-input--invalid]="phone.invalid && phone.touched">
               <div class="signup__phone-status">
                 @if (phone.valid && phone.value && phone.touched) {
-                  <span class="signup__phone-icon--valid">✓</span>
+                  <span class="signup__phone-icon--valid" aria-label="Número válido">✓</span>
                 }
                 @if (phone.invalid && phone.value && phone.touched) {
-                  <span class="signup__phone-icon--invalid">✕</span>
+                  <span class="signup__phone-icon--invalid" aria-label="Número inválido">✕</span>
                 }
               </div>
             </div>
@@ -74,7 +79,7 @@
               type="button"
               (click)="removePhoneNumber(i)"
               class="signup__phone-remove"
-              title="Eliminar teléfono">
+              [attr.aria-label]="'Eliminar teléfono número ' + (i + 1)">
               ✕ Eliminar
             </button>
           </div>
@@ -82,14 +87,16 @@
         <button
           type="button"
           (click)="addPhoneNumber()"
-          class="signup__phone-add">
+          class="signup__phone-add"
+          aria-label="Agregar nuevo número de teléfono">
           + Agregar teléfono
         </button>
       </div>
 
       <!-- Terms acceptance checkbox -->
-      <label class="signup__checkbox">
+      <label class="signup__checkbox" for="accept-terms">
         <input
+          id="accept-terms"
           type="checkbox"
           formControlName="acceptTerms"
           [class.signup__checkbox-input--invalid]="

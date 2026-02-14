@@ -48,6 +48,14 @@
         📅 Itinerario
       </a>
       <a 
+        href="#gallery"
+        class="trip-detail__nav-link"
+        [class.trip-detail__nav-link--active]="activeSection === 'gallery'"
+        (click)="switchSection('gallery')"
+        role="menuitem">
+        🖼️ Recuerdos
+      </a>
+      <a 
         href="#voting"
         class="trip-detail__nav-link"
         [class.trip-detail__nav-link--active]="activeSection === 'voting'"
@@ -141,6 +149,16 @@
       </article>
     </section>
 
+    <!-- Gallery Section: Recuerdos -->
+    <section 
+      id="gallery"
+      class="trip-detail__section"
+      *ngIf="activeSection === 'gallery'">
+      <h2 class="trip-detail__section-title">Recuerdos</h2>
+      <p class="trip-detail__section-description">Revive los mejores momentos de tu viaje a través de estas fotos</p>
+      <app-gallery></app-gallery>
+    </section>
+
     <!-- Voting Section -->
     <section 
       id="voting"
@@ -186,7 +204,7 @@
         <article 
           class="trip-detail__document-item"
           *ngFor="let doc of documents">
-          <span class="trip-detail__document-icon" aria-hidden="true">{{ getDocumentIcon(doc.type) }}</span>
+          <span class="trip-detail__document-icon">{{ getDocumentIcon(doc.type) }}</span>
           <article class="trip-detail__document-info">
             <h3 class="trip-detail__document-name">{{ doc.name }}</h3>
             <p class="trip-detail__document-meta">{{ doc.uploadedBy }} • {{ formatDate(doc.date) }}</p>
