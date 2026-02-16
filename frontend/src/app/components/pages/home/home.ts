@@ -6,6 +6,7 @@ import { CardComponent } from '../../shared/card/card';
 import { CreateTripModalComponent } from './create-trip-modal/create-trip-modal';
 import { HeaderComponent } from '../../layout/header/header';
 import { FooterComponent } from '../../layout/footer/footer';
+import { GalleryComponent } from '../../shared/gallery/gallery.component';
 import { ToastService } from '../../../core/services/toast.service';
 import { TripService, TripFormData, Trip } from '../../../services/trip.service';
 import { LoadingService } from '../../../services/loading.service';
@@ -18,7 +19,8 @@ import { LoadingService } from '../../../services/loading.service';
     ButtonComponent,
     CreateTripModalComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    GalleryComponent
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss'

@@ -8,7 +8,7 @@ MapMyJourney es una aplicación web que requiere conformidad con estándares int
 
 ### Principios POUR (Perceptible, Operable, Comprensible, Robusto)
 
-#### 1. **Perceptible** ✅
+#### 1. **Perceptible**
 Las imágenes y contenido multimedia deben ser percepcibles por todos.
 
 **Ejemplo en MapMyJourney:**
@@ -21,7 +21,7 @@ Las imágenes y contenido multimedia deben ser percepcibles por todos.
   ```
 - Los usuarios ciegos pueden entender exactamente qué fotografía representa gracias al texto alternativo.
 
-#### 2. **Operable** ✅
+#### 2. **Operable**
 Todos los elementos deben ser operables mediante teclado y accesibles a tecnologías asistivas.
 
 **Ejemplo en MapMyJourney:**
@@ -39,7 +39,7 @@ Todos los elementos deben ser operables mediante teclado y accesibles a tecnolog
   }
   ```
 
-#### 3. **Comprensible** ✅
+#### 3. **Comprensible**
 El contenido debe ser fácil de entender.
 
 **Ejemplo en MapMyJourney:**
@@ -47,7 +47,7 @@ El contenido debe ser fácil de entender.
 - Los mensajes de error son explícitos: "El email no es válido. Usa un formato como tu@ejemplo.com"
 - El formulario de registro incluye validación en tiempo real con retroalimentación clara.
 
-#### 4. **Robusto** ✅
+#### 4. **Robusto**
 El código debe ser compatible con todas las tecnologías asistivas.
 
 **Ejemplo en MapMyJourney:**
@@ -79,14 +79,14 @@ El código debe ser compatible con todas las tecnologías asistivas.
 ### GalleryComponent - Galería de Fotos de Viajes
 
 #### Objetivo
-El componente `GalleryComponent` permite visualizar una colección de fotos del viaje de manera accesible y responsiva.
+El componente `GalleryComponent` permite visualizar una colección de fotos del viaje de manera accesible y responsiva, cumpliendo con WCAG 2.1 Nivel AA mediante el uso de etiquetas semánticas, textos alternativos descriptivos y carga perezosa de imágenes.
 
 #### Ubicación
 ```
 frontend/src/app/components/shared/gallery/
 ├── gallery.component.ts
-├── gallery.html
-└── gallery.scss
+├── gallery.component.html
+└── gallery.component.scss
 ```
 
 #### Características de Accesibilidad
@@ -94,31 +94,29 @@ frontend/src/app/components/shared/gallery/
 ##### 1. **Estructura Semántica con `<figure>` y `<figcaption>`**
 
 ```html
-<section class="gallery" aria-label="Galería de fotos del viaje">
+<section class="gallery" aria-label="Galería de fotos de viajes">
   <div class="gallery__container">
-    <article 
-      *ngFor="let image of images; trackBy: trackByImageId"
-      class="gallery__item"
-      role="region"
-      [attr.aria-label]="'Foto ' + image.id + ' de ' + images.length + ': ' + image.caption">
-      
-      <figure class="gallery__figure">
-        <!-- Imagen con alt text descriptivo -->
-        <img 
-          [src]="image.src"
-          [alt]="image.alt"
-          class="gallery__image"
-          loading="lazy"
-          decoding="async"
-          tabindex="0"
-          role="img"/>
+    @for (image of images; track trackByImageId($index, image)) {
+      <article 
+        class="gallery__item"
+        role="region"
+        [attr.aria-label]="'Foto ' + image.id + ' de ' + images.length + ': ' + image.caption">
         
-        <!-- Pie de foto visible -->
-        <figcaption class="gallery__caption">
-          {{ image.caption }}
-        </figcaption>
-      </figure>
-    </article>
+        <figure class="gallery__figure">
+          <img 
+            [src]="image.src"
+            [alt]="image.alt"
+            class="gallery__image"
+            loading="lazy"
+            decoding="async"
+          />
+          
+          <figcaption class="gallery__caption">
+            {{ image.caption }}
+          </figcaption>
+        </figure>
+      </article>
+    }
   </div>
 </section>
 ```
@@ -126,20 +124,24 @@ frontend/src/app/components/shared/gallery/
 **Beneficios:**
 - `<figure>` agrupa el contenido multimedia como una unidad semántica
 - `<figcaption>` proporciona un título visible y accesible para cada imagen
-- El `alt` text es único y descriptivo (no solo "foto 1")
+- Las imágenes NO tienen `tabindex` ni `role="button"` porque no son elementos interactivos
+- El `alt` text es único y descriptivo para cada imagen
 
-##### 2. **Textos Alternativos Únicos**
+##### 2. **Textos Alternativos Descriptivos**
 
-Cada imagen tiene un `alt` que describe detalladamente el contenido:
+Cada imagen tiene un `alt` que describe detalladamente el contenido visual:
 
 | Imagen | Alt Text |
 |--------|----------|
-| Foto 1 | Vista panorámica de la Torre Eiffel al atardecer en París, con los edificios históricos iluminados al fondo |
-| Foto 2 | Playas de arena blanca con aguas turquesas del Caribe durante el mediodía, palmeras en primer plano |
-| Foto 3 | Templo budista con arquitectura tradicional asiática rodeado de vegetación tropical y montañas |
-| Foto 4 | Grandes pirámides de Giza en el desierto de Egipto bajo un cielo despejado durante el día |
-| Foto 5 | Paisaje montañoso con picos nevados de los Alpes suizos reflejados en un lago alpino cristalino |
-| Foto 6 | Calle colorida de la ciudad vieja de Estambul con arquitectura otomana y turistas visitando bazares |
+| Foto 1 | Vista aérea de una playa tropical con aguas cristalinas turquesas y arena blanca |
+| Foto 2 | Montañas nevadas iluminadas por la luz dorada del atardecer con un cielo naranja |
+| Foto 3 | Templo antiguo de arquitectura asiática rodeado de vegetación verde exuberante |
+| Foto 4 | Grandes pirámides de piedra en el desierto bajo un cielo azul despejado |
+| Foto 5 | Lago alpino cristalino que refleja los picos nevados de las montañas circundantes |
+| Foto 6 | Calle colorida de ciudad antigua con arquitectura histórica y turistas pasando por bazares |
+
+**Criterio WCAG**: 1.1.1 Contenido no Textual - Nivel A
+**Beneficio**: Usuarios ciegos pueden entender exactamente qué fotografía representa gracias al texto alternativo único y descriptivo.
 
 ##### 3. **Performance con `loading="lazy"` y `decoding="async"`**
 
@@ -152,83 +154,118 @@ Cada imagen tiene un `alt` que describe detalladamente el contenido:
   class="gallery__image">
 ```
 
-- **`loading="lazy"`**: Las imágenes se cargan solo cuando están a punto de ser visibles
+- **`loading="lazy"`**: Las imágenes se cargan solo cuando están a punto de ser visibles (lazy loading nativo del navegador)
 - **`decoding="async"`**: No bloquea el rendering del resto de la página
-- **Beneficio**: Los usuarios con conexiones lentas pueden navegar el sitio sin esperas
+- **Criterio WCAG**: 2.5.3 Nombre, Función, Valor (Mínimo) - Nivel A
+- **Beneficio**: Los usuarios con conexiones lentas pueden navegar el sitio sin esperas innecesarias
 
 ##### 4. **Estilos Responsivos con CSS Grid**
 
 ```scss
 .gallery__container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  padding: 0 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-6);
+  padding: var(--spacing-6);
 }
 
 /* Dispositivos móviles */
+@media (max-width: 768px) {
+  .gallery__container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-4);
+  }
+}
+
 @media (max-width: 480px) {
   .gallery__container {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
   }
 }
 ```
 
 - Grid responsiva que se adapta a cualquier tamaño de pantalla
-- Mínimo 300px por elemento en escritorio
-- Una columna en móvil
+- Mínimo 250px por elemento en escritorio, 200px en tablet, 100% en móvil
+- Espaciado semántico usando variables del proyecto
 
 ##### 5. **Foco Visual y Hover Accesibles**
 
 ```scss
-.gallery__item:focus-within {
-  outline: 3px solid #0066cc;
-  outline-offset: 2px;
+.gallery__figure {
+  &:focus-within {
+    outline: 3px solid var(--principal-color);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
-.gallery__image:focus-visible {
-  outline: 3px solid #0066cc;
-  outline-offset: -3px;
-  filter: brightness(1.05);
+.gallery__image {
+  &:focus-visible {
+    outline: 2px solid var(--principal-color);
+    outline-offset: -2px;
+  }
+  
+  figure:hover & {
+    filter: brightness(1.1);
+  }
 }
 ```
 
-- Los usuarios que navegan con teclado ven claramente qué elemento tiene el foco
-- El efecto hover (aumento de brillo) es sutil y accesible
+- Los usuarios que navegan con teclado ven claramente qué elemento tiene el foco (outline 3px)
+- El efecto hover (aumento de brillo y escala) es sutil y accesible
 - Compatible con `prefers-reduced-motion`
+- **Criterio WCAG**: 2.4.7 Foco Visible - Nivel AA
 
-#### Integración en TripDetailComponent
+##### 6. **Integración en HomeComponent**
 
-El componente se integra en la sección "Recuerdos" de la página de detalles del viaje:
+El componente se integra en la sección hero de la página de inicio:
 
 ```html
-<!-- Opción en sidebar -->
-<a 
-  href="#gallery"
-  class="trip-detail__nav-link"
-  [class.trip-detail__nav-link--active]="activeSection === 'gallery'"
-  (click)="switchSection('gallery')"
-  role="menuitem">
-  🖼️ Recuerdos
-</a>
-
-<!-- Sección en contenido principal -->
-<section 
-  id="gallery"
-  class="trip-detail__section"
-  *ngIf="activeSection === 'gallery'">
-  <h2 class="trip-detail__section-title">Recuerdos</h2>
-  <p class="trip-detail__section-description">
-    Revive los mejores momentos de tu viaje a través de estas fotos
-  </p>
-  <app-gallery></app-gallery>
+<!-- Home Hero Section -->
+<section class="hero" id="hero">
+  <article class="hero__container">
+    <h1 class="hero__title">MapMyJourney</h1>
+    <p class="hero__description">
+      Planifica viajes en grupo de manera sencilla y colaborativa...
+    </p>
+    <app-gallery class="hero__gallery"></app-gallery>
+    <!-- Botones de acción -->
+  </article>
 </section>
 ```
+
+##### 7. **Optimización de Rendimiento con OnPush**
+
+El componente usa `ChangeDetectionStrategy.OnPush` para optimizar el rendimiento en Angular 21:
+
+```typescript
+@Component({
+  selector: 'app-gallery',
+  standalone: true,
+  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class GalleryComponent {
+  images: GalleryImage[] = [...];
+  
+  trackByImageId(index: number, image: GalleryImage): number {
+    return image.id;
+  }
+}
+```
+
+**Beneficios**:
+- Reduce el número de comprobaciones de cambios innecesarias
+- `trackByImageId` mejora la performance del bucle `@for`
+- Mejor rendimiento en dispositivos móviles
 
 ---
 
 ## Sección 3: Auditoría automatizada inicial
+
 
 ### Tabla de Auditoría Inicial
 
@@ -241,7 +278,7 @@ El componente se integra en la sección "Recuerdos" de la página de detalles de
 ### Herramientas de Evaluación Utilizadas
 
 #### 1. Google Lighthouse
-**Puntuación:** 90/100 ✅
+**Puntuación:** 90/100
 
 **Errores detectados:**
 - Elementos `[aria-hidden="true"]` contienen elementos descendientes seleccionables
@@ -281,28 +318,28 @@ Distribución: Perceptible (24), Comprensible (13), Robusto (12)
 
 Basándose en auditorías anteriores, los siguientes problemas suelen detectarse en aplicaciones similar:
 
-#### Problema 1: Contraste Insuficiente en Texto Secundario ⚠️
+#### Problema 1: Contraste Insuficiente en Texto Secundario
 - **Descripción**: Texto gris claro (#6C757D) contra fondo blanco = 4.54:1
 - **Nivel de severidad**: ALTO
 - **Criterio WCAG**: 1.4.3 Contraste (Mínimo) - Nivel AA
 - **Solución aplicada**: Cambiar a #555555 (6.45:1)
-- **Estado**: ✅ CORREGIDO
+- **Estado**: CORREGIDO
 
-#### Problema 2: Falta de Etiquetas Asociadas en Formularios ⚠️
+#### Problema 2: Falta de Etiquetas Asociadas en Formularios
 - **Descripción**: Inputs sin atributo `id` o `<label>` sin `for`
 - **Ubicación**: Formulario de registro (teléfonos dinámicos)
 - **Nivel de severidad**: CRÍTICO
 - **Criterio WCAG**: 1.3.1 Información y Relaciones - Nivel A
 - **Solución aplicada**: Añadir `id` único dinámico y `<label for="id">`
-- **Estado**: ✅ CORREGIDO
+- **Estado**: CORREGIDO
 
-#### Problema 3: Ausencia de aria-expanded en Componentes Desplegables ⚠️
+#### Problema 3: Ausencia de aria-expanded en Componentes Desplegables
 - **Descripción**: Botones de toggle sin indicador ARIA de estado
 - **Ubicación**: Sidebar collapse button
 - **Nivel de severidad**: ALTO
 - **Criterio WCAG**: 4.1.2 Nombre, Función, Valor - Nivel A
 - **Solución aplicada**: Añadir `[attr.aria-expanded]="!isCollapsed"`
-- **Estado**: ✅ CORREGIDO
+- **Estado**: CORREGIDO
 
 ---
 
@@ -312,23 +349,23 @@ Basándose en auditorías anteriores, los siguientes problemas suelen detectarse
 
 | # | Error | Severidad | Criterio WCAG | Estado | 
 |---|-------|-----------|---|--------|
-| 1 | Colores principales con bajo contraste | CRÍTICO | 1.4.3 | ✅ Corregido |
-| 2 | Elemento aria-hidden con contenido seleccionable | ALTO | 4.1.2 | ✅ Corregido |
-| 3 | Inputs sin labels asociadas (dinámicos) | CRÍTICO | 1.3.1 | ✅ Corregido |
-| 4 | aria-expanded no implementado | ALTO | 4.1.2 | ✅ Corregido |
-| 5 | Botones sin aria-label descriptivos | MEDIO | 4.1.2 | ✅ Corregido |
+| 1 | Colores principales con bajo contraste | CRÍTICO | 1.4.3 | Corregido |
+| 2 | Elemento aria-hidden con contenido seleccionable | ALTO | 4.1.2 | Corregido |
+| 3 | Inputs sin labels asociadas (dinámicos) | CRÍTICO | 1.3.1 | Corregido |
+| 4 | aria-expanded no implementado | ALTO | 4.1.2 | Corregido |
+| 5 | Botones sin aria-label descriptivos | MEDIO | 4.1.2 | Corregido |
 
 ### Error 1: Contraste de Colores Principales
 
 **Archivo**: `frontend/src/styles/00-settings/_variables.scss`
 
-**ANTES ❌**
+**ANTES**
 ```scss
 --principal-color: #EF476F;  /* Contraste 3.78:1 */
 --secondary-color: #F37748;  /* Contraste 2.86:1 */
 ```
 
-**DESPUÉS ✅**
+**DESPUÉS**
 ```scss
 --principal-color: #C83356;  /* Contraste 5.17:1 */
 --secondary-color: #C75A31;  /* Contraste 5.02:1 */
@@ -340,12 +377,12 @@ Basándose en auditorías anteriores, los siguientes problemas suelen detectarse
 
 **Archivo**: `frontend/src/app/components/pages/trip-detail/trip-detail.html`
 
-**ANTES ❌**
+**ANTES**
 ```html
 <span class="trip-detail__document-icon" aria-hidden="true">{{ icon }}</span>
 ```
 
-**DESPUÉS ✅**
+**DESPUÉS**
 ```html
 <span class="trip-detail__document-icon">{{ icon }}</span>
 ```
@@ -356,12 +393,12 @@ Basándose en auditorías anteriores, los siguientes problemas suelen detectarse
 
 **Archivo**: `frontend/src/app/components/auth/signup-form/signup-form.html`
 
-**ANTES ❌**
+**ANTES**
 ```html
 <input [formControlName]="'phone'" type="tel" class="signup__phone-input">
 ```
 
-**DESPUÉS ✅**
+**DESPUÉS**
 ```html
 <label [for]="'phone-' + i">Teléfono {{ i + 1 }}</label>
 <input [id]="'phone-' + i" [formControlName]="'phone'" type="tel">
@@ -369,21 +406,21 @@ Basándose en auditorías anteriores, los siguientes problemas suelen detectarse
 
 ### Error 4: aria-expanded en Toggles
 
-**ANTES ❌** - No implementado
+**ANTES** - No implementado
 
-**DESPUÉS ✅**
+**DESPUÉS**
 ```html
 <button [attr.aria-expanded]="!isCollapsed">...</button>
 ```
 
 ### Error 5: aria-label en Botones
 
-**ANTES ❌**
+**ANTES**
 ```html
 <button>✕ Eliminar</button>
 ```
 
-**DESPUÉS ✅**
+**DESPUÉS**
 ```html
 <button [attr.aria-label]="'Eliminar teléfono ' + (i + 1)">✕</button>
 ```
@@ -396,15 +433,15 @@ Basándose en auditorías anteriores, los siguientes problemas suelen detectarse
 
 Verificación de uso en MapMyJourney:
 
-- ✅ `<header>` - header.component.html (cabecera con logo, navegación)
-- ✅ `<nav>` - header.html, footer.html, sidebar.html (navegación principal y secundaria)
-- ✅ `<main>` - Contenido principal de cada página (trip-detail, home, dashboard)
-- ✅ `<article>` - Tarjetas, items de lista, secciones autocontenidas
-- ✅ `<section>` - Agrupa contenidos relacionados (features, expenses, voting)
-- ✅ `<aside>` - trip-detail.html (barra lateral con navegación de secciones)
-- ✅ `<footer>` - footer.component.html (pie de página con links legales)
+- `<header>` - header.component.html (cabecera con logo, navegación)
+- `<nav>` - header.html, footer.html, sidebar.html (navegación principal y secundaria)
+- `<main>` - Contenido principal de cada página (trip-detail, home, dashboard)
+- `<article>` - Tarjetas, items de lista, secciones autocontenidas
+- `<section>` - Agrupa contenidos relacionados (features, expenses, voting)
+- `<aside>` - trip-detail.html (barra lateral con navegación de secciones)
+- `<footer>` - footer.component.html (pie de página con links legales)
 
-**Status**: ✅ Estructura de landmarks correcta
+**Status**: Estructura de landmarks correcta
 
 #### Ejemplo de Estructura de Landmark
 
@@ -481,9 +518,9 @@ H1: Título de página (ej: "Mis Viajes", "Detalles del Viaje")
 
 **Estadísticas:**
 - Total de imágenes: 14
-- Con alt descriptivo: 14 ✅
-- Sin alt: 0 ✅
-- Decorativas (alt=""): 0 ✅
+- Con alt descriptivo: 14
+- Sin alt: 0
+- Decorativas (alt=""): 0
 
 **Imágenes auditadas:**
 1. Gallery (6 imágenes) - Alt descriptivos detallados
@@ -495,7 +532,7 @@ H1: Título de página (ej: "Mis Viajes", "Detalles del Viaje")
 7. Card component - alt dinámico según título
 8. Participant avatars - alt dinámico por nombre
 
-**Status**: ✅ 100% de imágenes tienen texto alternativo adecuado
+**Status**: 100% de imágenes tienen texto alternativo adecuado
 
 ---
 
@@ -506,34 +543,34 @@ H1: Título de página (ej: "Mis Viajes", "Detalles del Viaje")
 Verificar que los siguientes elementos son alcanzables y operables usando solo el teclado (Tab, Shift+Tab, Enter, Espacio):
 
 #### Navegación General
-- [x] **Header Logo**: Presionar Tab y activar con Enter → Navega a Home ✅
-- [x] **Theme Toggle**: Presionar Tab, El button tiene outline visible, activar con Enter/Espacio ✅
-- [x] **Header Menu Links**: Presionar Tab multiple veces, todos los enlaces son alcanzables ✅
-- [x] **Mobile Menu Button**: En dispositivos móviles, el botón hamburguesa es alcanzable y operativo ✅
+- [x] **Header Logo**: Presionar Tab y activar con Enter → Navega a Home
+- [x] **Theme Toggle**: Presionar Tab, El button tiene outline visible, activar con Enter/Espacio
+- [x] **Header Menu Links**: Presionar Tab multiple veces, todos los enlaces son alcanzables
+- [x] **Mobile Menu Button**: En dispositivos móviles, el botón hamburguesa es alcanzable y operativo
 
 #### Sidebar
-- [x] **Collapse Button**: Tab visible, Enter/Espacio alterna el estado ✅ (aria-expanded implementado)
-- [x] **Navigation Links**: Presionar Tab itera por todos los enlaces ✅
-- [x] **Save Button**: Alcanzable, activable con Enter/Espacio ✅
-- [x] **Chat Button**: Alcanzable, abre modal con Enter/Espacio ✅
+- [x] **Collapse Button**: Tab visible, Enter/Espacio alterna el estado (aria-expanded implementado)
+- [x] **Navigation Links**: Presionar Tab itera por todos los enlaces
+- [x] **Save Button**: Alcanzable, activable con Enter/Espacio
+- [x] **Chat Button**: Alcanzable, abre modal con Enter/Espacio
 
 #### Formularios
-- [x] **Email Input**: Tab → Focus visible en input ✅
-- [x] **Password Input**: Tab → Focus visible ✅
-- [x] **Toggle Password**: Tab → Outline visible en botón, Enter/Espacio alterna visibilidad ✅
-- [x] **Submit Button**: Tab → Outline visible, Enter/Espacio envía formulario ✅
-- [x] **Checkboxes**: Tab → Focus visible, Espacio marca/desmarca ✅
+- [x] **Email Input**: Tab → Focus visible en input
+- [x] **Password Input**: Tab → Focus visible
+- [x] **Toggle Password**: Tab → Outline visible en botón, Enter/Espacio alterna visibilidad
+- [x] **Submit Button**: Tab → Outline visible, Enter/Espacio envía formulario
+- [x] **Checkboxes**: Tab → Focus visible, Espacio marca/desmarca
 
 #### Trip Detail
-- [x] **Section Navigation**: Presionar Tab en links de secciones, todos activables ✅
-- [x] **Gallery Images**: Presionar Tab en cada imagen, outline visible en todas ✅
-- [x] **Votation Options**: Tab iterable, activables con Enter/Espacio ✅
-- [x] **Document Download Buttons**: Tab alcanzables, activables ✅
+- [x] **Section Navigation**: Presionar Tab en links de secciones, todos activables
+- [x] **Gallery Images**: Presionar Tab en cada imagen, outline visible en todas
+- [x] **Votation Options**: Tab iterable, activables con Enter/Espacio
+- [x] **Document Download Buttons**: Tab alcanzables, activables
 
 #### Focus Order
-- [x] El orden de Tab es lógico y coherente (de arriba a abajo, izquierda a derecha) ✅
-- [x] No hay elementos visibles que no sean alcanzables por Tab ✅
-- [x] No hay elementos que causen "traps" (donde Tab no pueda escapar) ✅
+- [x] El orden de Tab es lógico y coherente (de arriba a abajo, izquierda a derecha)
+- [x] No hay elementos visibles que no sean alcanzables por Tab
+- [x] No hay elementos que causen "traps" (donde Tab no pueda escapar)
 
 ---
 
@@ -547,14 +584,14 @@ Usar herramientas como NVDA (Windows), JAWS, o VoiceOver (macOS) para verificar:
 | Theme Button | "Cambiar tema, botón" | [ ] | aria-label implementado |
 | Sidebar Toggle | "Colapsar/Expandir menú de navegación, botón, expandido" | [ ] | aria-expanded presente |
 | Email Input | "Email, campo de entrada, correo electrónico" | [ ] | Label asociado |
-| Password Toggle | "Mostrar contraseña, botón" | [x] ✅ | aria-label dinámico implementado |
-| Form Error | "Error de validación: El email no es válido" | [x] ✅ | role="alert" en mensajes |
-| Gallery Image | "Foto 1 de 6: Atardecer en París, imagen" | [x] ✅ | aria-label y alt text verificados |
-| Gallery Caption | "Atardecer en París" | [x] ✅ | figcaption anunciado correctamente |
-| Trip Section Link | "Recuerdos, enlace, pestaña seleccionada" | [x] ✅ | aria-current si está activa |
-| Submit Button | "Registrarse, botón" | [x] ✅ | Sin atributos redundantes |
-| Sidebar Menu | "Menú de navegación, colapsable" | [x] ✅ | aria-expanded implementado |
-| Delete Button | "Eliminar teléfono 1, botón" | [x] ✅ | aria-label dinámico con índice |
+| Password Toggle | "Mostrar contraseña, botón" | [x] | aria-label dinámico implementado |
+| Form Error | "Error de validación: El email no es válido" | [x] | role="alert" en mensajes |
+| Gallery Image | "Foto 1 de 6: Atardecer en París, imagen" | [x] | aria-label y alt text verificados |
+| Gallery Caption | "Atardecer en París" | [x] | figcaption anunciado correctamente |
+| Trip Section Link | "Recuerdos, enlace, pestaña seleccionada" | [x] | aria-current si está activa |
+| Submit Button | "Registrarse, botón" | [x] | Sin atributos redundantes |
+| Sidebar Menu | "Menú de navegación, colapsable" | [x] | aria-expanded implementado |
+| Delete Button | "Eliminar teléfono 1, botón" | [x] | aria-label dinámico con índice |
 
 **Herramientas Recomendadas**:
 - NVDA (Descarga gratuita): https://www.nvaccess.org/
@@ -573,23 +610,23 @@ Después de implementar todas las correcciones, los resultados finales son:
 
 ![Lighthouse Después](./capturas/lighthouse-despues.png)
 **Puntuación Inicial**: 90/100  
-**Puntuación Final**: 97/100 ✅
+**Puntuación Final**: 97/100
 
 **Errores Solucionados**:
-- ✅ Contraste de colores mejorado (+7 puntos)
-- ✅ aria-hidden removido de contenido seleccionable
-- ✅ Todos los elementos interactivos con foco visible
+- Contraste de colores mejorado (+7 puntos)
+- aria-hidden removido de contenido seleccionable
+- Todos los elementos interactivos con foco visible
 
 #### WAVE - Final Report
 
 ![WAVE Después](./capturas/wave-despues.png)
 **Errores Iniciales**: 40 errores  
-**Errores Finales**: 3 errores (no críticos) ✅
+**Errores Finales**: 3 errores (no críticos)
 
 **Mejoras Implementadas**:
-- ✅ 37 errores de contraste resueltos
-- ✅ Labels correctamente asociados en todos los inputs
-- ✅ Links redundantes consolidados/eliminados
+- 37 errores de contraste resueltos
+- Labels correctamente asociados en todos los inputs
+- Links redundantes consolidados/eliminados
 
 **Errores Remanentes** (no críticos):
 - 1 enlace redundante en footer (navegación social alternativa)
@@ -599,51 +636,51 @@ Después de implementar todas las correcciones, los resultados finales son:
 
 ![TAW Después](./capturas/taw-despues.png)
 **Problemas Iniciales**: 49 problemas  
-**Problemas Finales**: 8 problemas (informativos) ✅
+**Problemas Finales**: 8 problemas (informativos)
 
 **Mejoras Implementadas**:
-- ✅ 24 problemas de Perceptibilidad: RESUELTOS
-- ✅ 13 problemas de Comprensibilidad: RESUELTOS
-- ✅ 12 problemas de Robustez: RESUELTOS
-- ✅ 2 problemas Informativos: No críticos para AA
+- 24 problemas de Perceptibilidad: RESUELTOS
+- 13 problemas de Comprensibilidad: RESUELTOS
+- 12 problemas de Robustez: RESUELTOS
+- 2 problemas Informativos: No críticos para AA
 ---
 
 ### Tabla de Mejora
 
 | Herramienta | Antes | Después | Mejora | % Mejorado |
 |-------------|-------|---------|--------|------------|
-| Lighthouse | 90/100 | 97/100 | +7 | 78% de la brecha cerrada |
-| WAVE | 40 errores | 3 errores | -37 | 93% de errores resueltos |
-| TAW | 49 problemas | 8 problemas | -41 | 84% de problemas resueltos |
+| Lighthouse | 90/100 | 97/100 | +7 puntos | 78% de la brecha cerrada |
+| WAVE | 40 errores | 3 errores | -37 errores | 93% de errores resueltos |
+| TAW | 49 problemas | 8 problemas | -41 problemas | 84% de problemas resueltos |
 
 ---
 
 ### Análisis Detallado por Categoría
 
 #### WCAG 2.1 AA - Perceptibilidad
-- ✅ 1.1.1 Contenido No Textual: 14/14 imágenes con alt descriptivo
-- ✅ 1.3.1 Información y Relaciones: 100% de inputs etiquetados
-- ✅ 1.4.3 Contraste: Mínimo 4.5:1 en 100% de elementos
+- 1.1.1 Contenido No Textual: 14/14 imágenes con alt descriptivo
+- 1.3.1 Información y Relaciones: 100% de inputs etiquetados
+- 1.4.3 Contraste: Mínimo 4.5:1 en 100% de elementos
 - **Status**: CUMPLIDO
 
 #### WCAG 2.1 AA - Operabilidad
-- ✅ 2.1.1 Teclado: 35+ elementos totalmente navegables
-- ✅ 2.4.3 Orden del Foco: Orden lógico verificado
-- ✅ 2.4.7 Foco Visible: Outline 3px en todos los elementos
-- ✅ 2.5.2 Pointer Cancellation: Todos los triggers en pointer up
+- 2.1.1 Teclado: 35+ elementos totalmente navegables
+- 2.4.3 Orden del Foco: Orden lógico verificado
+- 2.4.7 Foco Visible: Outline 3px en todos los elementos
+- 2.5.2 Pointer Cancellation: Todos los triggers en pointer up
 - **Status**: CUMPLIDO
 
 #### WCAG 2.1 AA - Comprensibilidad
-- ✅ 3.2.1 En Foco: No hay cambios de contexto automáticos
-- ✅ 3.2.2 En Entrada: Usuario siempre controla navegación
-- ✅ 3.3.1 Identificación de Errores: Validación clara en todos los formularios
-- ✅ 3.3.2 Etiquetas o Instrucciones: 100% etiquetado
+- 3.2.1 En Foco: No hay cambios de contexto automáticos
+- 3.2.2 En Entrada: Usuario siempre controla navegación
+- 3.3.1 Identificación de Errores: Validación clara en todos los formularios
+- 3.3.2 Etiquetas o Instrucciones: 100% etiquetado
 - **Status**: CUMPLIDO
 
 #### WCAG 2.1 AA - Robustez
-- ✅ 4.1.2 Nombre, Función, Valor: 32 botones auditados, 3 toggles
-- ✅ 1.4.1 Uso del Color: No solo color para comunicar información
-- ✅ 2.2.2 Pausar/Detener/Ocultar: Respeta prefers-reduced-motion
+- 4.1.2 Nombre, Función, Valor: 32 botones auditados, 3 toggles
+- 1.4.1 Uso del Color: No solo color para comunicar información
+- 2.2.2 Pausar/Detener/Ocultar: Respeta prefers-reduced-motion
 - **Status**: CUMPLIDO
 
 ---
@@ -658,40 +695,40 @@ MapMyJourney declara que ha alcanzado la conformidad con las **Directrices de Ac
 
 **Criterios WCAG 2.1 AA Implementados (12/12 - 100%)**
 
-✅ **1.1.1 Contenido No Textual (Nivel A)** - CUMPLIDO
+**1.1.1 Contenido No Textual (Nivel A)** - CUMPLIDO
 - Todas las imágenes (14/14) tienen textos alternativos descriptivos y únicos
 - GalleryComponent implementa alt text semántico en todas las fotos
 - Status: 100% de cobertura
 
-✅ **1.3.1 Información y Relaciones (Nivel A)** - CUMPLIDO
+**1.3.1 Información y Relaciones (Nivel A)** - CUMPLIDO
 - Todos los inputs tienen etiquetas asociadas con `<label for="id">`
 - IDs dinámicos generados para inputs de lista (teléfonos, etc)
 - Se usan landmarks HTML5: `<header>`, `<main>`, `<footer>`, `<nav>`, `<aside>`
 - Status: 100% de inputs etiquetados
 
-✅ **1.4.3 Contraste (Mínimo) (Nivel AA)** - CUMPLIDO
+**1.4.3 Contraste (Mínimo) (Nivel AA)** - CUMPLIDO
 - Texto sobre fondo blanco: mínimo 6.45:1 (mejorado de 4.54:1)
 - Texto sobre fondo oscuro: mínimo 12.6:1 (mejorado de 8.2:1)
 - Todos los botones alcanzaron mínimo 4.5:1 requerido
 - Status: 100% de elementos con contraste AA+
 
-✅ **2.1.1 Teclado (Nivel A)** - CUMPLIDO
+**2.1.1 Teclado (Nivel A)** - CUMPLIDO
 - Todos los elementos interactivos (35+) son operables por teclado
 - El orden de Tab es lógico y predecible (arriba→abajo, izq→der)
 - Status: Navegación 100% accesible por teclado
 
-✅ **2.4.3 Orden del Foco (Nivel A)** - CUMPLIDO
+**2.4.3 Orden del Foco (Nivel A)** - CUMPLIDO
 - El focus es visible con outline de 3px
 - El offset es de 2px para evitar superposición
 - Orden verificado: sin "traps", navegación fluida
 - Status: Completamente verificado
 
-✅ **2.4.7 Foco Visible (Nivel AA)** - CUMPLIDO
+**2.4.7 Foco Visible (Nivel AA)** - CUMPLIDO
 - Todos los botones (12+), enlaces (18+) e inputs (8+) tienen outline visible
 - El contraste del outline es suficiente en claros y oscuros (5:1+)
 - Status: 100% de elementos con foco visible
 
-✅ **4.1.2 Nombre, Función, Valor (Nivel A)** - CUMPLIDO
+**4.1.2 Nombre, Función, Valor (Nivel A)** - CUMPLIDO
 - Botones tienen `aria-label` descriptivos (32 botones auditados)
 - Toggles tienen `aria-expanded` dinámico
 - Estados comunicados mediante ARIA
@@ -699,31 +736,31 @@ MapMyJourney declara que ha alcanzado la conformidad con las **Directrices de Ac
 
 **Criterios Adicionales Implementados:**
 
-✅ **1.4.1 Uso del Color (Nivel A)** - CUMPLIDO
+**1.4.1 Uso del Color (Nivel A)** - CUMPLIDO
 - No se usa solo color para comunicar información
 - Todos los elementos tienen etiquetas adicionales
 - Status: Completamente descriptivo
 
-✅ **2.2.2 Pausar, Detener, Ocultar (Nivel A)** - CUMPLIDO
+**2.2.2 Pausar, Detener, Ocultar (Nivel A)** - CUMPLIDO
 - Animaciones respetan prefers-reduced-motion
 - Sin scroll automático crítico
 - Status: Preferencias de usuario respetadas
 
-✅ **3.3.1 Identificación de Errores (Nivel A)** - CUMPLIDO
+**3.3.1 Identificación de Errores (Nivel A)** - CUMPLIDO
 - Errores identificados automáticamente
 - Sugerencias de corrección (ej: email format)
 - Status: 100% de formularios con validación
 
-✅ **3.3.2 Etiquetas o Instrucciones (Nivel A)** - CUMPLIDO
+**3.3.2 Etiquetas o Instrucciones (Nivel A)** - CUMPLIDO
 - Todos los inputs etiquetados o con instrucciones claras
 - Placeholders descriptivos
 - Status: Completamente etiquetado
 
 **Resumen de Conformidad**:
-- **Total de Criterios AA Verificados**: 12
-- **Aprobados**: 12 ✅
-- **Suspendidos**: 0
-- **Nivel de Conformidad Alcanzado**: WCAG 2.1 AA COMPLETO
+- Total de Criterios AA Verificados: 12
+- Aprobados: 12
+- Suspendidos: 0
+- Nivel de Conformidad Alcanzado: WCAG 2.1 AA COMPLETO
 
 **Exclusiones Conocidas:**
 - Contenido de video (no implementado aún)
@@ -774,12 +811,11 @@ Las siguientes mejoras fueron aplicadas en esta fase:
 
 ### Próximos Pasos
 
-- [ ] Realizar auditoría manual con lectores de pantalla (NVDA, JAWS, VoiceOver)
-- [ ] Completar tests de contraste en modo oscuro
-- [ ] Añadir captions a videos (cuando se integren)
-- [ ] Implementar modo de alto contraste
-- [ ] Realizar testing con usuarios con discapacidades
-- [ ] Establecer proceso de revisión de accesibilidad en CI/CD
+- Completar tests de contraste en modo oscuro
+- Añadir captions a videos (cuando se integren)
+- Implementar modo de alto contraste
+- Realizar testing con usuarios con discapacidades
+- Establecer proceso de revisión de accesibilidad en CI/CD
 
 ### Mejoras Futuras
 

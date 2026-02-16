@@ -1,0 +1,25 @@
+<section class="gallery" aria-label="Galería de fotos de viajes">
+  <div class="gallery__container">
+    @for (image of images; track trackByImageId($index, image)) {
+      <article 
+        class="gallery__item"
+        role="region"
+        [attr.aria-label]="'Foto ' + image.id + ' de ' + images.length + ': ' + image.caption">
+        
+        <figure class="gallery__figure">
+          <img 
+            [src]="image.src"
+            [alt]="image.alt"
+            class="gallery__image"
+            loading="lazy"
+            decoding="async"
+          />
+          
+          <figcaption class="gallery__caption">
+            {{ image.caption }}
+          </figcaption>
+        </figure>
+      </article>
+    }
+  </div>
+</section>

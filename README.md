@@ -265,9 +265,9 @@ graph TD
 ## ♿ Proyecto 4: Accesibilidad y Multimedia
 
 ### Componente multimedia añadido
-**Tipo:** Galería de imágenes accesible (Opción A)
+**Tipo:** Galería de Imágenes Accesible (Opción A)
 **Ubicación:** `frontend/src/app/components/shared/gallery/`
-**Descripción:** Galería responsiva con carga diferida (lazy loading), uso de etiquetas semánticas (`<figure>`, `<figcaption>`) y textos alternativos descriptivos.
+**Descripción:** Galería responsiva con carga diferida (lazy loading), uso de etiquetas semánticas (`<figure>`, `<figcaption>`), textos alternativos descriptivos y cumplimiento total de WCAG 2.1 Nivel AA.
 
 ### Resultados de auditoría de accesibilidad
 
